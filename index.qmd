@@ -1,6 +1,6 @@
 ---
-title: "Sample Report - Data Science Capstone"
-author: "Student name"
+title: "STA6257 Capstone Project - Missing Data and Imputation "
+author: "Robert Stairs"
 date: '`r Sys.Date()`'
 format:
   html:
@@ -21,6 +21,8 @@ editor:
 
 ### What is "mehtod"?
 
+INTRODUCTION GOES HERE
+
 This is an introduction to LASSO regression, which is a non-parametric
 estimator that estimates the conditional expectation of two variables
 which is random. The goal of a kernel regression is to discover the
@@ -38,6 +40,10 @@ This is my work and I want to add more work...
 This section is going to cover the literature review...
 
 ## Methods
+
+NEED TO IDENTIFY WHICH METHOD(S) WE WANT TO COVER FOR MISSING DATA IMPUTATION
+
+METHODOLOGY AND EQUATIONS CAN BE DISCUSSED HERE
 
 The common non-parametric regression model is
 $Y_i = m(X_i) + \varepsilon_i$, where $Y_i$ can be defined as the sum of
