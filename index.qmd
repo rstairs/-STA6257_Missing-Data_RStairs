@@ -1,6 +1,6 @@
 ---
 title: "STA6257 Capstone Project - Missing Data and Imputation "
-author: "Robert Stairs"
+author: "Karthik Aerra, Liz Miller, Mohit Kumar Veeraboina, Robert Stairs"
 date: '`r Sys.Date()`'
 format:
   html:
@@ -19,7 +19,7 @@ editor:
 
 ## Introduction
 
-### What is "mehtod"?
+### What is "missing data and imputation"?
 
 INTRODUCTION GOES HERE
 
