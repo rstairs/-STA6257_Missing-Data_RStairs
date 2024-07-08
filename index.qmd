@@ -21,24 +21,25 @@ editor:
 
 Missing data is a key challenge that data professionals encounter in their daily work. In the real world, data is often messy, incomplete, and requires a level of pre-processing before data analysis can occur. Part of data pre-processing is dealing with missing data. Missing data can occur for several reasons including but not limited to processing error, machine or measurement errors, non-responses in surveys, invalid calculations (e.g. division by zero), and study participant dropout [@Emmanuel2021surveyml]. Missing data can be problematic for analysis because it can reduce the number of usable observations, introduce bias, and interfere with different analysis tools such as machine learning algorithms, which cannot automatically handle missing data.
 
-One of the first steps in handling missing data is to determine how much of the data is missing and from which columns. Missing data in a dataset can be represented in several ways including NA, NaN, Null, None, blanks, spaces, empty strings, or placeholder values such as 999999 (or equivalent obvious numerical outlier). For standard missing values such as NAs, functions such as is.na() in R can be used to count the number of missing observations. For string-related missing values such as space (“ ” or empty strings (“”), functions such as unique() in R can be used to identify unexpected strings. For numerical placeholders such as 99999 (or equivalent), visual distributions of the data can be useful to identify missing values.
+One of the first steps in handling missing data is to determine how much of the data is missing and from which columns. Missing data in a dataset can be represented in several ways including NA, NaN, Null, None, blanks, spaces, empty strings, or placeholder values such as 999999 (or equivalent obvious numerical outlier). For standard missing values such as NAs, functions such as is.na() in R can be used to count the number of missing observations. For string-related missing values such as space (“ ” or empty strings (“”), functions such as unique() in R can be used to identify unexpected strings. For numerical placeholders such as 0, 99999 (or equivalent), or negative values, histograms of the data can be useful to identify missing values.
 
 *Insert a table here to show the different ways data can be missing and some of the useful functions/packages/tools are for identifying missing data.*
 
-If a dataset contains missing data, there are two basic approaches: deletion or imputation [@schefer2002dealingwithmissingdata]. Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood. 
+If a dataset contains missing data, there are two basic approaches: deletion or imputation [@schefer2002dealingwithmissingdata]. Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias or understimation of variance if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood. 
 
-The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling], [@bennett2001can], [@little2014joys]:
+The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling], [@bennett2001can], [@little2014joys], [@du2020missing]:
 
 **Missing completely at random (MCAR)**
-When data are MCAR, the probability of a record missing is independent from observed and unobserved data. That is, the frequency of missing data for a given variable does not depend on that variable’s level or any other variable(s) in the dataset. For example, if performing a survey with age as a variable, missing values for age are random with respect to age and do not depend on other variables such as weight or gender. In the case of MCAR data, the deletion of data reduces the number of observations in the dataset but does not introduce bias.
+When data are MCAR, the probability of a record missing is independent from observed and unobserved data. For example, if performing a survey with age as a variable, missing values for age are random with respect to age and do not depend on other variables such as weight or gender. In the case of MCAR data, the deletion of data reduces the number of observations in the dataset but does not introduce bias.
 
 **Missing at Random (MAR)**
-When data are MAR, the probability of a record missing depends on the observed data, but not the unobserved data. In other words, the frequency of missing data does not depend on that variable’s level, but it can be dependent on other variables in the dataset. Using the same example of a survey with age as a variable, people who are overweight may be more likely to omit their age in the survey. However, the actual age of those who omit their age may still be random. In the case of MAR, deletion of entire observations with missing data may or may not introduce bias.
+When data are MAR, the probability of a record missing depends on the observed data, but not the unobserved data. Using the same example of a survey with age as a variable, people who are overweight may be more likely to omit their age in the survey. However, the actual age of those who omit their age may still be random. In the case of MAR, deletion of entire observations with missing data may or may not introduce bias.
 
 **Not missing at random (NMAR)**
 When data are NMAR, the probability of a record missing is dependent on the unobserved data. In the same example of a survey including age as a variable, elderly people may be less likely to include their age in the survey. Similarly to MAR, deletion of observations with missing data may or may not introduce bias to the analysis.
 
-*Add image here for MCAR/MAR/NMAR*
+![MCAR, MAR, and NMAR Example, [@du2020missing]](Missing Data Mechanisms Figure.png)
+
 
 *[@ghazali2020missing] demonstrates some visualizations that can be used to help determine missing data mechanisms. It would be helpful to add some of those here as examples.*
 
@@ -63,7 +64,7 @@ These theories provide a comprehensive framework for understanding and implement
 
 **Descriptive Studies:** These studies analyze the patterns of missing data and evaluate the effectiveness of various imputation methods. Examples include the work by Jerez et al. and Güzel [@jerez2010statisticalandmlmethods], [@guzel2013knn].
 
-**Comparative Studies:** These studies compare the performance of different imputation methods. Joseph G. Ibrahim and Siming Zheng have conducted such comparative analyses, highlighting the strengths and weaknesses of various approaches [@ibrahim2011glm], [@zhang2024matrixcompletionmethod].
+**Comparative Studies:** These studies compare the performance of different imputation methods. Joseph G. Ibrahim and Siming Zheng have conducted such comparative analyses, highlighting the strengths and weaknesses of various approaches [@ibrahim2011glm], [@zhang2024matrixcompletionmethod], [@zheng2023likelihood].
 
 **Simulation Studies:** These studies test imputation methods on controlled datasets, allowing researchers to systematically observe the impact of different techniques. This helps in understanding the conditions under which each method performs best.
 
@@ -72,12 +73,113 @@ These theories provide a comprehensive framework for understanding and implement
 **Theoretical Analysis:** This involves discussing the conditions, limitations, and best practices of imputation methods. Rachael A Hughes' work is an example, providing insights into when multiple imputation is not suitable and suggesting alternative approaches.
 
 
+**Practical Implications of Advanced Imputation Methods for Missing Data**
+
+1.   Improved Decision-Making in Data Analysis: 
+
+Researchers and analysts may select the best imputation techniques to ensure the correctness of their studies by having a thorough understanding of the effects of various missing data types (MCAR, MAR, and NMAR) on datasets.
+ 
+ 
+2.   Choosing the Best Imputation Techniques:
+
+More sophisticated imputation techniques, such as matrix completion, K-Nearest Neighbors (KNN), Expectation-Maximization (EM), Multiple Imputation (MI) utilizing MCMC, and missForest, perform better at preserving dataset integrity. These approaches should be chosen by practitioners over easier ones, especially when handling MAR and NMAR data.
+
+ 
+3.   Use in Medical and Clinical Settings:
+
+Machine learning-based imputation techniques like Multi-Layer Perceptron (MLP) and KNN increase the accuracy of prediction models for medical practitioners dealing with datasets such as breast cancer prognosis. Improved patient outcomes and more informed healthcare decisions result from this.
+ 
+
+4.   Improvement of Diagnostic Tools: 
+In the medical domain in particular, combining imputation techniques (e.g., KNN) with classification algorithms (e.g., Naïve Bayes) improves diagnostic accuracy and lowers costs by eliminating pointless operations.
+
+ 
+5.   Integration with Statistical and Analytical Software: 
+
+These studies' insights direct the choice of suitable statistical software modules and functions (e.g., SPSS, SOLAS), maximizing data preprocessing and analysis.
+
+ 
+6.   Robustness and Versatility Across Domains:
+
+Techniques like missForest are robust and relevant in a variety of domains, including bioinformatics, industrial processes, and the social sciences. They handle mixed-type data without making significant distributional assumptions.
+
+ 
+7.   Scalability and Practicality: 
+
+Although techniques like matrix completion and imputation based on reinforcement learning provide great accuracy, they demand a large amount of computer power. Companies must weigh the advantages of these techniques against their computational expenses.
+ 
+
+8.   Training and Expertise Requirements: 
+
+Significant training and expertise in machine learning and statistics are required for the implementation and optimization of advanced imputation techniques. To fully utilize these strategies, organizations need spend money on professional development programs for staff members or on employing qualified experts.
+
+ 
+9.   Context-Specific Method Selection: 
+
+There isn't a single best imputation technique. Educators should try out several approaches to find the best match for their unique datasets and patterns of missing data.
+
+ 
+10.Enhancement of Data Quality and Analytical Results: 
+Higher-quality imputed datasets are produced by using sophisticated imputation techniques, which preserve the integrity of original data correlations and patterns. This improves the validity and dependability of later analysis and prediction models.
+ 
+Practitioners in a variety of fields can greatly increase the accuracy and robustness of their analysis by implementing these sophisticated imputation approaches, which will improve decision-making and results.
+
+
 ### Related work
 
 
 
 ## Methods
 
+**Article Selection Criteria and Search Strategy**
+
+The approach used to select and analyze the literature included in this review involved identifying articles relevant to the topic of missing data and the imputation thereof.  Articles were selected based on their topic relevance as it related to statistical and machine learning concepts.  Preference was given to articles that were published recently to ensure the inclusion of the latest methods and research in the field.  In addition, articles were prioritized from peer-reviewed and reputable conference papers to ensure quality and reliability of the research.  A comprehensive search using Google Scholar and the available databases accessed through the University of West Florida was implemented.  Key search terms included: ‘missing data’, ‘missing data imputation’.
+
+**Selection Criteria**
+
+Articles were selected based on their relevance to the subject, in addition to including papers with a variety of methods implemented. Research addressing both statistical and machine learning approaches were focused on.  Articles not available in full text, not directly related to missing data imputation methods, or where the primary focus was theoretical as opposed to practical were excluded.
+
+**Summary of Selected Articles**
+
+1.      Jerez, J. M. et al. - "Missing data imputation using statistical and machine learning methods in a real breast cancer problem."
+
+2.      Rachael A Hughes - "Accounting for missing data in statistical analyses: multiple imputation is not always the answer."
+
+3.      Joseph G. IBRAHIM - "Missing-Data Methods for Generalized Linear Models: A Comparative Review."
+
+4.      Saqib Ejaz Awan - "A reinforcement learning-based approach for imputing missing data."
+
+5.      Emmanuel, T. - "A survey on missing data in machine learning."
+
+6.      Güzel, C. - "Breast cancer diagnosis based on naïve Bayes machine learning classifier with KNN missing data imputation."
+
+7.      Judi Scheffer - "Dealing with Missing Data."
+
+8.      Siming Zheng - "Likelihood identifiability and parameter estimation with nonignorable missing data."
+
+9.      Stekhoven, Daniel J and Buhlmann, Peter - "MissForest - non-parametric missing value imputation for mixed-type data."
+
+10.     de Goeij, M.C. et al - "Multiple Imputation: Dealing with Missing Data."
+
+
+**Data and Analysis**
+
+Once an article was selected, it was reviewed for relevant data pertaining to missing data imputation methods. The context of the study, the datasets involved, and the results provided were also reviewed. The article analysis focused on:
+
+
+**Goal** – understanding the specific goal of the study and how it relates to missing data imputation.
+
+
+**Methods/Techniques** – Identifying the specific methods used, whether statistical or machine learning, or a combination of both.
+
+
+**Results/Applications** – evaluating the effectiveness/efficiency of the methods employed. Showing how these methods were/can be applied in a real-world scenario.
+
+
+**Limitations/Challenges** – noting the limitations or challenges involved in each method used.
+
+
+**Data** – identifying the types of data used for testing (e.g. simulated, real-world) and the type of missing data (e.g. missing at random, missing completely at random, not missing at random) 
 
 
 ## Analysis and Results
