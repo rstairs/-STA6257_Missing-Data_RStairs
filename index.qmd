@@ -23,25 +23,22 @@ Missing data is a key challenge that data professionals encounter in their daily
 
 One of the first steps in handling missing data is to determine how much of the data is missing and from which columns. Missing data in a dataset can be represented in several ways including NA, NaN, Null, None, blanks, spaces, empty strings, or placeholder values such as 999999 (or equivalent obvious numerical outlier). For standard missing values such as NAs, functions such as is.na() in R can be used to count the number of missing observations. For string-related missing values such as space (“ ” or empty strings (“”), functions such as unique() in R can be used to identify unexpected strings. For numerical placeholders such as 0, 99999 (or equivalent), or negative values, histograms of the data can be useful to identify missing values.
 
-*Insert a table here to show the different ways data can be missing and some of the useful functions/packages/tools are for identifying missing data.*
-
 If a dataset contains missing data, there are two basic approaches: deletion or imputation [@schefer2002dealingwithmissingdata]. Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias or understimation of variance if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood. 
 
 The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling], [@bennett2001can], [@little2014joys], [@du2020missing]:
 
 **Missing completely at random (MCAR)**
-When data are MCAR, the probability of a record missing is independent from observed and unobserved data. For example, if performing a survey with age as a variable, missing values for age are random with respect to age and do not depend on other variables such as weight or gender. In the case of MCAR data, the deletion of data reduces the number of observations in the dataset but does not introduce bias.
+When data are MCAR, the probability of a record missing is independent from observed and unobserved data. For example, if performing a survey with age as a variable, missing values for age are random with respect to age and do not depend on other variables such as weight or gender. In the case of MCAR data, the deletion of data reduces the number of observations in the dataset but does not introduce bias. MCAR is the most ideal, but least realistic scenario.
 
 **Missing at Random (MAR)**
-When data are MAR, the probability of a record missing depends on the observed data, but not the unobserved data. Using the same example of a survey with age as a variable, people who are overweight may be more likely to omit their age in the survey. However, the actual age of those who omit their age may still be random. In the case of MAR, deletion of entire observations with missing data may or may not introduce bias.
+When data are MAR, the probability of a record missing depends on the observed data, but not the unobserved data. Using the same example of a survey with age as a variable, people who are overweight may be more likely to omit their age in the survey. However, the probability of a missing data point can be attributed to another observed variable. In the case of MAR, deletion of entire observations with missing data may or may not introduce bias.
 
 **Not missing at random (NMAR)**
-When data are NMAR, the probability of a record missing is dependent on the unobserved data. In the same example of a survey including age as a variable, elderly people may be less likely to include their age in the survey. Similarly to MAR, deletion of observations with missing data may or may not introduce bias to the analysis.
+When data are NMAR, the probability of a record missing is dependent on the unobserved data. In the same example of a survey including age as a variable, elderly people may be less likely to include their age in the survey. The missing value for age cannot be predicted using other variables included in the dataset such as weight or gender. There may be a factor that can predict the probability of a missing value, but it is unknown. NMAR data are the most complicated to analyze. Similarly to MAR, deletion of observations with missing data may or may not introduce bias to the analysis.
 
 ![MCAR, MAR, and NMAR Example, [@du2020missing]](Missing Data Mechanisms Figure.png)
 
-
-*[@ghazali2020missing] demonstrates some visualizations that can be used to help determine missing data mechanisms. It would be helpful to add some of those here as examples.*
+Understanding the mechanism behind missing data (MCAR, MAR, or NMAR) is important because many imputation methods require the assumption of MCAR or MAR to be held true. There is not a statistical test or analysis to classify data as MCAR, MAR, or NMAR. Instead, visualization of the missing data is required to determine the relationships (or lack thereof) within the missing data. For example, correlation matrix plots, scatterplots, and other custom visualizations can be useful tools in identifying patterns in the missing data [@ghazali2020missing]. 
 
 Imputation methods play a crucial role in addressing missing data, ranging from simple techniques like mean, median, and mode imputation to more sophisticated methods such as multiple imputation and machine learning approaches. Advanced methods generally offer improved accuracy but require careful consideration of underlying assumptions and computational resources.
 
