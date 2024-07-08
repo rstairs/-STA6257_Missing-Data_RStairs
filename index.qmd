@@ -23,51 +23,51 @@ Missing data is a key challenge that data professionals encounter in their daily
 
 One of the first steps in handling missing data is to determine how much of the data is missing and from which columns. Missing data in a dataset can be represented in several ways including NA, NaN, Null, None, blanks, spaces, empty strings, or placeholder values such as 999999 (or equivalent obvious numerical outlier). For standard missing values such as NAs, functions such as is.na() in R can be used to count the number of missing observations. For string-related missing values such as space (“ ” or empty strings (“”), functions such as unique() in R can be used to identify unexpected strings. For numerical placeholders such as 99999 (or equivalent), visual distributions of the data can be useful to identify missing values.
 
-Insert a table here to show the different ways data can be missing and some of the useful functions/packages/tools are for identifying missing data.
+*Insert a table here to show the different ways data can be missing and some of the useful functions/packages/tools are for identifying missing data.*
 
 If a dataset contains missing data, there are two basic approaches: deletion or imputation [@schefer2002dealingwithmissingdata]. Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood.
 
-The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling]:
+The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling], [@bennett2001can], [@little2014joys]:
 
-Missing completely at random (MCAR)
+**Missing completely at random (MCAR)**
 When data are MCAR, the probability of a record missing is independent from observed and unobserved data. That is, the frequency of missing data for a given variable does not depend on that variable’s level or any other variable(s) in the dataset. For example, if performing a survey with age as a variable, missing values for age are random with respect to age and do not depend on other variables such as weight or gender. In the case of MCAR data, the deletion of data reduces the number of observations in the dataset but does not introduce bias.
 
-Missing at Random (MAR)
+**Missing at Random (MAR)**
 When data are MAR, the probability of a record missing depends on the observed data, but not the unobserved data. In other words, the frequency of missing data does not depend on that variable’s level, but it can be dependent on other variables in the dataset. Using the same example of a survey with age as a variable, people who are overweight may be more likely to omit their age in the survey. However, the actual age of those who omit their age may still be random. In the case of MAR, deletion of entire observations with missing data may or may not introduce bias.
 
-Not missing at random (NMAR)
+**Not missing at random (NMAR)**
 When data are NMAR, the probability of a record missing is dependent on the unobserved data. In the same example of a survey including age as a variable, elderly people may be less likely to include their age in the survey. Similarly to MAR, deletion of observations with missing data may or may not introduce bias to the analysis.
 
-Add image here for MCAR/MAR/NMAR
+*Add image here for MCAR/MAR/NMAR*
 
 Imputation methods play a crucial role in addressing missing data, ranging from simple techniques like mean, median, and mode imputation to more sophisticated methods such as multiple imputation and machine learning approaches. Advanced methods generally offer improved accuracy but require careful consideration of underlying assumptions and computational resources.
 
 Mean imputation involves replacing missing values with the average of observed values, assuming missingness is random. It's simple to implement but may underestimate variability. Median imputation, substituting missing values with the median, is robust to outliers and appropriate for skewed distributions. Mode imputation replaces missing values with the most frequently observed value, suitable for categorical data but ignoring variability. These methods are straightforward yet assume missing data are completely random, potentially biasing results. Advanced techniques like multiple imputation and machine learning offer more nuanced approaches, enhancing accuracy by considering complex relationships within datasets.
 
-Theories
+**Theories**
 
-Rubin's Missing Data Theory: 
+**Rubin's Missing Data Theory:** 
 This foundational theory categorizes missing data into MCAR, MAR, and NMAR. It provides a framework for understanding the mechanisms behind missing data and guides the selection of appropriate imputation strategies based on these mechanisms. 
 
-Statistical Theory of Imputation: 
+**Statistical Theory of Imputation:**
 This theory involves using statistical models to estimate missing values, leveraging the relationship between observed and missing data points. Multiple imputation, a prominent technique within this theory, generates multiple plausible values for each missing data point to account for uncertainty. 
 
-Machine Learning Theories:
+**Machine Learning Theories:**
 Machine learning techniques are increasingly employed for imputing missing data due to their ability to learn patterns from data and make predictions. Methods such as k-nearest neighbors (KNN) and neural networks are applied to predict missing values based on observed data patterns.
 
 These theories provide a comprehensive framework for understanding and implementing imputation methods across various datasets and analytical contexts.
 
-Research Methods:
+**Research Methods:**
 
-Descriptive Studies: These studies analyze the patterns of missing data and evaluate the effectiveness of various imputation methods. Examples include the work by Jerez et al. and Güzel [@jerez2010statisticalandmlmethods], [@guzel2013knn].
+**Descriptive Studies:** These studies analyze the patterns of missing data and evaluate the effectiveness of various imputation methods. Examples include the work by Jerez et al. and Güzel [@jerez2010statisticalandmlmethods], [@guzel2013knn].
 
-Comparative Studies: These studies compare the performance of different imputation methods. Joseph G. Ibrahim and Siming Zheng have conducted such comparative analyses, highlighting the strengths and weaknesses of various approaches [@ibrahim2011glm], [@zhang2024matrixcompletionmethod].
+**Comparative Studies:** These studies compare the performance of different imputation methods. Joseph G. Ibrahim and Siming Zheng have conducted such comparative analyses, highlighting the strengths and weaknesses of various approaches [@ibrahim2011glm], [@zhang2024matrixcompletionmethod].
 
-Simulation Studies: These studies test imputation methods on controlled datasets, allowing researchers to systematically observe the impact of different techniques. This helps in understanding the conditions under which each method performs best.
+**Simulation Studies:** These studies test imputation methods on controlled datasets, allowing researchers to systematically observe the impact of different techniques. This helps in understanding the conditions under which each method performs best.
 
-Application-Based Studies: These studies apply imputation methods to real-world data, demonstrating their practical use and the challenges involved. Examples include the works by Saqib Ejaz Awan and Emmanuel, which show how imputation methods are implemented in practical scenarios [@awan2022reinforcementlearning], [@Emmanuel2021surveyml].
+**Application-Based Studies:** These studies apply imputation methods to real-world data, demonstrating their practical use and the challenges involved. Examples include the works by Saqib Ejaz Awan and Emmanuel, which show how imputation methods are implemented in practical scenarios [@awan2022reinforcementlearning], [@Emmanuel2021surveyml].
 
-Theoretical Analysis: This involves discussing the conditions, limitations, and best practices of imputation methods. Rachael A Hughes' work is an example, providing insights into when multiple imputation is not suitable and suggesting alternative approaches.
+**Theoretical Analysis:** This involves discussing the conditions, limitations, and best practices of imputation methods. Rachael A Hughes' work is an example, providing insights into when multiple imputation is not suitable and suggesting alternative approaches.
 
 
 ### Related work
@@ -82,7 +82,7 @@ Theoretical Analysis: This involves discussing the conditions, limitations, and 
 
 ### Data and Visualization
 
-Description of the Dataset
+**Description of the Dataset**
 
 The “Ozone: Los Angeles Ozone Pollution Data, 1976” dataset has been chosen for this project. It contains observations related to pollution levels in the Los Angeles area during 1976. The variables contained in the dataset are thought to influence ozone concentration. These include daily ozone measurements consisting of: 
 Ozone: response variable, daily max one-hour-average ozone concentration in parts per billion
