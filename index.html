@@ -3137,6 +3137,7 @@ vertical-align: -.125em;
 <p><strong>Missing at Random (MAR)</strong> When data are MAR, the probability of a record missing depends on the observed data, but not the unobserved data. In other words, the frequency of missing data does not depend on that variable’s level, but it can be dependent on other variables in the dataset. Using the same example of a survey with age as a variable, people who are overweight may be more likely to omit their age in the survey. However, the actual age of those who omit their age may still be random. In the case of MAR, deletion of entire observations with missing data may or may not introduce bias.</p>
 <p><strong>Not missing at random (NMAR)</strong> When data are NMAR, the probability of a record missing is dependent on the unobserved data. In the same example of a survey including age as a variable, elderly people may be less likely to include their age in the survey. Similarly to MAR, deletion of observations with missing data may or may not introduce bias to the analysis.</p>
 <p><em>Add image here for MCAR/MAR/NMAR</em></p>
+<p><em><span class="citation" data-cites="ghazali2020missing">(<a href="#ref-ghazali2020missing" role="doc-biblioref">Ghazali, Shaadan, and Idrus 2020</a>)</span> demonstrates some visualizations that can be used to help determine missing data mechanisms. It would be helpful to add some of those here as examples.</em></p>
 <p>Imputation methods play a crucial role in addressing missing data, ranging from simple techniques like mean, median, and mode imputation to more sophisticated methods such as multiple imputation and machine learning approaches. Advanced methods generally offer improved accuracy but require careful consideration of underlying assumptions and computational resources.</p>
 <p>Mean imputation involves replacing missing values with the average of observed values, assuming missingness is random. It’s simple to implement but may underestimate variability. Median imputation, substituting missing values with the median, is robust to outliers and appropriate for skewed distributions. Mode imputation replaces missing values with the most frequently observed value, suitable for categorical data but ignoring variability. These methods are straightforward yet assume missing data are completely random, potentially biasing results. Advanced techniques like multiple imputation and machine learning offer more nuanced approaches, enhancing accuracy by considering complex relationships within datasets.</p>
 <p><strong>Theories</strong></p>
@@ -3198,6 +3199,9 @@ Bennett, Derrick A. 2001. <span>“How Can i Deal with Missing Data in My Study?
 </div>
 <div id="ref-Emmanuel2021surveyml" class="csl-entry" role="listitem">
 Emmanuel, Maupong, T. 2021. <span>“A Survey on Missing Data in Machine Learning.”</span> <em>J Big Data</em> 8: 401–7.
+</div>
+<div id="ref-ghazali2020missing" class="csl-entry" role="listitem">
+Ghazali, Shamihah Muhammad, Norshahida Shaadan, and Zainura Idrus. 2020. <span>“Missing Data Exploration in Air Quality Data Set Using r-Package Data Visualisation Tools.”</span> <em>Bulletin of Electrical Engineering and Informatics</em> 9 (2): 755–63.
 </div>
 <div id="ref-guzel2013knn" class="csl-entry" role="listitem">
 Guzel, Kaya, C. 2013. <span>“Breast Cancer Diagnosis Based on Naïve Bayes Machine Learning Classifier with KNN Missing Data Imputation.”</span> <em>AWERProcedia Information Technology &amp; Computer Science</em> 4: 332–46.
