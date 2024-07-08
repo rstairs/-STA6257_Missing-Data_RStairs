@@ -139,28 +139,6 @@ The approach used to select and analyze the literature included in this review i
 
 Articles were selected based on their relevance to the subject, in addition to including papers with a variety of methods implemented. Research addressing both statistical and machine learning approaches were focused on.  Articles not available in full text, not directly related to missing data imputation methods, or where the primary focus was theoretical as opposed to practical were excluded.
 
-**Summary of Selected Articles**
-
-1.      Jerez, J. M. et al. - "Missing data imputation using statistical and machine learning methods in a real breast cancer problem."
-
-2.      Rachael A Hughes - "Accounting for missing data in statistical analyses: multiple imputation is not always the answer."
-
-3.      Joseph G. IBRAHIM - "Missing-Data Methods for Generalized Linear Models: A Comparative Review."
-
-4.      Saqib Ejaz Awan - "A reinforcement learning-based approach for imputing missing data."
-
-5.      Emmanuel, T. - "A survey on missing data in machine learning."
-
-6.      Güzel, C. - "Breast cancer diagnosis based on naïve Bayes machine learning classifier with KNN missing data imputation."
-
-7.      Judi Scheffer - "Dealing with Missing Data."
-
-8.      Siming Zheng - "Likelihood identifiability and parameter estimation with nonignorable missing data."
-
-9.      Stekhoven, Daniel J and Buhlmann, Peter - "MissForest - non-parametric missing value imputation for mixed-type data."
-
-10.     de Goeij, M.C. et al - "Multiple Imputation: Dealing with Missing Data."
-
 
 **Data and Analysis**
 
