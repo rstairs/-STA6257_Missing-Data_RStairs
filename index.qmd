@@ -19,92 +19,96 @@ editor:
 
 ## Introduction
 
-### What is "missing data and imputation"?
+Missing data is a key challenge that data professionals encounter in their daily work. In the real world, data is often messy, incomplete, and requires a level of pre-processing before data analysis can occur. Part of data pre-processing is dealing with missing data. Missing data can occur for several reasons including but not limited to processing error, machine or measurement errors, non-responses in surveys, invalid calculations (e.g. division by zero), and study participant dropout [@Emmanuel2021surveyml]. Missing data can be problematic for analysis because it can reduce the number of usable observations, introduce bias, and interfere with different analysis tools such as machine learning algorithms, which cannot automatically handle missing data.
 
-INTRODUCTION GOES HERE
+One of the first steps in handling missing data is to determine how much of the data is missing and from which columns. Missing data in a dataset can be represented in several ways including NA, NaN, Null, None, blanks, spaces, empty strings, or placeholder values such as 999999 (or equivalent obvious numerical outlier). For standard missing values such as NAs, functions such as is.na() in R can be used to count the number of missing observations. For string-related missing values such as space (“ ” or empty strings (“”), functions such as unique() in R can be used to identify unexpected strings. For numerical placeholders such as 99999 (or equivalent), visual distributions of the data can be useful to identify missing values.
 
-This is an introduction to LASSO regression, which is a non-parametric
-estimator that estimates the conditional expectation of two variables
-which is random. The goal of a kernel regression is to discover the
-non-linear relationship between two random variables. To discover the
-non-linear relationship, kernel estimator or kernel smoothing is the
-main method to estimate the curve for non-parametric statistics. In
-kernel estimator, weight function is known as kernel function
-[@efr2008]. Cite this paper [@bro2014principal]. The GEE [@wang2014].
-The PCA [@daffertshofer2004pca]
+Insert a table here to show the different ways data can be missing and some of the useful functions/packages/tools are for identifying missing data.
 
-This is my work and I want to add more work...
+If a dataset contains missing data, there are two basic approaches: deletion or imputation [@schefer2002dealingwithmissingdata]. Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood.
+
+The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling]:
+
+Missing completely at random (MCAR)
+When data are MCAR, the probability of a record missing is independent from observed and unobserved data. That is, the frequency of missing data for a given variable does not depend on that variable’s level or any other variable(s) in the dataset. For example, if performing a survey with age as a variable, missing values for age are random with respect to age and do not depend on other variables such as weight or gender. In the case of MCAR data, the deletion of data reduces the number of observations in the dataset but does not introduce bias.
+
+Missing at Random (MAR)
+When data are MAR, the probability of a record missing depends on the observed data, but not the unobserved data. In other words, the frequency of missing data does not depend on that variable’s level, but it can be dependent on other variables in the dataset. Using the same example of a survey with age as a variable, people who are overweight may be more likely to omit their age in the survey. However, the actual age of those who omit their age may still be random. In the case of MAR, deletion of entire observations with missing data may or may not introduce bias.
+
+Not missing at random (NMAR)
+When data are NMAR, the probability of a record missing is dependent on the unobserved data. In the same example of a survey including age as a variable, elderly people may be less likely to include their age in the survey. Similarly to MAR, deletion of observations with missing data may or may not introduce bias to the analysis.
+
+Add image here for MCAR/MAR/NMAR
+
+Imputation methods play a crucial role in addressing missing data, ranging from simple techniques like mean, median, and mode imputation to more sophisticated methods such as multiple imputation and machine learning approaches. Advanced methods generally offer improved accuracy but require careful consideration of underlying assumptions and computational resources.
+
+Mean imputation involves replacing missing values with the average of observed values, assuming missingness is random. It's simple to implement but may underestimate variability. Median imputation, substituting missing values with the median, is robust to outliers and appropriate for skewed distributions. Mode imputation replaces missing values with the most frequently observed value, suitable for categorical data but ignoring variability. These methods are straightforward yet assume missing data are completely random, potentially biasing results. Advanced techniques like multiple imputation and machine learning offer more nuanced approaches, enhancing accuracy by considering complex relationships within datasets.
+
+Theories
+
+Rubin's Missing Data Theory: 
+This foundational theory categorizes missing data into MCAR, MAR, and NMAR. It provides a framework for understanding the mechanisms behind missing data and guides the selection of appropriate imputation strategies based on these mechanisms. 
+
+Statistical Theory of Imputation: 
+This theory involves using statistical models to estimate missing values, leveraging the relationship between observed and missing data points. Multiple imputation, a prominent technique within this theory, generates multiple plausible values for each missing data point to account for uncertainty. 
+
+Machine Learning Theories:
+Machine learning techniques are increasingly employed for imputing missing data due to their ability to learn patterns from data and make predictions. Methods such as k-nearest neighbors (KNN) and neural networks are applied to predict missing values based on observed data patterns.
+
+These theories provide a comprehensive framework for understanding and implementing imputation methods across various datasets and analytical contexts.
+
+Research Methods:
+
+Descriptive Studies: These studies analyze the patterns of missing data and evaluate the effectiveness of various imputation methods. Examples include the work by Jerez et al. and Güzel [@jerez2010statisticalandmlmethods], [@guzel2013knn].
+
+Comparative Studies: These studies compare the performance of different imputation methods. Joseph G. Ibrahim and Siming Zheng have conducted such comparative analyses, highlighting the strengths and weaknesses of various approaches [@ibrahim2011glm], [@zhang2024matrixcompletionmethod].
+
+Simulation Studies: These studies test imputation methods on controlled datasets, allowing researchers to systematically observe the impact of different techniques. This helps in understanding the conditions under which each method performs best.
+
+Application-Based Studies: These studies apply imputation methods to real-world data, demonstrating their practical use and the challenges involved. Examples include the works by Saqib Ejaz Awan and Emmanuel, which show how imputation methods are implemented in practical scenarios [@awan2022reinforcementlearning], [@Emmanuel2021surveyml].
+
+Theoretical Analysis: This involves discussing the conditions, limitations, and best practices of imputation methods. Rachael A Hughes' work is an example, providing insights into when multiple imputation is not suitable and suggesting alternative approaches.
+
 
 ### Related work
 
-This section is going to cover the literature review...
+
 
 ## Methods
 
-NEED TO IDENTIFY WHICH METHOD(S) WE WANT TO COVER FOR MISSING DATA IMPUTATION
 
-METHODOLOGY AND EQUATIONS CAN BE DISCUSSED HERE
-
-The common non-parametric regression model is
-$Y_i = m(X_i) + \varepsilon_i$, where $Y_i$ can be defined as the sum of
-the regression function value $m(x)$ for $X_i$. Here $m(x)$ is unknown
-and $\varepsilon_i$ some errors. With the help of this definition, we
-can create the estimation for local averaging i.e. $m(x)$ can be
-estimated with the product of $Y_i$ average and $X_i$ is near to $x$. In
-other words, this means that we are discovering the line through the
-data points with the help of surrounding data points. The estimation
-formula is printed below [@R-base]:
-
-$$
-M_n(x) = \sum_{i=1}^{n} W_n (X_i) Y_i  \tag{1}
-$$ $W_n(x)$ is the sum of weights that belongs to all real numbers.
-Weights are positive numbers and small if $X_i$ is far from $x$.
-
-Another equation:
-
-$$
-y_i = \beta_0 + \beta_1 X_1 +\varepsilon_i
-$$
 
 ## Analysis and Results
 
 ### Data and Visualization
 
-A study was conducted to determine how...
+Description of the Dataset
+
+The “Ozone: Los Angeles Ozone Pollution Data, 1976” dataset has been chosen for this project. It contains observations related to pollution levels in the Los Angeles area during 1976. The variables contained in the dataset are thought to influence ozone concentration. These include daily ozone measurements consisting of: 
+Ozone: response variable, daily max one-hour-average ozone concentration in parts per billion
+Solar.R: solar radiation in Langley units
+Wind: Average wind speed in mph
+Temp: Max daily temp in degrees Fahrenheit
+Month: month of observation
+Day: day of the month of the observation
+
+The dataset allows for analysis of how different meteorological conditions/factors can affect ozone levels. It contains a total of 13 variables, 366 observations (one for each day for one year), and 139 missing or NA values, which we will attempt to impute with the method chosen.
+
 
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # loading packages 
-library(tidyverse)
-library(knitr)
-library(ggthemes)
-library(ggrepel)
-library(dslabs)
+
 ```
 
 ```{r, warning=FALSE, echo=TRUE}
 # Load Data
-kable(head(murders))
-
-ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total)) 
-
-  ggplot1 + geom_point(aes(col=region), size = 4) +
-  geom_text_repel(aes(label=abb)) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(formula = "y~x", method=lm,se = F)+
-  xlab("Populations in millions (log10 scale)") + 
-  ylab("Total number of murders (log10 scale)") +
-  ggtitle("US Gun Murders in 2010") +
-  scale_color_discrete(name = "Region")+
-      theme_bw()
-  
 
 ```
 
 ### Statistical Modeling
 
-```{r}
+```{r, warning=FALSE, echo=T, message=FALSE}
 
 ```
 
