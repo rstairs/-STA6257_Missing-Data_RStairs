@@ -1,5 +1,5 @@
 ---
-title: "STA6257 Capstone Project - Missing Data and Imputation "
+title: "Exploration of Different Imputation Methods for Missing Data"
 author: "Karthik Aerra, Liz Miller, Mohit Kumar Veeraboina, Robert Stairs"
 date: '`r Sys.Date()`'
 format:
@@ -40,24 +40,36 @@ When data are NMAR, the probability of a record missing is dependent on the unob
 
 Understanding the mechanism behind missing data (MCAR, MAR, or NMAR) is important because many imputation methods require the assumption of MCAR or MAR to be held true. There is not a statistical test or analysis to classify data as MCAR, MAR, or NMAR. Instead, visualization of the missing data is required to determine the relationships (or lack thereof) within the missing data. For example, correlation matrix plots, scatterplots, and other custom visualizations can be useful tools in identifying patterns in the missing data [@ghazali2020missing]. 
 
-Imputation methods play a crucial role in addressing missing data, ranging from simple techniques like mean, median, and mode imputation to more sophisticated methods such as multiple imputation and machine learning approaches. Advanced methods generally offer improved accuracy but require careful consideration of underlying assumptions and computational resources.
+Methods for handling missing data can be split into three broad categories [@ren2023review], [@Emmanuel2021surveyml]:
 
-Mean imputation involves replacing missing values with the average of observed values, assuming missingness is random. It's simple to implement but may underestimate variability. Median imputation, substituting missing values with the median, is robust to outliers and appropriate for skewed distributions. Mode imputation replaces missing values with the most frequently observed value, suitable for categorical data but ignoring variability. These methods are straightforward yet assume missing data are completely random, potentially biasing results. Advanced techniques like multiple imputation and machine learning offer more nuanced approaches, enhancing accuracy by considering complex relationships within datasets.
+* **Deletion methods**
+* One of the approaches to handling missing data is to delete instances of missing values. This can be accomplished through either listwise deletion or pairwise deletion, for example. In listwise deletion, all rows with missing values are deleted from the dataset. This results in a dataset with a lower number of observations. In pairwise deletion, columns with missing data are deleted from the dataset. In this way, the number of observations in the dataset is maintained, but the total number of features is reduced. Deletion methods are advantageous in that they are quick and simple. With a large dataset and relatively low amounts of missing data, reducing the number of observations or features may be okay. However, deletion can introduce bias into the analysis if the data are not missing completely at random, which is often the case [@ren2023review], [@Emmanuel2021surveyml].
+
+* **Single imputation**
+* In single imputation, missing data values are replaced with a single value, without consideration of the uncertainty around the prediction for the missing value. In other words, a single value is predicted for each missing data point. This can be accomplished using techniques such as mean imputation, median imputation, hot and cold deck imputation and regression-based techniques. There is not a model defined for predicting the values in the column as a whole, so there is information lost around the variance of the prediction. Single imputation methods are simpler than multiple imputation methods, but they tend to underestimate the variance resulting models may have artifically low confidence intervals [@ren2023review], [@Emmanuel2021surveyml].
+
+
+* **Multiple imputation**
+* In multiple imputation methods such as MICE, a model is constructed to predict missing values in each column based on observed data in other columns. This model provides a point estimate for the missing values, as well as the uncertainty around the predictions. Multiple iterations are performed to predict the missing values. In each iteration, a missing value is predicted based on the model and its uncertainty. That is, with multiple iterations, you will end up with a distribution of possible missing values. In this way, multiple datasets with multiple possible values for the missing data are generated. Once the iterations are complete, the missing data predictions can consolidated back into a single dataset, where the missing values will be a result of the point estimate and the variance or uncertainty from the model. Multiple imputation can be a powerful technique that is helpful in preserving some of the variance or uncertainty around missing values, but it can be complex and computationally expensive. [@ren2023review], [@Emmanuel2021surveyml]. 
+
+
+Imputation methods can be further broken down into statistical versus machine learning methods. According to [@lin2020missing]'s review of literature from 2006-2017, four of the most common statistical methods for missing value imputation include expectation management (EM), linear regression, least squares (LS), and mean/mode imputation. For machine learning, the four most common methods include clustering, decision trees, random forest, and KNN.
+
 
 **Theories**
 
 **Rubin's Missing Data Theory:** 
-This foundational theory categorizes missing data into MCAR, MAR, and NMAR. It provides a framework for understanding the mechanisms behind missing data and guides the selection of appropriate imputation strategies based on these mechanisms. 
+This foundational theory categorizes missing data into MCAR, MAR, and NMAR. It provides a framework for understanding the mechanisms behind missing data and guides the selection of appropriate imputation strategies based on these mechanisms. (**CITATION NEEDED**) 
 
 **Statistical Theory of Imputation:**
-This theory involves using statistical models to estimate missing values, leveraging the relationship between observed and missing data points. Multiple imputation, a prominent technique within this theory, generates multiple plausible values for each missing data point to account for uncertainty. 
+This theory involves using statistical models to estimate missing values, leveraging the relationship between observed and missing data points. Multiple imputation, a prominent technique within this theory, generates multiple plausible values for each missing data point to account for uncertainty. (**CITATION NEEDED**) 
 
 **Machine Learning Theories:**
-Machine learning techniques are increasingly employed for imputing missing data due to their ability to learn patterns from data and make predictions. Methods such as k-nearest neighbors (KNN) and neural networks are applied to predict missing values based on observed data patterns.
+Machine learning techniques are increasingly employed for imputing missing data due to their ability to learn patterns from data and make predictions. Methods such as k-nearest neighbors (KNN) and neural networks are applied to predict missing values based on observed data patterns. (**CITATION NEEDED**) 
 
 These theories provide a comprehensive framework for understanding and implementing imputation methods across various datasets and analytical contexts.
 
-**Research Methods:**
+**Research Methods for Missing Data:**
 
 **Descriptive Studies:** These studies analyze the patterns of missing data and evaluate the effectiveness of various imputation methods. Examples include the work by Jerez et al. and Güzel [@jerez2010statisticalandmlmethods], [@guzel2013knn].
 
@@ -69,57 +81,7 @@ These theories provide a comprehensive framework for understanding and implement
 
 **Theoretical Analysis:** This involves discussing the conditions, limitations, and best practices of imputation methods. Rachael A Hughes' work is an example, providing insights into when multiple imputation is not suitable and suggesting alternative approaches.
 
-
-**Practical Implications of Advanced Imputation Methods for Missing Data**
-
-1.   Improved Decision-Making in Data Analysis: 
-
-Researchers and analysts may select the best imputation techniques to ensure the correctness of their studies by having a thorough understanding of the effects of various missing data types (MCAR, MAR, and NMAR) on datasets.
- 
- 
-2.   Choosing the Best Imputation Techniques:
-
-More sophisticated imputation techniques, such as matrix completion, K-Nearest Neighbors (KNN), Expectation-Maximization (EM), Multiple Imputation (MI) utilizing MCMC, and missForest, perform better at preserving dataset integrity. These approaches should be chosen by practitioners over easier ones, especially when handling MAR and NMAR data.
-
- 
-3.   Use in Medical and Clinical Settings:
-
-Machine learning-based imputation techniques like Multi-Layer Perceptron (MLP) and KNN increase the accuracy of prediction models for medical practitioners dealing with datasets such as breast cancer prognosis. Improved patient outcomes and more informed healthcare decisions result from this.
- 
-
-4.   Improvement of Diagnostic Tools: 
-In the medical domain in particular, combining imputation techniques (e.g., KNN) with classification algorithms (e.g., Naïve Bayes) improves diagnostic accuracy and lowers costs by eliminating pointless operations.
-
- 
-5.   Integration with Statistical and Analytical Software: 
-
-These studies' insights direct the choice of suitable statistical software modules and functions (e.g., SPSS, SOLAS), maximizing data preprocessing and analysis.
-
- 
-6.   Robustness and Versatility Across Domains:
-
-Techniques like missForest are robust and relevant in a variety of domains, including bioinformatics, industrial processes, and the social sciences. They handle mixed-type data without making significant distributional assumptions.
-
- 
-7.   Scalability and Practicality: 
-
-Although techniques like matrix completion and imputation based on reinforcement learning provide great accuracy, they demand a large amount of computer power. Companies must weigh the advantages of these techniques against their computational expenses.
- 
-
-8.   Training and Expertise Requirements: 
-
-Significant training and expertise in machine learning and statistics are required for the implementation and optimization of advanced imputation techniques. To fully utilize these strategies, organizations need spend money on professional development programs for staff members or on employing qualified experts.
-
- 
-9.   Context-Specific Method Selection: 
-
-There isn't a single best imputation technique. Educators should try out several approaches to find the best match for their unique datasets and patterns of missing data.
-
- 
-10.Enhancement of Data Quality and Analytical Results: 
-Higher-quality imputed datasets are produced by using sophisticated imputation techniques, which preserve the integrity of original data correlations and patterns. This improves the validity and dependability of later analysis and prediction models.
- 
-Practitioners in a variety of fields can greatly increase the accuracy and robustness of their analysis by implementing these sophisticated imputation approaches, which will improve decision-making and results.
+The purpose of this project is to demonstrate the use of several different types of missing data imputation methods using a test dataset with missing data. The performance of various imputation methods will be assessed using RMSE and R-Squared of the resulting predictive models after applying various imputation methods.
 
 
 ### Related work
@@ -145,7 +107,9 @@ Articles were selected based on their relevance to the subject, in addition to i
 
 An overview of the methodology used to demonstrate different techniques for imputing missing data is shown below:
 
-![Workflow for Missing Data Imputation] (MIssing Data Workflow Graphic.png)
+![Overivew of Methodology for Demonstrating Different Techniques for Missing Data Imputation](MIssing Data Workflow Graphic.png)
+
+!(MIssing Data Workflow Graphic.png)
 
 To demonstrate the use of different imputation techniques for handling missing data, a dataset was selected with a high frequency of missing data. The "Ozone" dataset from the mlbench package, which contains ~38% missing values for one of the variables was selected for this case study. The data were first pre-processed. This step typically entails importing the data, checking for missing values, checking data types, and making transformations as needed. In this case, all columns were converted to numeric data type and renamed for easier interpretation. Missing values by column were reported in summary statistics, but were not addressed until further visualization was performed.
 
