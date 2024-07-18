@@ -595,7 +595,9 @@ svm_mean <- svm(Ozone_reading ~ ., data = train_mean)
 # make predictions
 svm_mean_pred <- predict(svm_mean, newdata = test_mean)
 # Plot variable importance
-
+var_importance_svm <- t(abs(coef(svm_mean)[1, -1]))
+barplot(var_importance_svm, main = "Feature Importance in SVM",
+        xlab = "Features", ylab = "Magnitude of Coefficient")
 
 
 # Function to calculate RMSE
@@ -662,19 +664,23 @@ varImpPlot(rf_med, main = "Variable Importance Plot for Random Forest Model")
 knn_med <- train(Ozone_reading ~ ., data = train_med, method = "knn")
 knn_med_pred <- predict(knn_med, newdata = test_med)
 # Plot variable importance
-
+feature_importance <- table(y) / length(y)
+barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
 
 # Decision tree model
-tree_med <- ctree(Ozone_reading ~ ., data = train_med)
+tree_med <- rpart(Ozone_reading ~ ., data = train_med)
 tree_med_pred <- predict(tree_med, newdata = test_med)
 # Plot variable importance
-
+var_importance <- varImp(tree_med)
+barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
 # SVM model
 svm_med <- svm(Ozone_reading ~ ., data = train_med)
 svm_med_pred <- predict(svm_med, newdata = test_med)
 # Plot variable importance
-
+var_importance_svm <- t(abs(coef(svm_med)[1, -1]))
+barplot(var_importance_svm, main = "Feature Importance in SVM",
+        xlab = "Features", ylab = "Magnitude of Coefficient")
 
 
 # Calculate RMSE for each model
@@ -719,19 +725,23 @@ varImpPlot(rf_mode, main = "Variable Importance Plot for Random Forest Model")
 knn_mode <- train(Ozone_reading ~ ., data = train_mode, method = "knn")
 knn_mode_pred <- predict(knn_mode, newdata = test_mode)
 # Plot variable importance
-
+feature_importance <- table(y) / length(y)
+barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
 
 # Decision tree model
-tree_mode <- ctree(Ozone_reading ~ ., data = train_mode)
+tree_mode <- rpart(Ozone_reading ~ ., data = train_mode)
 tree_mode_pred <- predict(tree_mode, newdata = test_mode)
 # Plot variable importance
-
+var_importance <- varImp(tree_mode)
+barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
 # SVM model
 svm_mode <- svm(Ozone_reading ~ ., data = train_mode)
 svm_mode_pred <- predict(svm_mode, newdata = test_mode)
 # Plot variable importance
-
+var_importance_svm <- t(abs(coef(svm_mode)[1, -1]))
+barplot(var_importance_svm, main = "Feature Importance in SVM",
+        xlab = "Features", ylab = "Magnitude of Coefficient")
 
 
 # Calculate RMSE for each model
@@ -783,7 +793,7 @@ knn_miss_pred <- predict(knn_miss, newdata = test_miss)
 
 
 # Decision tree model
-tree_miss <- ctree(Ozone_reading ~ ., data = train_miss)
+tree_miss <- rpart(Ozone_reading ~ ., data = train_miss)
 tree_miss_pred <- predict(tree_miss, newdata = test_miss)
 # Plot variable importance
 
@@ -841,7 +851,7 @@ knn_mice_pred <- predict(knn_mice, newdata = test_mice)
 
 
 # Decision tree model
-tree_mice <- ctree(Ozone_reading ~ ., data = train_mice)
+tree_mice <- rpart(Ozone_reading ~ ., data = train_mice)
 tree_mice_pred <- predict(tree_mice, newdata = test_mice)
 # Plot variable importance
 
