@@ -456,12 +456,26 @@ grid4 <- grid.arrange(p12, p13, nrow = 1)
 ```
 
 # Missing Data Imputation
-
 Simple Imputation Methods
+* Drop all NA values
+* Drop column if NA's >= 20%
 * Mean
 * Median
 * Mode
 ```{r}
+# Function to drop column if quantity of missing values is over the threshold
+drop_na_columns <- function(data, threshold) {
+  na_counts <- colSums(is.na(data))
+  na_proportion <- na_counts / nrow(data)
+  data <- data[, na_proportion <= threshold]
+  return(data)
+}
+# Define threshold (e.g., 20% NA allowed)
+threshold <- 0.20
+
+# Drop all missing values
+dropNA_data <- na.omit(ozone2)
+
 # Function for mean imputation
 mean_impute <- function(x) {
   x[is.na(x)] <- mean(x, na.rm = TRUE)
@@ -481,7 +495,12 @@ mode_impute <- function(x) {
   return(x)
 }
 
-# Apply imputation methods
+##### Apply imputation methods
+# Drop columns based on the NA threshold
+dropCol_data <- drop_na_columns(ozone2, threshold) # the column Temp_EM gets dropped
+dropCol_data <- apply(ozone2, 2, mean_impute)
+dropCol_data <- data.frame(dropCol_data)
+
 imputed_data_mean <- apply(ozone2, 2, mean_impute)
 imputed_data_mean <- data.frame(imputed_data_mean)
 
@@ -495,6 +514,8 @@ imputed_data_mode <- data.frame(imputed_data_mode)
 head(imputed_data_mean)
 head(imputed_data_median)
 head(imputed_data_mode)
+head(dropCol_data)
+head(dropNA_data)
 
 #print(sum(is.na(imputed_data_mean)))
 #print(sum(is.na(imputed_data_median)))
@@ -551,54 +572,48 @@ library(rpart)# decision tree
 library(tidymodels) 
 
 ```
-
-**Mean**
+**Dropped Temp_EM column**
 ```{r}
 # Split the data into training and testing sets
 set.seed(123)
-data_split_mean <- initial_split(imputed_data_mean, prop = 0.75)
-train_mean <- training(data_split_mean)
-test_mean <- testing(data_split_mean)
+data_split_dropCol <- initial_split(dropCol_data, prop = 0.75)
+train_dropCol <- training(data_split_dropCol)
+test_dropCol <- testing(data_split_dropCol)
 
 # Split data into predictors and target
-X <- train_mean[, -1]  # Features
-y <- train_mean$Ozone_reading  # Target
-
+X <- train_dropCol[, -1]  # Features
+y <- train_dropCol$Ozone_reading  # Target
 
 # Random forest model
-rf_mean <- randomForest(Ozone_reading ~ ., data = train_mean)
+rf_dropCol <- randomForest(Ozone_reading ~ ., data = train_dropCol)
 # make predictions
-rf_mean_pred <- predict(rf_mean, newdata = test_mean)
+rf_dropCol_pred <- predict(rf_dropCol, newdata = test_dropCol)
 # Plot variable importance
-varImpPlot(rf_mean, main = "Variable Importance Plot for Random Forest Model")
-
+varImpPlot(rf_dropCol, main = "Variable Importance Plot for Random Forest Model")
 
 # KNN model
-knn_mean <- train(Ozone_reading ~ ., data = train_mean, method = "knn")
+knn_dropCol <- train(Ozone_reading ~ ., data = train_dropCol, method = "knn")
 # make predictions
-knn_mean_pred <- predict(knn_mean, newdata = test_mean)
+knn_dropCol_pred <- predict(knn_dropCol, newdata = test_dropCol)
 # Plot variable importance
 feature_importance <- table(y) / length(y)
 barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
 
-
 # Decision tree model
-tree_mean <- rpart(Ozone_reading ~ ., data = train_mean)
+tree_dropCol <- rpart(Ozone_reading ~ ., data = train_dropCol)
 # make predictions
-tree_mean_pred <- predict(tree_mean, newdata = test_mean)
+tree_dropCol_pred <- predict(tree_dropCol, newdata = test_dropCol)
 # Plot variable importance
-var_importance <- varImp(tree_mean)
+var_importance <- varImp(tree_dropCol)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
 # SVM model
-svm_mean <- svm(Ozone_reading ~ ., data = train_mean)
+svm_dropCol <- svm(Ozone_reading ~ ., data = train_dropCol)
 # make predictions
-svm_mean_pred <- predict(svm_mean, newdata = test_mean)
+svm_dropCol_pred <- predict(svm_dropCol, newdata = test_dropCol)
 # Plot variable importance
-var_importance_svm <- t(abs(coef(svm_mean)[1, -1]))
-barplot(var_importance_svm, main = "Feature Importance in SVM",
-        xlab = "Features", ylab = "Magnitude of Coefficient")
-
+var_importance_svm <- t(abs(coef(svm_dropCol)[1, -1]))
+barplot(var_importance_svm, main = "Feature Importance in SVM", xlab = "Features", ylab = "Magnitude of Coefficient")
 
 # Function to calculate RMSE
 rmse <- function(pred, actual) {
@@ -616,11 +631,122 @@ r_squared <- function(actual, pred) {
     r2 <- NaN  # Handle case where ss_tot is 0
   } else {
     r2 <- 1 - (ss_res / ss_tot)
-  }
-  
+  }  
   return(r2)
 }
+```
+```{r}
+# Calculate RMSE for each model
+rf_dropCol_rmse <- rmse(rf_dropCol_pred, test_dropCol$Ozone_reading)
+knn_dropCol_rmse <- rmse(knn_dropCol_pred, test_dropCol$Ozone_reading)
+tree_dropCol_rmse <- rmse(tree_dropCol_pred, test_dropCol$Ozone_reading)
+svm_dropCol_rmse <- rmse(svm_dropCol_pred, test_dropCol$Ozone_reading)
 
+rf_dropCol_r2 <- r_squared(test_dropCol$Ozone_reading, rf_dropCol_pred)
+knn_dropCol_r2 <- r_squared(test_dropCol$Ozone_reading, knn_dropCol_pred)
+tree_dropCol_r2 <- r_squared(test_dropCol$Ozone_reading, tree_dropCol_pred)
+svm_dropCol_r2 <- r_squared(test_dropCol$Ozone_reading, svm_dropCol_pred)
+
+# Print RMSE values
+cat("Random Forest RMSE:", rf_dropCol_rmse, "\n")
+cat("KNN RMSE:", knn_dropCol_rmse, "\n")
+cat("Decision Tree RMSE:", tree_dropCol_rmse, "\n")
+cat("SVM RMSE:", svm_dropCol_rmse, "\n")
+
+cat("Random Forest R-squared:", rf_dropCol_r2["Rsquared"], "\n")
+cat("KNN R-squared:", knn_dropCol_r2["Rsquared"], "\n")
+cat("Decision Tree R-squared:", tree_dropCol_r2["Rsquared"], "\n")
+cat("SVM R-squared:", svm_dropCol_r2["Rsquared"], "\n")
+```
+
+**Drop All NA's**
+```{r}
+# Split the data into training and testing sets
+set.seed(123)
+data_split_dropNA <- initial_split(dropNA_data, prop = 0.75)
+train_dropNA <- training(data_split_dropNA)
+test_dropNA <- testing(data_split_dropNA)
+
+# Split data into predictors and target
+X <- train_dropNA[, -1]  # Features
+y <- train_dropNA$Ozone_reading  # Target
+
+# Random forest model
+rf_dropNA <- randomForest(Ozone_reading ~ ., data = train_dropNA)
+# make predictions
+rf_dropNA_pred <- predict(rf_dropNA, newdata = test_dropNA)
+# Plot variable importance
+varImpPlot(rf_dropNA, main = "Variable Importance Plot for Random Forest Model")
+
+# KNN model
+knn_dropNA <- train(Ozone_reading ~ ., data = train_dropNA, method = "knn")
+# make predictions
+knn_dropNA_pred <- predict(knn_dropNA, newdata = test_dropNA)
+# Plot variable importance
+feature_importance <- table(y) / length(y)
+barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
+
+# Decision tree model
+tree_dropNA <- rpart(Ozone_reading ~ ., data = train_dropNA)
+# make predictions
+tree_dropNA_pred <- predict(tree_dropNA, newdata = test_dropNA)
+# Plot variable importance
+var_importance <- varImp(tree_dropNA)
+barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
+
+# SVM model
+svm_dropNA <- svm(Ozone_reading ~ ., data = train_dropNA)
+# make predictions
+svm_dropNA_pred <- predict(svm_dropNA, newdata = test_dropNA)
+# Plot variable importance
+var_importance_svm <- t(abs(coef(svm_dropNA)[1, -1]))
+barplot(var_importance_svm, main = "Feature Importance in SVM", xlab = "Features", ylab = "Magnitude of Coefficient")
+```
+
+**Mean**
+```{r}
+# Split the data into training and testing sets
+set.seed(123)
+data_split_mean <- initial_split(imputed_data_mean, prop = 0.75)
+train_mean <- training(data_split_mean)
+test_mean <- testing(data_split_mean)
+
+# Split data into predictors and target
+X <- train_mean[, -1]  # Features
+y <- train_mean$Ozone_reading  # Target
+
+# Random forest model
+rf_mean <- randomForest(Ozone_reading ~ ., data = train_mean)
+# make predictions
+rf_mean_pred <- predict(rf_mean, newdata = test_mean)
+# Plot variable importance
+varImpPlot(rf_mean, main = "Variable Importance Plot for Random Forest Model")
+
+# KNN model
+knn_mean <- train(Ozone_reading ~ ., data = train_mean, method = "knn")
+# make predictions
+knn_mean_pred <- predict(knn_mean, newdata = test_mean)
+# Plot variable importance
+feature_importance <- table(y) / length(y)
+barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
+
+# Decision tree model
+tree_mean <- rpart(Ozone_reading ~ ., data = train_mean)
+# make predictions
+tree_mean_pred <- predict(tree_mean, newdata = test_mean)
+# Plot variable importance
+var_importance <- varImp(tree_mean)
+barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
+
+# SVM model
+svm_mean <- svm(Ozone_reading ~ ., data = train_mean)
+# make predictions
+svm_mean_pred <- predict(svm_mean, newdata = test_mean)
+# Plot variable importance
+var_importance_svm <- t(abs(coef(svm_mean)[1, -1]))
+barplot(var_importance_svm, main = "Feature Importance in SVM", xlab = "Features", ylab = "Magnitude of Coefficient")
+```
+```{r}
 # Calculate RMSE for each model
 rf_mean_rmse <- rmse(rf_mean_pred, test_mean$Ozone_reading)
 knn_mean_rmse <- rmse(knn_mean_pred, test_mean$Ozone_reading)
@@ -642,7 +768,6 @@ cat("Random Forest R-squared:", rf_mean_r2["Rsquared"], "\n")
 cat("KNN R-squared:", knn_mean_r2["Rsquared"], "\n")
 cat("Decision Tree R-squared:", tree_mean_r2["Rsquared"], "\n")
 cat("SVM R-squared:", svm_mean_r2["Rsquared"], "\n")
-
 ```
 
 **Median**
@@ -679,10 +804,9 @@ svm_med <- svm(Ozone_reading ~ ., data = train_med)
 svm_med_pred <- predict(svm_med, newdata = test_med)
 # Plot variable importance
 var_importance_svm <- t(abs(coef(svm_med)[1, -1]))
-barplot(var_importance_svm, main = "Feature Importance in SVM",
-        xlab = "Features", ylab = "Magnitude of Coefficient")
-
-
+barplot(var_importance_svm, main = "Feature Importance in SVM", xlab = "Features", ylab = "Magnitude of Coefficient")
+```
+```{r}
 # Calculate RMSE for each model
 rf_med_rmse <- rmse(rf_med_pred, test_med$Ozone_reading)
 knn_med_rmse <- rmse(knn_med_pred, test_med$Ozone_reading)
@@ -714,7 +838,6 @@ data_split_mode <- initial_split(imputed_data_mode, prop = 0.75)
 train_mode <- training(data_split_mode)
 test_mode <- testing(data_split_mode)
 
-
 # Random forest model
 rf_mode <- randomForest(Ozone_reading ~ ., data = train_mode)
 rf_mode_pred <- predict(rf_mode, newdata = test_mode)
@@ -740,10 +863,9 @@ svm_mode <- svm(Ozone_reading ~ ., data = train_mode)
 svm_mode_pred <- predict(svm_mode, newdata = test_mode)
 # Plot variable importance
 var_importance_svm <- t(abs(coef(svm_mode)[1, -1]))
-barplot(var_importance_svm, main = "Feature Importance in SVM",
-        xlab = "Features", ylab = "Magnitude of Coefficient")
-
-
+barplot(var_importance_svm, main = "Feature Importance in SVM", xlab = "Features", ylab = "Magnitude of Coefficient")
+```
+```{r}
 # Calculate RMSE for each model
 rf_mode_rmse <- rmse(rf_mode_pred, test_mode$Ozone_reading)
 knn_mode_rmse <- rmse(knn_mode_pred, test_mode$Ozone_reading)
@@ -779,7 +901,6 @@ data_split_miss <- initial_split(ozone2_mf, prop = 0.75)
 train_miss <- training(data_split_miss)
 test_miss <- testing(data_split_miss)
 
-
 # Random forest model
 rf_miss <- randomForest(Ozone_reading ~ ., data = train_miss)
 rf_miss_pred <- predict(rf_miss, newdata = test_miss)
@@ -791,20 +912,17 @@ knn_miss <- train(Ozone_reading ~ ., data = train_miss, method = "knn")
 knn_miss_pred <- predict(knn_miss, newdata = test_miss)
 # Plot variable importance
 
-
 # Decision tree model
 tree_miss <- rpart(Ozone_reading ~ ., data = train_miss)
 tree_miss_pred <- predict(tree_miss, newdata = test_miss)
 # Plot variable importance
 
-
 # SVM model
 svm_miss <- svm(Ozone_reading ~ ., data = train_miss)
 svm_miss_pred <- predict(svm_miss, newdata = test_miss)
 # Plot variable importance
-
-
-
+```
+```{r}
 # Calculate RMSE for each model
 rf_miss_rmse <- rmse(rf_miss_pred, test_miss$Ozone_reading)
 knn_miss_rmse <- rmse(knn_miss_pred, test_miss$Ozone_reading)
@@ -837,7 +955,6 @@ data_split_mice <- initial_split(ozone2_mice, prop = 0.75)
 train_mice <- training(data_split_mice)
 test_mice <- testing(data_split_mice)
 
-
 # Random forest model
 rf_mice <- randomForest(Ozone_reading ~ ., data = train_mice)
 rf_mice_pred <- predict(rf_mice, newdata = test_mice)
@@ -849,20 +966,17 @@ knn_mice <- train(Ozone_reading ~ ., data = train_mice, method = "knn")
 knn_mice_pred <- predict(knn_mice, newdata = test_mice)
 # Plot variable importance
 
-
 # Decision tree model
 tree_mice <- rpart(Ozone_reading ~ ., data = train_mice)
 tree_mice_pred <- predict(tree_mice, newdata = test_mice)
 # Plot variable importance
 
-
 # SVM model
 svm_mice <- svm(Ozone_reading ~ ., data = train_mice)
 svm_mice_pred <- predict(svm_mice, newdata = test_mice)
 # Plot variable importance
-
-
-
+```
+```{r}
 # Calculate RMSE for each model
 rf_mice_rmse <- rmse(rf_mice_pred, test_mice$Ozone_reading)
 knn_mice_rmse <- rmse(knn_mice_pred, test_mice$Ozone_reading)
@@ -890,15 +1004,18 @@ cat("SVM R-squared:", svm_mice_r2["Rsquared"], "\n")
 # Create data frame with RSME scores
 ```{r}
 models <- c('RandomForest', 'KNN', 'DecisionTree', 'SVM')
-scores <- c(rf_mean_rmse,knn_mean_rmse,tree_mean_rmse,svm_mean_rmse, 
+scores <- c(rf_dropCol_rmse,knn_mean_rmse,tree_dropCol_rmse,svm_dropCol_rmse, 
+            rf_dropNA_rmse,knn_dropNA_rmse,tree_dropNA_rmse,svm_dropNA_rmse,
+            rf_mean_rmse,knn_mean_rmse,tree_mean_rmse,svm_mean_rmse, 
             rf_med_rmse,knn_med_rmse,tree_med_rmse,svm_med_rmse,
             rf_mode_rmse,knn_mode_rmse,tree_mode_rmse,svm_mode_rmse,
             rf_miss_rmse,knn_miss_rmse,tree_miss_rmse,svm_miss_rmse,
             rf_mice_rmse,knn_mice_rmse,tree_mice_rmse,svm_mice_rmse)
-ImpMethod <- c('Mean', 'Median', 'Mode','missForest','MICE')
+ImpMethod <- c('DropCol','DropNA','Mean', 'Median', 'Mode','missForest','MICE')
 
 # Create dataframe
 rmse_df <- data.frame(Model = models, ImpMethod=ImpMethod,RMSE = scores)
+print(rmse_df)
 
 ```
 
