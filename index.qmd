@@ -17,7 +17,7 @@ editor:
     wrap: 72
 ---
 
-## Introduction
+# Introduction
 
 Missing data is a key challenge that data professionals encounter in their daily work. In the real world, data is often messy, incomplete, and requires a level of pre-processing before data analysis can occur. Part of data pre-processing is dealing with missing data. Missing data can occur for several reasons including but not limited to processing error, machine or measurement errors, non-responses in surveys, invalid calculations (e.g. division by zero), and study participant dropout [@Emmanuel2021surveyml]. Missing data can be problematic for analysis because it can reduce the number of usable observations, introduce bias, and interfere with different analysis tools such as machine learning algorithms, which cannot automatically handle missing data.
 
@@ -25,47 +25,63 @@ One of the first steps in handling missing data is to determine how much of the 
 
 If a dataset contains missing data, there are two basic approaches: deletion or imputation [@schefer2002dealingwithmissingdata]. Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias or understimation of variance if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood. 
 
+
+###Missing Data Mechanisms
+
 The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling], [@bennett2001can], [@little2014joys], [@du2020missing]:
 
-**Missing completely at random (MCAR)**
+**Missing Completely at Random (MCAR):**
+
 When data are MCAR, the probability of a record missing is independent from observed and unobserved data. For example, if performing a survey with age as a variable, missing values for age are random with respect to age and do not depend on other variables such as weight or gender. In the case of MCAR data, the deletion of data reduces the number of observations in the dataset but does not introduce bias. MCAR is the most ideal, but least realistic scenario.
 
-**Missing at Random (MAR)**
+**Missing at Random (MAR):**
+
 When data are MAR, the probability of a record missing depends on the observed data, but not the unobserved data. Using the same example of a survey with age as a variable, people who are overweight may be more likely to omit their age in the survey. However, the probability of a missing data point can be attributed to another observed variable. In the case of MAR, deletion of entire observations with missing data may or may not introduce bias.
 
-**Not missing at random (NMAR)**
-When data are NMAR, the probability of a record missing is dependent on the unobserved data. In the same example of a survey including age as a variable, elderly people may be less likely to include their age in the survey. The missing value for age cannot be predicted using other variables included in the dataset such as weight or gender. There may be a factor that can predict the probability of a missing value, but it is unknown. NMAR data are the most complicated to analyze. Similarly to MAR, deletion of observations with missing data may or may not introduce bias to the analysis.
+**Missing Not at Random (MNAR):**
 
-![MCAR, MAR, and NMAR Example, [@du2020missing]](Missing Data Mechanisms Figure.png)
+When data are MNAR, the probability of a record missing is dependent on the unobserved data. In the same example of a survey including age as a variable, elderly people may be less likely to include their age in the survey. The missing value for age cannot be predicted using other variables included in the dataset such as weight or gender. There may be a factor that can predict the probability of a missing value, but it is unknown. MNAR data are the most complicated to analyze. Similarly to MAR, deletion of observations with missing data may or may not introduce bias to the analysis.
+
+![MCAR, MAR, and MNAR Example, [@du2020missing]](Missing Data Mechanisms Figure.png)
 
 Understanding the mechanism behind missing data (MCAR, MAR, or NMAR) is important because many imputation methods require the assumption of MCAR or MAR to be held true. There is not a statistical test or analysis to classify data as MCAR, MAR, or NMAR. Instead, visualization of the missing data is required to determine the relationships (or lack thereof) within the missing data. For example, correlation matrix plots, scatterplots, and other custom visualizations can be useful tools in identifying patterns in the missing data [@ghazali2020missing]. 
 
+
+###Methods for Handling Missing Data
+
 Methods for handling missing data can be split into three broad categories [@ren2023review], [@Emmanuel2021surveyml]:
 
-* **Deletion methods**
-* One of the approaches to handling missing data is to delete instances of missing values. This can be accomplished through either listwise deletion or pairwise deletion, for example. In listwise deletion, all rows with missing values are deleted from the dataset. This results in a dataset with a lower number of observations. In pairwise deletion, columns with missing data are deleted from the dataset. In this way, the number of observations in the dataset is maintained, but the total number of features is reduced. Deletion methods are advantageous in that they are quick and simple. With a large dataset and relatively low amounts of missing data, reducing the number of observations or features may be okay. However, deletion can introduce bias into the analysis if the data are not missing completely at random, which is often the case [@ren2023review], [@Emmanuel2021surveyml].
 
-* **Single imputation**
-* In single imputation, missing data values are replaced with a single value, without consideration of the uncertainty around the prediction for the missing value. In other words, a single value is predicted for each missing data point. This can be accomplished using techniques such as mean imputation, median imputation, hot and cold deck imputation and regression-based techniques. There is not a model defined for predicting the values in the column as a whole, so there is information lost around the variance of the prediction. Single imputation methods are simpler than multiple imputation methods, but they tend to underestimate the variance resulting models may have artifically low confidence intervals [@ren2023review], [@Emmanuel2021surveyml].
+**Deletion methods:**
+
+One of the approaches to handling missing data is to delete instances of missing values. This can be accomplished through either listwise deletion or pairwise deletion, for example. In listwise deletion, all rows with missing values are deleted from the dataset. This results in a dataset with a lower number of observations. In pairwise deletion, columns with missing data are deleted from the dataset. In this way, the number of observations in the dataset is maintained, but the total number of features is reduced. Deletion methods are advantageous in that they are quick and simple. With a large dataset and relatively low amounts of missing data, reducing the number of observations or features may be okay. However, deletion can introduce bias into the analysis if the data are not missing completely at random, which is often the case [@ren2023review], [@Emmanuel2021surveyml].
 
 
-* **Multiple imputation**
-* In multiple imputation methods such as MICE, a model is constructed to predict missing values in each column based on observed data in other columns. This model provides a point estimate for the missing values, as well as the uncertainty around the predictions. Multiple iterations are performed to predict the missing values. In each iteration, a missing value is predicted based on the model and its uncertainty. That is, with multiple iterations, you will end up with a distribution of possible missing values. In this way, multiple datasets with multiple possible values for the missing data are generated. Once the iterations are complete, the missing data predictions can consolidated back into a single dataset, where the missing values will be a result of the point estimate and the variance or uncertainty from the model. Multiple imputation can be a powerful technique that is helpful in preserving some of the variance or uncertainty around missing values, but it can be complex and computationally expensive. [@ren2023review], [@Emmanuel2021surveyml]. 
+**Single imputation:**
+
+In single imputation, missing data values are replaced with a single value, without consideration of the uncertainty around the prediction for the missing value. In other words, a single value is predicted for each missing data point. This can be accomplished using techniques such as mean imputation, median imputation, hot and cold deck imputation and regression-based techniques. There is not a model defined for predicting the values in the column as a whole, so there is information lost around the variance of the prediction. Single imputation methods are simpler than multiple imputation methods, but they tend to underestimate the variance resulting models may have artifically low confidence intervals [@ren2023review], [@Emmanuel2021surveyml].
+
+
+**Multiple imputation:**
+
+In multiple imputation methods such as MICE, a model is constructed to predict missing values in each column based on observed data in other columns. This model provides a point estimate for the missing values, as well as the uncertainty around the predictions. Multiple iterations are performed to predict the missing values. In each iteration, a missing value is predicted based on the model and its uncertainty. That is, with multiple iterations, you will end up with a distribution of possible missing values. In this way, multiple datasets with multiple possible values for the missing data are generated. Once the iterations are complete, the missing data predictions can consolidated back into a single dataset, where the missing values will be a result of the point estimate and the variance or uncertainty from the model. Multiple imputation can be a powerful technique that is helpful in preserving some of the variance or uncertainty around missing values, but it can be complex and computationally expensive. [@ren2023review], [@Emmanuel2021surveyml]. 
 
 
 Imputation methods can be further broken down into statistical versus machine learning methods. According to [@lin2020missing]'s review of literature from 2006-2017, four of the most common statistical methods for missing value imputation include expectation management (EM), linear regression, least squares (LS), and mean/mode imputation. For machine learning, the four most common methods include clustering, decision trees, random forest, and KNN.
 
 
-**Theories**
+###Theories for Missing Data
+
+
 
 **Rubin's Missing Data Theory:** 
-This foundational theory categorizes missing data into MCAR, MAR, and NMAR. It provides a framework for understanding the mechanisms behind missing data and guides the selection of appropriate imputation strategies based on these mechanisms. (**CITATION NEEDED**) 
+This foundational theory categorizes missing data into MCAR, MAR, and NMAR. It provides a framework for understanding the mechanisms behind missing data and guides the selection of appropriate imputation strategies based on these mechanisms[@rubin2004multiple].  
 
 **Statistical Theory of Imputation:**
-This theory involves using statistical models to estimate missing values, leveraging the relationship between observed and missing data points. Multiple imputation, a prominent technique within this theory, generates multiple plausible values for each missing data point to account for uncertainty. (**CITATION NEEDED**) 
+This theory involves using statistical models to estimate missing values, leveraging the relationship between observed and missing data points. Multiple imputation, a prominent technique within this theory, generates multiple plausible values for each missing data point to account for uncertainty [@schafer1997analysis]. 
 
 **Machine Learning Theories:**
-Machine learning techniques are increasingly employed for imputing missing data due to their ability to learn patterns from data and make predictions. Methods such as k-nearest neighbors (KNN) and neural networks are applied to predict missing values based on observed data patterns. (**CITATION NEEDED**) 
+Machine learning techniques are increasingly employed for imputing missing data due to their ability to learn patterns from data and make predictions. Methods such as k-nearest neighbors (KNN) and neural networks are applied to predict missing values based on observed data patterns [@batista2003analysis].
 
 These theories provide a comprehensive framework for understanding and implementing imputation methods across various datasets and analytical contexts.
 
@@ -107,15 +123,10 @@ Articles were selected based on their relevance to the subject, in addition to i
 
 An overview of the methodology used to demonstrate different techniques for imputing missing data is shown below:
 
-![Overivew of Methodology for Demonstrating Different Techniques for Missing Data Imputation](MIssing Data Workflow Graphic.png)
+![Overivew of Methodology for Demonstrating Different Techniques for Missing Data Imputation. Figured generated by Robert Stairs, 14JUL2024.](MIssing Data Workflow Graphic.png)
 
-!(MIssing Data Workflow Graphic.png)
 
-To demonstrate the use of different imputation techniques for handling missing data, a dataset was selected with a high frequency of missing data. The "Ozone" dataset from the mlbench package, which contains ~38% missing values for one of the variables was selected for this case study. The data were first pre-processed. This step typically entails importing the data, checking for missing values, checking data types, and making transformations as needed. In this case, all columns were converted to numeric data type and renamed for easier interpretation. Missing values by column were reported in summary statistics, but were not addressed until further visualization was performed.
-
-Following pre-processing, correlation coefficients were calculated for all variables with respect to Ozone levels (the response variable). Variables with strong positive or negative correlation were then visualized using histograms to show the distribution of each variable with respect to percentage of Ozone level readings. Missing data were then visualized to determine if there were any significant patterns to the missingness of the data. The purpose of this step is to provide evidence to support that the data are either MCAR, MAR, or MNAR.
-
-Once the missing mechanism was established, the missing data were imputed using one of the following methods:
+The following methods were used to impute missing data for this project: 
 
 *  **Mean imputation**
 * In mean imputation, missing values for a given column are all replaced with a single value: the mean of the non-missing values.
@@ -147,7 +158,7 @@ The effectiveness of each imputation technique was evaluated using RMSE and R-Sq
 
 **Description of the Dataset**
 
-The “Ozone: Los Angeles Ozone Pollution Data, 1976” dataset has been chosen for this project. It contains observations related to pollution levels in the Los Angeles area during 1976. The variables contained in the dataset are thought to influence ozone concentration. These include daily ozone measurements consisting of: 
+The Ozone dataset (“Ozone: Los Angeles Ozone Pollution Data, 1976”) from the mlbench package in R was chosen for this project. It contains observations related to pollution levels in the Los Angeles area during 1976. The variables contained in the dataset are thought to influence ozone concentration. These include daily ozone measurements consisting of: 
 
 * V1: Month, 1-12, where 1 is January and 12 is December
 * V2: Day of month
@@ -163,7 +174,16 @@ The “Ozone: Los Angeles Ozone Pollution Data, 1976” dataset has been chosen 
 * V12: Inversion base temperature (degrees F) at LAX
 * V13: Visibility (miles) measured at LAX
 
-The dataset allows for analysis of how different meteorological conditions/factors can affect ozone levels. It contains a total of 13 variables, 366 observations (one for each day for one year), and 139 missing or NA values for V9, which we will attempt to impute with the method chosen.
+The dataset allows for analysis of how different meteorological conditions/factors can affect ozone levels. This dataset was chosen because it already has a high frequency of missing data, which is representative of a real-world application for missing data. It contains a total of 13 variables, 366 observations (one for each day for one year), and 139 missing or NA values for V9, which represents 38% of the total observations in the dataset. In practical applications, the missing values are unknown (not simulated), so it is up to the investigator to choose a methodology for handling the missing data. The investigator will also need to choose appropriate metrics for evaluating the effectiveness of different methods for handling missing data. 
+
+
+**Description of the Imputation Workflow**
+
+The data were first pre-processed. This step typically entails importing the data, checking for missing values, checking data types, and making transformations as needed. In this case, all columns were converted to numeric data type and renamed for easier interpretation. Missing values by column were reported in summary statistics, but were not addressed until further visualization was performed.
+
+Following pre-processing, correlation coefficients were calculated for all variables with respect to Ozone levels (the response variable). Variables with strong positive or negative correlation were then visualized using histograms to show the distribution of each variable with respect to percentage of Ozone level readings. Missing data were then visualized to determine if there were any significant patterns to the missingness of the data. The purpose of this step is to provide evidence to support that the data are either MCAR, MAR, or MNAR.
+
+Missing data were then imputed with various methodologies, including mean imputation, mode imputation, median imputation, MICE, and random forest. This resulted in 5 unique datasets, where missing data were imputed using different metholodologies. To compare the effectiveness of each imputation method, each of the imputed datasets were split into test and training datasets. The training set was used to develop machine learning models to predict Ozone levels, including decision trees, random forest, KNN, and SVM. The resulting RMSE and R-Squared from each machine learning model and imputation method were used to identify the most effective imputation method and model combination for this dataset.
 
 **Load Packages**
 
@@ -232,7 +252,7 @@ summary(ozone1)
 
 **Data Pre-Processing**
 
-First, the data type was evaluated for each column. V1, V2, and V3 (Month, day of month, and day of week) were found to be "factor" data type, while the remaining columns were found to be be "numeric". V1, V2, and V3 columns were converted to numeric data type.
+The data type was evaluated for each column. V1, V2, and V3 (Month, day of month, and day of week) were found to be "factor" data type, while the remaining columns were found to be be "numeric". V1, V2, and V3 columns were converted to numeric data type.
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
