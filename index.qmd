@@ -26,7 +26,7 @@ One of the first steps in handling missing data is to determine how much of the 
 If a dataset contains missing data, there are two basic approaches: deletion or imputation [@schefer2002dealingwithmissingdata]. Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias or understimation of variance if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood. 
 
 
-###Missing Data Mechanisms
+### Missing Data Mechanisms
 
 The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling], [@bennett2001can], [@little2014joys], [@du2020missing]:
 
@@ -47,7 +47,7 @@ When data are MNAR, the probability of a record missing is dependent on the unob
 Understanding the mechanism behind missing data (MCAR, MAR, or NMAR) is important because many imputation methods require the assumption of MCAR or MAR to be held true. There is not a statistical test or analysis to classify data as MCAR, MAR, or NMAR. Instead, visualization of the missing data is required to determine the relationships (or lack thereof) within the missing data. For example, correlation matrix plots, scatterplots, and other custom visualizations can be useful tools in identifying patterns in the missing data [@ghazali2020missing]. 
 
 
-###Methods for Handling Missing Data
+### Methods for Handling Missing Data
 
 Methods for handling missing data can be split into three broad categories [@ren2023review], [@Emmanuel2021surveyml]:
 
@@ -70,93 +70,114 @@ In multiple imputation methods such as MICE, a model is constructed to predict m
 Imputation methods can be further broken down into statistical versus machine learning methods. According to [@lin2020missing]'s review of literature from 2006-2017, four of the most common statistical methods for missing value imputation include expectation management (EM), linear regression, least squares (LS), and mean/mode imputation. For machine learning, the four most common methods include clustering, decision trees, random forest, and KNN.
 
 
-###Theories for Missing Data
+### Theories for Missing Data
 
 
 
 **Rubin's Missing Data Theory:** 
+
 This foundational theory categorizes missing data into MCAR, MAR, and NMAR. It provides a framework for understanding the mechanisms behind missing data and guides the selection of appropriate imputation strategies based on these mechanisms[@rubin2004multiple].  
 
+
 **Statistical Theory of Imputation:**
+
 This theory involves using statistical models to estimate missing values, leveraging the relationship between observed and missing data points. Multiple imputation, a prominent technique within this theory, generates multiple plausible values for each missing data point to account for uncertainty [@schafer1997analysis]. 
 
+
 **Machine Learning Theories:**
+
 Machine learning techniques are increasingly employed for imputing missing data due to their ability to learn patterns from data and make predictions. Methods such as k-nearest neighbors (KNN) and neural networks are applied to predict missing values based on observed data patterns [@batista2003analysis].
 
 These theories provide a comprehensive framework for understanding and implementing imputation methods across various datasets and analytical contexts.
 
-**Research Methods for Missing Data:**
+### Research Methods for Missing Data:
 
-**Descriptive Studies:** These studies analyze the patterns of missing data and evaluate the effectiveness of various imputation methods. Examples include the work by Jerez et al. and Güzel [@jerez2010statisticalandmlmethods], [@guzel2013knn].
+**Descriptive Studies:** 
 
-**Comparative Studies:** These studies compare the performance of different imputation methods. Joseph G. Ibrahim and Siming Zheng have conducted such comparative analyses, highlighting the strengths and weaknesses of various approaches [@ibrahim2011glm], [@zhang2024matrixcompletionmethod], [@zheng2023likelihood].
+These studies analyze the patterns of missing data and evaluate the effectiveness of various imputation methods. Examples include the work by Jerez et al. and Güzel [@jerez2010statisticalandmlmethods], [@guzel2013knn].
 
-**Simulation Studies:** These studies test imputation methods on controlled datasets, allowing researchers to systematically observe the impact of different techniques. This helps in understanding the conditions under which each method performs best.
 
-**Application-Based Studies:** These studies apply imputation methods to real-world data, demonstrating their practical use and the challenges involved. Examples include the works by Saqib Ejaz Awan and Emmanuel, which show how imputation methods are implemented in practical scenarios [@awan2022reinforcementlearning], [@Emmanuel2021surveyml].
+**Comparative Studies:** 
 
-**Theoretical Analysis:** This involves discussing the conditions, limitations, and best practices of imputation methods. Rachael A Hughes' work is an example, providing insights into when multiple imputation is not suitable and suggesting alternative approaches.
+These studies compare the performance of different imputation methods. Joseph G. Ibrahim and Siming Zheng have conducted such comparative analyses, highlighting the strengths and weaknesses of various approaches [@ibrahim2011glm], [@zhang2024matrixcompletionmethod], [@zheng2023likelihood].
+
+
+**Simulation Studies:** 
+
+These studies test imputation methods on controlled datasets, allowing researchers to systematically observe the impact of different techniques. This helps in understanding the conditions under which each method performs best.
+
+
+**Application-Based Studies:** 
+
+These studies apply imputation methods to real-world data, demonstrating their practical use and the challenges involved. Examples include the works by Saqib Ejaz Awan and Emmanuel, which show how imputation methods are implemented in practical scenarios [@awan2022reinforcementlearning], [@Emmanuel2021surveyml].
+
+
+**Theoretical Analysis:** 
+
+This involves discussing the conditions, limitations, and best practices of imputation methods. Rachael A Hughes' work is an example, providing insights into when multiple imputation is not suitable and suggesting alternative approaches.
+
+### Project Purpose 
 
 The purpose of this project is to demonstrate the use of several different types of missing data imputation methods using a test dataset with missing data. The performance of various imputation methods will be assessed using RMSE and R-Squared of the resulting predictive models after applying various imputation methods.
 
 
-### Related work
-
-
-
-## Methods
-
-**Literature Research**
-
-The approach used to select and analyze the literature included in this review involved identifying articles relevant to the topic of missing data and the imputation thereof.  Articles were selected based on their topic relevance as it related to statistical and machine learning concepts.  Preference was given to articles that were published recently to ensure the inclusion of the latest methods and research in the field.  In addition, articles were prioritized from peer-reviewed and reputable conference papers to ensure quality and reliability of the research.  A comprehensive search using Google Scholar and the available databases accessed through the University of West Florida was implemented.  Key search terms included: ‘missing data’, ‘missing data imputation’.
-
-Articles were selected based on their relevance to the subject, in addition to including papers with a variety of methods implemented. Research addressing both statistical and machine learning approaches were focused on.  Articles not available in full text, not directly related to missing data imputation methods, or where the primary focus was theoretical as opposed to practical were excluded. Once an article was selected, it was reviewed for relevant data pertaining to missing data imputation methods. The context of the study, the datasets involved, and the results provided were also reviewed. The article analysis focused on:
-
-
-* **Goal** – understanding the specific goal of the study and how it relates to missing data imputation.
-* **Methods/Techniques** – Identifying the specific methods used, whether statistical or machine learning, or a combination of both.
-* **Results/Applications** – evaluating the effectiveness/efficiency of the methods employed. Showing how these methods were/can be applied in a real-world scenario.
-* **Limitations/Challenges** – noting the limitations or challenges involved in each method used.
-* **Data** – identifying the types of data used for testing (e.g. simulated, real-world) and the type of missing data (e.g. missing at random, missing completely at random, not missing at random) 
-
-**Data Analysis Methodology**
+# Methods
 
 An overview of the methodology used to demonstrate different techniques for imputing missing data is shown below:
 
 ![Overivew of Methodology for Demonstrating Different Techniques for Missing Data Imputation. Figured generated by Robert Stairs, 14JUL2024.](MIssing Data Workflow Graphic.png)
 
+### Imputation Methods
+
 
 The following methods were used to impute missing data for this project: 
 
-*  **Mean imputation**
-* In mean imputation, missing values for a given column are all replaced with a single value: the mean of the non-missing values.
+**Mean imputation:**
 
-* **Mode imputation**
-* In mode imputation, missing values for a given column are all replaced with a single value: the mode of the non-missing values.
+In mean imputation, missing values for a given column are all replaced with a single value: the mean of the non-missing values.
 
-* **Median imputation**
-* In median imputation, missing values for a given column are all replaced with a single value: the median of the non-missing values.
 
-* **MICE (multiple imputation by chained equations)**
-* In MICE, missing data for a given column are imputed based on other columns with observed data over multiple iterations [@azur2011multiple]. It operates under the assumption that the data are missing at random (MAR). For a missing column, the missing values are imputed using regression based on observed data from other columns in the dataset. Then, the next column's missing data are imputed using observed data in other columns and so forth until regression models are available for each column. Each regression model will have its own level of uncertainty. With each iteration, a possible missing value is imputed for a given data point given the regression function and its associated uncertainty. This process is repeated over multiple iterations, where the number of iterations is set by the user. This results in multiple datasets, which are then combined into a single dataset again. In this case, 50 iterations were used.
+**Mode imputation:**
 
-* **Random Forest**
-* Random forest is an ensemble machine learning method, where the data set is bootstrap sampled randomly and individual decision trees are constructed for each bootstrap [@tang2017random]. The collection of decision trees is then used to impute a missing data point. This technique in machine learning helps prevent overfitting that decision trees are prone to.
+In mode imputation, missing values for a given column are all replaced with a single value: the mode of the non-missing values.
+
+
+**Median imputation:**
+
+In median imputation, missing values for a given column are all replaced with a single value: the median of the non-missing values.
+
+
+**MICE (multiple imputation by chained equations):**
+
+In MICE, missing data for a given column are imputed based on other columns with observed data over multiple iterations [@azur2011multiple]. It operates under the assumption that the data are missing at random (MAR). For a missing column, the missing values are imputed using regression based on observed data from other columns in the dataset. Then, the next column's missing data are imputed using observed data in other columns and so forth until regression models are available for each column. Each regression model will have its own level of uncertainty. With each iteration, a possible missing value is imputed for a given data point given the regression function and its associated uncertainty. This process is repeated over multiple iterations, where the number of iterations is set by the user. This results in multiple datasets, which are then combined into a single dataset again. In this case, 50 iterations were used.
+
+
+**Random Forest:**
+
+Random forest is an ensemble machine learning method, where the data set is bootstrap sampled randomly and individual decision trees are constructed for each bootstrap [@tang2017random]. The collection of decision trees is then used to impute a missing data point. This technique in machine learning helps prevent overfitting that decision trees are prone to.
+
+
+### Machine Learning Methods for Model-Fitting
+
 
 Once missing values were imputed using each of the five methods outlined above, each resulting dataset (5) was used to fit models for Ozone levels. The datasets were split into training and test sets using a split ratio of 0.75. The following models were then used for training each dataset:
 
-* Decision Tree
-* Random Forest
-* KNN
-* SVM
+**Decision Tree:**
+
+**Random Forest:**
+
+**KNN:**
+
+**SVM:**
 
 The effectiveness of each imputation technique was evaluated using RMSE and R-Squared for the resulting Ozone level models. The RMSE and R-Squared for each imputation/model combination were reported and summarized in a data frame. The combination with the lowest RMSE was determined to be the most effective imputation technique and model fit for this dataset.
 
 
 
-## Analysis and Results
+### Analysis and Results
 
-**Description of the Dataset**
+
+# Description of the Dataset
 
 The Ozone dataset (“Ozone: Los Angeles Ozone Pollution Data, 1976”) from the mlbench package in R was chosen for this project. It contains observations related to pollution levels in the Los Angeles area during 1976. The variables contained in the dataset are thought to influence ozone concentration. These include daily ozone measurements consisting of: 
 
@@ -177,7 +198,7 @@ The Ozone dataset (“Ozone: Los Angeles Ozone Pollution Data, 1976”) from the
 The dataset allows for analysis of how different meteorological conditions/factors can affect ozone levels. This dataset was chosen because it already has a high frequency of missing data, which is representative of a real-world application for missing data. It contains a total of 13 variables, 366 observations (one for each day for one year), and 139 missing or NA values for V9, which represents 38% of the total observations in the dataset. In practical applications, the missing values are unknown (not simulated), so it is up to the investigator to choose a methodology for handling the missing data. The investigator will also need to choose appropriate metrics for evaluating the effectiveness of different methods for handling missing data. 
 
 
-**Description of the Imputation Workflow**
+# Description of the Imputation Workflow
 
 The data were first pre-processed. This step typically entails importing the data, checking for missing values, checking data types, and making transformations as needed. In this case, all columns were converted to numeric data type and renamed for easier interpretation. Missing values by column were reported in summary statistics, but were not addressed until further visualization was performed.
 
@@ -185,7 +206,7 @@ Following pre-processing, correlation coefficients were calculated for all varia
 
 Missing data were then imputed with various methodologies, including mean imputation, mode imputation, median imputation, MICE, and random forest. This resulted in 5 unique datasets, where missing data were imputed using different metholodologies. To compare the effectiveness of each imputation method, each of the imputed datasets were split into test and training datasets. The training set was used to develop machine learning models to predict Ozone levels, including decision trees, random forest, KNN, and SVM. The resulting RMSE and R-Squared from each machine learning model and imputation method were used to identify the most effective imputation method and model combination for this dataset.
 
-**Load Packages**
+### Load Packages
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # loading packages 
@@ -214,7 +235,7 @@ library(ggfittext)
 ```
 
 
-**Importing and Summarizing the Data**
+### Importing and Summarizing the Data
 
 First, the data were imported and converted to a data frame. Next, columns were reordered such that V4 (response variable) is the first column. Lastly, the data were summarized using the summary() function. The summary function gives the number of NA's per column. There are 139 missing values for V9 in the dataset. The number of missing values (NA's) in each column are as follows:
 
@@ -250,7 +271,7 @@ summary(ozone1)
 
 ```
 
-**Data Pre-Processing**
+### Data Pre-Processing
 
 The data type was evaluated for each column. V1, V2, and V3 (Month, day of month, and day of week) were found to be "factor" data type, while the remaining columns were found to be be "numeric". V1, V2, and V3 columns were converted to numeric data type.
 
@@ -286,7 +307,7 @@ print(data_types2)
 
 ```
 
-**Create a new column "Date" that combines date columns (month, day of month, day of week) into a single column**.
+Created a new column "Date" that combines date columns (month, day of month, day of week) into a single column.
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
@@ -299,7 +320,7 @@ head(ozone_date, n=10)
 
 ```
 
-**Columns were renamed for clearer interpretation during analysis**
+Columns were renamed for clearer interpretation during analysis:
 
 * **Ozone_reading:** Daily maximum one-hour-average ozone reading
 * **Month:** 1 = January, ..., 12 = December
@@ -351,7 +372,9 @@ head(ozone_date2, n=10)
 
 ```
 
-**Data Exploration: Summary Statistics by Day of Week**
+### Data Exploration 
+
+**Summary Statistics by Day of Week**
 
 No notable trend in ozone levels by day of the week, except that mean and median ozone levels appear to be lower on day 4 of the week (Thursdays).
 
@@ -371,7 +394,7 @@ print(ozone_summary_by_day)
 
 ```
 
-**Data Exploration: Summary Statistics by Month**
+**Summary Statistics by Month**
 
 Mean and median ozone levels are lowest in the months of January, February, and March on average. They increase during the summer months, peaking in July, and gradually decline through the remainder of the year. 
 
@@ -579,7 +602,7 @@ ggplot(percentage_data7, aes(x = visibility_bin, y = percentage)) +
 
 ```
 
-**Exploration of the Missing Data**
+### Exploration of the Missing Data
 
 The total number of missing data points for each column is shown below as a count and as a percentage. Most of the columns contain <5% missing values. **Temp_EM contains 139 missing values, which is 38.0% of the observations.** The total number of missing values in the dataset is 203 out of 4,768 (13 columns times 366 obervations). This represents 4.3% of the entire dataset. 
 
@@ -600,7 +623,7 @@ print(missing_summary)
 print(sum(is.na(ozone2)))
 ```
 
-**Visualization of the Missing Data**
+### Visualization of the Missing Data
 
 Three different plots were generating to visualize the missing data. The first uses the vis_miss() function and the resulting plot shows the missing values shaded in black for each column and each row. Since the rows are arranged by date, we can see that the most of the data are missing in random clusters with respect to date. Temp_EM, which has the highest proportion of missing data (38%), appears to be missing in pretty regular intervals. This was further explored in the next section.
 
@@ -704,7 +727,7 @@ grid4 <- grid.arrange(p12, p13, nrow = 1)
 
 ```
 
-**Missing Data Imputation Using Simple Methods**
+### Missing Data Imputation Using Simple Methods
 
 Missing data were imputed using either the mean, median or mode as a demonstration of simple imputation techniques. With mean, median, or mode imputation, all NA values are replaced by a single value for each column: the mean, median, or mode of that column. Three data frames were created: one where mean imputation was used, a second where median imputation was used, and the last where mode imputation was used.
 
@@ -752,7 +775,7 @@ print(sum(is.na(imputed_data_mode)))
 
 ```
 
-**Missing Data Imputation Using MICE (Multiple Imputation Method) and Random Forest (Machine Learning Method)**
+### Missing Data Imputation Using MICE (Multiple Imputation Method) and Random Forest (Machine Learning Method)
 
 Next, the missing data were imputed using MICE and Miss_Forest methods. 
 
@@ -790,6 +813,8 @@ ozone2_mice <- as.data.frame(ozone2_mice)
 print(sum(is.na(ozone2_mice)))
 
 ```
+
+### Model-Fitting of Imputed Datasets
 
 ***Make Predictions Using Data Where Missing Values Were Imputed Using the Mean**
 
@@ -1182,7 +1207,7 @@ cat("SVM R-squared:", svm_mice_r2["Rsquared"], "\n")
 
 ```
 
-**Summarize Model Performance for Each Imputation Methodology**
+### Summarize Model Performance for Each Imputation Methodology
 
 The RMSE for each model and imputation method combination was summarized into a data frame. The results are shown below. The best model fit (lowest RMSE) was obtained when using MICE for imputation of missing data and the SVM algorithm for model training with the imputed dataset. Mean imputation with SVM model fitting was the second best combination, followed by median imputation with Random Forest.
 
@@ -1204,6 +1229,6 @@ rmse_df[order(rmse_df$RMSE),]
 ```
 
 
-### Conclusion
+# Conclusions
 
-## References
+# References
