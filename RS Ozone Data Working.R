@@ -1,10 +1,11 @@
 ---
 title: "STA6257_Project: Missing Data Imputation Methods"
 output: html_document
-Authors: "Karthik Aerra, 
-          Elizabeth (Liz) Miller, 
-          Mohit Kumar Veeraboina, 
-          Robert Stairs"
+Authors: "Robert Stairs,
+          Elizabeth (Liz) Miller,
+          Karthik Aerra, 
+          Mohit Kumar Veeraboina
+          "
 date: "2024-06-20"
 self-contained: true
 execute:
@@ -177,7 +178,7 @@ print(ozone_summary_by_month)
 ```{r}
 # Histogram of ozone levels
 ggplot(ozone2, aes(x = Ozone_reading)) +
-  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black", alpha = 0.7) +
   labs(title = "Histogram of Ozone Levels in Los Angeles, 1976", x = "Ozone Level", y = "Frequency")
 
 # Boxplot of ozone levels by month
@@ -208,7 +209,7 @@ corr_df <- data.frame(Variable = names(corr_coeffs), Correlation = corr_coeffs)
 
 # Create the bar graph
 ggplot(corr_df, aes(x = reorder(Variable, Correlation), y = Correlation)) +
-  geom_bar(stat = 'identity',fill = "blue") +
+  geom_bar(stat = 'identity',fill = "skyblue") +
   xlab('Variable') +
   ylab('Correlation Coefficient') +
   ggtitle('Correlation Between Variables and Daily Average Ozone Reading') +
@@ -384,19 +385,26 @@ print(sum(is.na(ozone2)))
 ```
 * There is a total of 203 missing values, which constitutes approximately 5.5% of all observations.
 
+**Look at Data Randomness
 ```{r}
-#Shows what percentage of the data are missing from each column
-vis_miss(ozone2)
-
+# Plot missing data pattern
 
 #This plot gives a visual of what combinations of NAs are present and how many there are for each
-#set nsets to 8 since we have 8 columns with missing data
+#set nsets = 8 since we have 8 columns with missing data
 gg_miss_upset(ozone2, nsets=8)
 
-
 #Another way to visualize number of missing rows per column
-gg_miss_var(ozone2) + ylim(0, 150)
+gg_miss_var(ozone2) + labs(y = "Number of missing values") + ylim(0, 150)
+
+# Perform Little's MCAR test
+mcar_result <- mcar_test(ozone2)
+print(mcar_result)
 ```
+**Interpretation of Little's MCAR Test:**
+* Null Hypothesis (H0): The data is missing completely at random (MCAR).
+* Alternative Hypothesis (H1): The data is not missing completely at random.
+
+Reject the null hypothesis, data is not missing completely at random (MCAR).
 
 
 ```{r}
@@ -455,10 +463,12 @@ grid3 <- grid.arrange(p9, p10, p11, nrow = 2)
 grid4 <- grid.arrange(p12, p13, nrow = 1)
 ```
 
+
 # Missing Data Imputation
+
 Simple Imputation Methods
 * Drop all NA values
-* Drop column if NA's >= 20%
+* Drop column if NA's >= 20%, use mean for remaining NA's
 * Mean
 * Median
 * Mode
@@ -525,7 +535,7 @@ head(dropNA_data)
 Complex Imputation Methods
 * missForest
 * MICE
-```{r}
+```{r, include=FALSE}
 library(missForest)
 
 # verbose = If 'TRUE' the user is supplied with additional output between iterations
@@ -533,7 +543,6 @@ library(missForest)
 ozone2_mf <- missForest(ozone2, xtrue = ozone2, verbose = TRUE)
 # convert back to data frame
 ozone2_mf <- as.data.frame(ozone2_mf$ximp)
-print(sum(is.na(ozone2_mf)))
 
 ## The final results can be accessed directly. The estimated error:
 ozone2_mf$OOBerror
@@ -553,26 +562,30 @@ ozone2_mice <- mice(ozone2, method = "pmm", m = 5, maxit = 50)
 ozone2_mice <- complete(ozone2_mice)
 # Convert completed data to data frame
 ozone2_mice <- as.data.frame(ozone2_mice)
-
+```
+```{r}
+# Check for any missing values
+print(sum(is.na(ozone2_mf)))
 print(sum(is.na(ozone2_mice)))
 ```
 
 
 ## Develop Predictive Models
-
 ### Make Predictions using data where missing values were imputed with simple methods:
 
-```{r}
+```{r, include=FALSE}
 library(caret) # for fitting KNN models
-library(e1071) 
+library(e1071) # svr model
 library(rsample) # for creating validation splits
 library(recipes)    # for feature engineering
 library(randomForest)
 library(rpart)# decision tree
 library(tidymodels) 
-
+library(class) 
+library(vip)
 ```
-****Drop column if NA's >= 20%****
+
+**Drop column if NA's >= 20%**
 ```{r}
 # Split the data into training and testing sets
 set.seed(123)
@@ -613,21 +626,8 @@ rmse <- function(pred, actual) {
   sqrt(mean((pred - actual)^2))
 }
 
-# Define a function to calculate R-squared
-r_squared <- function(actual, pred) {
-  mean_actual <- mean(actual)
-  ss_tot <- sum((actual - mean_actual)^2)
-  ss_res <- sum((actual - pred)^2)
-  
-  # Check if ss_tot is 0, which would lead to division by zero
-  if (ss_tot == 0) {
-    r2 <- NaN  # Handle case where ss_tot is 0
-  } else {
-    r2 <- 1 - (ss_res / ss_tot)
-  }  
-  return(r2)
-}
 ```
+
 ```{r}
 # Calculate RMSE for each model
 rf_dropCol_rmse <- rmse(rf_dropCol_pred, test_dropCol$Ozone_reading)
@@ -638,6 +638,7 @@ tree_dropCol_rmse <- rmse(tree_dropCol_pred, test_dropCol$Ozone_reading)
 cat("Random Forest RMSE:", rf_dropCol_rmse, "\n")
 cat("KNN RMSE:", knn_dropCol_rmse, "\n")
 cat("Decision Tree RMSE:", tree_dropCol_rmse, "\n")
+
 ```
 
 **Drop All NA's**
@@ -675,7 +676,9 @@ tree_dropNA_pred <- predict(tree_dropNA, newdata = test_dropNA)
 var_importance <- varImp(tree_dropNA)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
+
 ```
+
 ```{r}
 # Calculate RMSE for each model
 rf_dropNA_rmse <- rmse(rf_dropNA_pred, test_dropNA$Ozone_reading)
@@ -686,7 +689,9 @@ tree_dropNA_rmse <- rmse(tree_dropNA_pred, test_dropNA$Ozone_reading)
 cat("Random Forest RMSE:", rf_dropNA_rmse, "\n")
 cat("KNN RMSE:", knn_dropNA_rmse, "\n")
 cat("Decision Tree RMSE:", tree_dropNA_rmse, "\n")
+
 ```
+
 
 **Mean**
 ```{r}
@@ -723,7 +728,9 @@ tree_mean_pred <- predict(tree_mean, newdata = test_mean)
 var_importance <- varImp(tree_mean)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
+
 ```
+
 ```{r}
 # Calculate RMSE for each model
 rf_mean_rmse <- rmse(rf_mean_pred, test_mean$Ozone_reading)
@@ -734,7 +741,9 @@ tree_mean_rmse <- rmse(tree_mean_pred, test_mean$Ozone_reading)
 cat("Random Forest RMSE:", rf_mean_rmse, "\n")
 cat("KNN RMSE:", knn_mean_rmse, "\n")
 cat("Decision Tree RMSE:", tree_mean_rmse, "\n")
+
 ```
+
 
 **Median**
 ```{r}
@@ -766,17 +775,21 @@ var_importance <- varImp(tree_med)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
 ```
+
 ```{r}
 # Calculate RMSE for each model
 rf_med_rmse <- rmse(rf_med_pred, test_med$Ozone_reading)
 knn_med_rmse <- rmse(knn_med_pred, test_med$Ozone_reading)
 tree_med_rmse <- rmse(tree_med_pred, test_med$Ozone_reading)
 
+
 # Print RMSE values
 cat("Random Forest RMSE:", rf_med_rmse, "\n")
 cat("KNN RMSE:", knn_med_rmse, "\n")
 cat("Decision Tree RMSE:", tree_med_rmse, "\n")
+
 ```
+
 
 **Mode**
 ```{r}
@@ -806,7 +819,9 @@ tree_mode_pred <- predict(tree_mode, newdata = test_mode)
 var_importance <- varImp(tree_mode)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
+
 ```
+
 ```{r}
 # Calculate RMSE for each model
 rf_mode_rmse <- rmse(rf_mode_pred, test_mode$Ozone_reading)
@@ -817,8 +832,8 @@ tree_mode_rmse <- rmse(tree_mode_pred, test_mode$Ozone_reading)
 cat("Random Forest RMSE:", rf_mode_rmse, "\n")
 cat("KNN RMSE:", knn_mode_rmse, "\n")
 cat("Decision Tree RMSE:", tree_mode_rmse, "\n")
-```
 
+```
 
 
 ### Make Predictions using data where missing values were imputed with complex methods:
@@ -852,16 +867,19 @@ var_importance <- varImp(tree_miss)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
 ```
+
 ```{r}
 # Calculate RMSE for each model
 rf_miss_rmse <- rmse(rf_miss_pred, test_miss$Ozone_reading)
 knn_miss_rmse <- rmse(knn_miss_pred, test_miss$Ozone_reading)
 tree_miss_rmse <- rmse(tree_miss_pred, test_miss$Ozone_reading)
 
+
 # Print RMSE values
 cat("Random Forest RMSE:", rf_miss_rmse, "\n")
 cat("KNN RMSE:", knn_miss_rmse, "\n")
 cat("Decision Tree RMSE:", tree_miss_rmse, "\n")
+
 ```
 
 
@@ -893,32 +911,40 @@ tree_mice_pred <- predict(tree_mice, newdata = test_mice)
 var_importance <- varImp(tree_mice)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
+
 ```
+
 ```{r}
 # Calculate RMSE for each model
 rf_mice_rmse <- rmse(rf_mice_pred, test_mice$Ozone_reading)
 knn_mice_rmse <- rmse(knn_mice_pred, test_mice$Ozone_reading)
 tree_mice_rmse <- rmse(tree_mice_pred, test_mice$Ozone_reading)
 
+
 # Print RMSE values
 cat("Random Forest RMSE:", rf_mice_rmse, "\n")
 cat("KNN RMSE:", knn_mice_rmse, "\n")
 cat("Decision Tree RMSE:", tree_mice_rmse, "\n")
+
 ```
 
 
 # Create data frame with RSME scores
 ```{r}
 models <- c('RandomForest', 'KNN', 'DecisionTree')
-scores <- c(rf_dropCol_rmse,knn_mean_rmse,tree_dropCol_rmse,svm_dropCol_rmse, 
-            rf_dropNA_rmse,knn_dropNA_rmse,tree_dropNA_rmse,rf_mean_rmse,knn_mean_rmse,tree_mean_rmse, 
-            rf_med_rmse,knn_med_rmse,tree_med_rmse,rf_mode_rmse,knn_mode_rmse,tree_mode_rmse,
-            rf_miss_rmse,knn_miss_rmse,tree_miss_rmse,rf_mice_rmse,knn_mice_rmse,tree_mice_rmse,)
+scores <- c(rf_dropCol_rmse, knn_dropCol_rmse, tree_dropCol_rmse,
+            rf_dropNA_rmse, knn_dropNA_rmse, tree_dropNA_rmse,
+            rf_mean_rmse, knn_mean_rmse, tree_mean_rmse,
+            rf_med_rmse, knn_med_rmse, tree_med_rmse,
+            rf_mode_rmse, knn_mode_rmse, tree_mode_rmse,
+            rf_miss_rmse, knn_miss_rmse, tree_miss_rmse,
+            rf_mice_rmse, knn_mice_rmse, tree_mice_rmse
+)
 ImpMethod <- c('DropCol','DropNA','Mean', 'Median', 'Mode','missForest','MICE')
 
 # Create dataframe
 rmse_df <- data.frame(Model = models, ImpMethod=ImpMethod,RMSE = scores)
-print(rmse_df)
+print(rmse_df[order(rmse_df$RMSE), ])
 
 ```
 
