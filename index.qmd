@@ -19,12 +19,11 @@ editor:
 
 # Introduction
 
-Missing data is a key challenge that data professionals encounter in their daily work. In the real world, data is often messy, incomplete, and requires a level of pre-processing before data analysis can occur. Part of data pre-processing is dealing with missing data. Missing data can occur for several reasons including but not limited to processing error, machine or measurement errors, non-responses in surveys, invalid calculations (e.g. division by zero), and study participant dropout [@Emmanuel2021surveyml]. Missing data can be problematic for analysis because it can reduce the number of usable observations, introduce bias, and interfere with different analysis tools such as machine learning algorithms, which cannot automatically handle missing data.
+Missing data is a key challenge that data professionals encounter in their daily work. In the real world, data is often messy, incomplete, and requires a level of preprocessing before data analysis can occur. Part of data preprocessing is dealing with missing data. Missing data can occur for several reasons including but not limited to processing error, machine or measurement errors, non-responses in surveys, invalid calculations (e.g. division by zero), and study participant dropout (Emmanuel 2021). Missing data can be problematic for analysis because it can reduce the number of usable observations, introduce bias, and interfere with different analysis tools such as machine learning algorithms, which cannot automatically handle missing data.
 
 One of the first steps in handling missing data is to determine how much of the data is missing and from which columns. Missing data in a dataset can be represented in several ways including NA, NaN, Null, None, blanks, spaces, empty strings, or placeholder values such as 999999 (or equivalent obvious numerical outlier). For standard missing values such as NAs, functions such as is.na() in R can be used to count the number of missing observations. For string-related missing values such as space (“ ” or empty strings (“”), functions such as unique() in R can be used to identify unexpected strings. For numerical placeholders such as 0, 99999 (or equivalent), or negative values, histograms of the data can be useful to identify missing values.
 
-If a dataset contains missing data, there are two basic approaches: deletion or imputation [@schefer2002dealingwithmissingdata]. Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias or understimation of variance if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood. 
-
+If a dataset contains missing data, there are two basic approaches: deletion or imputation (Schefer 2002). Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias or underestimation of variance if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood.
 
 ### Missing Data Mechanisms
 
@@ -72,17 +71,13 @@ Imputation methods can be further broken down into statistical versus machine le
 
 ### Theories for Missing Data
 
-
-
 **Rubin's Missing Data Theory:** 
 
 This foundational theory categorizes missing data into MCAR, MAR, and NMAR. It provides a framework for understanding the mechanisms behind missing data and guides the selection of appropriate imputation strategies based on these mechanisms[@rubin2004multiple].  
 
-
 **Statistical Theory of Imputation:**
 
 This theory involves using statistical models to estimate missing values, leveraging the relationship between observed and missing data points. Multiple imputation, a prominent technique within this theory, generates multiple plausible values for each missing data point to account for uncertainty [@schafer1997analysis]. 
-
 
 **Machine Learning Theories:**
 
@@ -120,6 +115,22 @@ This involves discussing the conditions, limitations, and best practices of impu
 
 The purpose of this project is to demonstrate the use of several different types of missing data imputation methods using a test dataset with missing data. The performance of various imputation methods will be assessed using RMSE and R-Squared of the resulting predictive models after applying various imputation methods.
 
+# Related Work
+
+**Literature Research and Review**
+The approach used to select and analyze the literature included in this review involved identifying articles relevant to the topic of missing data and the imputation thereof. Articles were selected based on their topic relevance as it related to statistical and machine learning concepts. 
+
+Preference was given to articles that were published recently to ensure the inclusion of the latest methods and research in the field. In addition, articles were prioritized from peer-reviewed and reputable conference papers to ensure quality and reliability of the research. A comprehensive search using Google Scholar and the available databases accessed through the University of West Florida was implemented. Key search terms included: ‘missing data’, ‘missing data imputation’.
+
+Articles were selected based on their relevance to the subject, in addition to including papers with a variety of methods implemented. Research addressing both statistical and machine learning approaches were focused on. Articles not available in full text, not directly related to missing data imputation methods, or where the primary focus was theoretical as opposed to practical were excluded. 
+
+Once an article was selected, it was reviewed for relevant data pertaining to missing data imputation methods. The context of the study, the datasets involved, and the results provided were also reviewed. The article analysis focused on:
+•	Goal – understanding the specific goal of the study and how it relates to missing data imputation.
+•	Methods/Techniques – Identifying the specific methods used, whether statistical or machine learning, or a combination of both.
+•	Results/Applications – evaluating the effectiveness/efficiency of the methods employed. Showing how these methods were/can be applied in a real-world scenario.
+•	Limitations/Challenges – noting the limitations or challenges involved in each method used.
+•	Data – identifying the types of data used for testing (e.g. simulated, real-world) and the type of missing data (e.g. missing at random, missing completely at random, not missing at random)
+
 
 # Methods
 
@@ -129,36 +140,23 @@ An overview of the methodology used to demonstrate different techniques for impu
 
 ### Imputation Methods
 
-
 The following methods were used to impute missing data for this project: 
+**List-wise Deletion:** all rows containing missing values are removed from the dataset
 
-**Mean imputation:**
+**Column Delete with Threshold:** if the total percentage of missing values in a column is over a threshold (20%), then the entire column/feature is removed.
 
-In mean imputation, missing values for a given column are all replaced with a single value: the mean of the non-missing values.
+**Mean imputation:** missing values are replaced with the mean of the non-missing values of the corresponding feature.
 
+**Mode imputation:** missing values are replaced with the mode of the non-missing values of the corresponding feature.
 
-**Mode imputation:**
+**Median imputation:** missing values are replaced with the median of the non-missing values of the corresponding feature.
 
-In mode imputation, missing values for a given column are all replaced with a single value: the mode of the non-missing values.
+**MICE (multiple imputation by chained equations):** missing data for a given column are imputed based on other columns with observed data over multiple iterations (Azur et al. 2011). It operates under the assumption that the data are missing at random (MAR). For a missing column, the missing values are imputed using regression based on observed data from other columns in the dataset. Then, the next column’s missing data are imputed using observed data in other columns and so forth until regression models are available for each column. Each regression model will have its own level of uncertainty. With each iteration, a possible missing value is imputed for a given data point given the regression function and its associated uncertainty. This process is repeated over multiple iterations, where the number of iterations is set by the user. This results in multiple datasets, which are then combined into a single dataset again. In this case, 50 iterations were used.
 
-
-**Median imputation:**
-
-In median imputation, missing values for a given column are all replaced with a single value: the median of the non-missing values.
-
-
-**MICE (multiple imputation by chained equations):**
-
-In MICE, missing data for a given column are imputed based on other columns with observed data over multiple iterations [@azur2011multiple]. It operates under the assumption that the data are missing at random (MAR). For a missing column, the missing values are imputed using regression based on observed data from other columns in the dataset. Then, the next column's missing data are imputed using observed data in other columns and so forth until regression models are available for each column. Each regression model will have its own level of uncertainty. With each iteration, a possible missing value is imputed for a given data point given the regression function and its associated uncertainty. This process is repeated over multiple iterations, where the number of iterations is set by the user. This results in multiple datasets, which are then combined into a single dataset again. In this case, 50 iterations were used.
-
-
-**Random Forest:**
-
-Random forest is an ensemble machine learning method, where the data set is bootstrap sampled randomly and individual decision trees are constructed for each bootstrap [@tang2017random]. The collection of decision trees is then used to impute a missing data point. This technique in machine learning helps prevent overfitting that decision trees are prone to.
+**missForest:** uses a random forest trained on observed data to predict missing values in continuous and categorical data. It is an ensemble machine learning method, where the data set is bootstrap sampled randomly and individual decision trees are constructed for each bootstrap (Tang 2017). The collection of decision trees is then used to impute a missing data point. This technique in machine learning helps prevent overfitting that decision trees are prone to.
 
 
 ### Machine Learning Methods for Model-Fitting
-
 
 Once missing values were imputed using each of the five methods outlined above, each resulting dataset (5) was used to fit models for Ozone levels. The datasets were split into training and test sets using a split ratio of 0.75. The following models were then used for training each dataset:
 
@@ -167,8 +165,6 @@ Once missing values were imputed using each of the five methods outlined above, 
 **Random Forest:**
 
 **KNN:**
-
-**SVM:**
 
 The effectiveness of each imputation technique was evaluated using RMSE and R-Squared for the resulting Ozone level models. The RMSE and R-Squared for each imputation/model combination were reported and summarized in a data frame. The combination with the lowest RMSE was determined to be the most effective imputation technique and model fit for this dataset.
 
@@ -204,12 +200,13 @@ The data were first pre-processed. This step typically entails importing the dat
 
 Following pre-processing, correlation coefficients were calculated for all variables with respect to Ozone levels (the response variable). Variables with strong positive or negative correlation were then visualized using histograms to show the distribution of each variable with respect to percentage of Ozone level readings. Missing data were then visualized to determine if there were any significant patterns to the missingness of the data. The purpose of this step is to provide evidence to support that the data are either MCAR, MAR, or MNAR.
 
-Missing data were then imputed with various methodologies, including mean imputation, mode imputation, median imputation, MICE, and random forest. This resulted in 5 unique datasets, where missing data were imputed using different metholodologies. To compare the effectiveness of each imputation method, each of the imputed datasets were split into test and training datasets. The training set was used to develop machine learning models to predict Ozone levels, including decision trees, random forest, KNN, and SVM. The resulting RMSE and R-Squared from each machine learning model and imputation method were used to identify the most effective imputation method and model combination for this dataset.
+Missing data were then imputed with various methodologies, including list-wise deletion, feature removal, mean imputation, mode imputation, median imputation, MICE, and missForest. This resulted in 7 unique datasets, where missing data were imputed using different metholodologies. To compare the effectiveness of each imputation method, each of the imputed datasets were split into test and training datasets. The training set was used to develop machine learning models to predict Ozone levels, including decision trees, random forest, and KNN. The resulting RMSE from each machine learning model and imputation method were used to identify the most effective imputation method and model combination for this dataset.
 
 ### Load Packages
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
-# loading packages 
+knitr::opts_chunk$set(echo = TRUE)
+#install.packages('mlbench')
 
 library(mlbench)
 library(dplyr)
@@ -230,8 +227,6 @@ library(caTools)
 library(party)
 library(magrittr)
 library(ggfittext)
-
-
 ```
 
 
@@ -254,21 +249,17 @@ First, the data were imported and converted to a data frame. Next, columns were 
 * V13: None
 
 ```{r, warning=FALSE, echo=TRUE}
-
-# Import data
+# import data
 data("Ozone", package = "mlbench")
 
-# Cconvert to data frame
+# convert to data frame
 ozone1 <- data.frame(Ozone)
-
 # Reorder columns
 ozone1 <- ozone1 %>%
   dplyr::select(V4,V1,V2,V3,V5,V6,V7,V8,V9,V10,V11,V12,V13)
 
 # View summary of data
 summary(ozone1)
-
-
 ```
 
 ### Data Pre-Processing
@@ -317,7 +308,6 @@ ozone_date <- ozone_date %>%
 
 # Verify the new Date column
 head(ozone_date, n=10)
-
 ```
 
 Columns were renamed for clearer interpretation during analysis:
@@ -366,10 +356,8 @@ ozone_date2 <- plyr::rename(ozone_date, c('V4'="Ozone_reading",
                                  'V11'="Pressure_gradient", 
                                  'V12'="IBT_LAX", 
                                  'V13'="Visibility_LAX"))
-
 head(ozone2, n=10)
 head(ozone_date2, n=10)
-
 ```
 
 ### Data Exploration 
@@ -412,7 +400,6 @@ ozone_summary_by_month <- ozone2 %>%
 print(ozone_summary_by_month)
 
 ```
-
 
 **Examine how feature variables correlate with Ozone levels**
 
@@ -555,9 +542,7 @@ ggplot(percentage_data5, aes(x = Temp_sd_bin, y = percentage)) +
 **Explore Interactions with Negatively Correlated Variables**
 
 * **Strong Negative Correlations:** IBH_LAX and Visibility_LAX
-
 The percentage of ozone readings does not appear to be normally distributed with respect to IBH_LAX and Visbility_LAX. The highest proportion of Ozone readings are at high IBH (4600-5100), with a secondary mode at low IBH (600-1100). The proportion of Ozone readings are positively skewed with respect to Visbility_LAX, with the mode occurring between 50 and 100, and a secondary mode occuring between 250 and 300. 
-
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
@@ -604,7 +589,7 @@ ggplot(percentage_data7, aes(x = visibility_bin, y = percentage)) +
 
 ### Exploration of the Missing Data
 
-The total number of missing data points for each column is shown below as a count and as a percentage. Most of the columns contain <5% missing values. **Temp_EM contains 139 missing values, which is 38.0% of the observations.** The total number of missing values in the dataset is 203 out of 4,768 (13 columns times 366 obervations). This represents 4.3% of the entire dataset. 
+The total number of missing data points for each column is shown below as a count and as a percentage. Most of the columns contain <5% missing values. Temp_EM contains 139 missing values, which is 38.0% of the observations. The total number of missing values in the dataset is 203 out of 4,768 (13 columns times 366 obervations). This represents 4.3% of the entire dataset. 
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
@@ -631,9 +616,13 @@ The second plot uses the gg_miss_upset() function. This plot shows the number of
 
 The third plot was generated using the gg_miss_var() function and shows the number of missing values for each variable. Again, Temp_EM has by far the largest number of missing points (139).
 
+Lastly, the Little's MCAR test was performed to analyze randomness. 
+* Null Hypothesis (H0): The data is missing completely at random (MCAR).
+* Alternative Hypothesis (H1): The data is not missing completely at random.
+Based on the p-value(4.102052e-12) from the test, the null hypothesis is rejected, data is not missing completely at random (MCAR).
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
-
+# Plot missing data pattern
 #Shows what percentage of the data are missing from each column
 vis_miss(ozone2)
 
@@ -644,7 +633,11 @@ gg_miss_upset(ozone2, nsets=8)
 
 
 #Another way to visualize number of missing rows per column
-gg_miss_var(ozone2) + ylim(0, 150)
+gg_miss_var(ozone2) + labs(y = "Number of missing values") + ylim(0, 150)
+
+# Perform Little's MCAR test
+mcar_result <- mcar_test(ozone2)
+print(mcar_result)
 
 ```
 
@@ -729,9 +722,22 @@ grid4 <- grid.arrange(p12, p13, nrow = 1)
 
 ### Missing Data Imputation Using Simple Methods
 
-Missing data were imputed using either the mean, median or mode as a demonstration of simple imputation techniques. With mean, median, or mode imputation, all NA values are replaced by a single value for each column: the mean, median, or mode of that column. Three data frames were created: one where mean imputation was used, a second where median imputation was used, and the last where mode imputation was used.
+Missing data were imputed using either the list-wise deletion, feature removal, mean, median or mode as a demonstration of simple imputation techniques. List-wise deletion is simply deleting all rows that contain a missing value. Feature removel is where a column is deleted if its total percentage of missing values is over a set threshold (we chose 20%). With  mean, median, or mode imputation, all NA values are replaced by a single value for each column: the mean, median, or mode of that column. Three data frames were created: one where mean imputation was used, a second where median imputation was used, and the last where mode imputation was used.
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
+
+# Function to drop column if quantity of missing values is over the threshold
+drop_na_columns <- function(data, threshold) {
+  na_counts <- colSums(is.na(data))
+  na_proportion <- na_counts / nrow(data)
+  data <- data[, na_proportion <= threshold]
+  return(data)
+}
+# Define threshold (e.g., 20% NA allowed)
+threshold <- 0.20
+
+# Drop all missing values
+dropNA_data <- na.omit(ozone2)
 
 # Function for mean imputation
 mean_impute <- function(x) {
@@ -752,7 +758,12 @@ mode_impute <- function(x) {
   return(x)
 }
 
-# Apply imputation methods
+##### Apply imputation methods
+# Drop columns based on the NA threshold
+dropCol_data <- drop_na_columns(ozone2, threshold) # the column Temp_EM gets dropped
+dropCol_data <- apply(ozone2, 2, mean_impute)
+dropCol_data <- data.frame(dropCol_data)
+
 imputed_data_mean <- apply(ozone2, 2, mean_impute)
 imputed_data_mean <- data.frame(imputed_data_mean)
 
@@ -766,16 +777,16 @@ imputed_data_mode <- data.frame(imputed_data_mode)
 head(imputed_data_mean)
 head(imputed_data_median)
 head(imputed_data_mode)
+head(dropCol_data)
+head(dropNA_data)
 
-
-#Confirm there are no more NA's in each respective dataset
-print(sum(is.na(imputed_data_mean)))
-print(sum(is.na(imputed_data_median)))
-print(sum(is.na(imputed_data_mode)))
-
+# Check to make sure there are no remaining missing values
+#print(sum(is.na(imputed_data_mean)))
+#print(sum(is.na(imputed_data_median)))
+#print(sum(is.na(imputed_data_mode)))
 ```
 
-### Missing Data Imputation Using MICE (Multiple Imputation Method) and Random Forest (Machine Learning Method)
+### Missing Data Imputation Using MICE (Multiple Imputation Method) and missForest (Machine Learning Method)
 
 Next, the missing data were imputed using MICE and Miss_Forest methods. 
 
@@ -823,21 +834,122 @@ The mean imputed dataset was split into testing and training datasets using a sp
 * Random Forest
 * K-Nearest Neighbors
 * Decision Tree
-* SVM
 
-After models were fit to the training data, predictions were made on the unseen test data. RMSE and R-Squared were then reported for each model. The SVM model resulted in the lowest RMSE (4.89) for predicted ozone levels when using mean imputation.
+After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
 #Load additional libraries for model fitting
 library(caret) # for fitting KNN models
-library(e1071) # svm model
+library(e1071) # svr model
 library(rsample) # for creating validation splits
 library(recipes)    # for feature engineering
 library(randomForest)
 library(rpart)# decision tree
 library(tidymodels) 
+library(class) 
+library(vip) 
 
+**List-wise Deletion**
+```{r}
+# Split the data into training and testing sets
+set.seed(123)
+data_split_dropNA <- initial_split(dropNA_data, prop = 0.75)
+train_dropNA <- training(data_split_dropNA)
+test_dropNA <- testing(data_split_dropNA)
+
+# Split data into predictors and target
+X <- train_dropNA[, -1]  # Features
+y <- train_dropNA$Ozone_reading  # Target
+
+# Random forest model
+rf_dropNA <- randomForest(Ozone_reading ~ ., data = train_dropNA)
+# make predictions
+rf_dropNA_pred <- predict(rf_dropNA, newdata = test_dropNA)
+# Plot variable importance
+varImpPlot(rf_dropNA, main = "Variable Importance Plot for Random Forest Model")
+
+# KNN model
+knn_dropNA <- train(Ozone_reading ~ ., data = train_dropNA, method = "knn")
+# make predictions
+knn_dropNA_pred <- predict(knn_dropNA, newdata = test_dropNA)
+# Plot variable importance
+feature_importance <- table(y) / length(y)
+barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
+
+# Decision tree model
+tree_dropNA <- rpart(Ozone_reading ~ ., data = train_dropNA)
+# make predictions
+tree_dropNA_pred <- predict(tree_dropNA, newdata = test_dropNA)
+# Plot variable importance
+var_importance <- varImp(tree_dropNA)
+barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
+```
+```{r}
+# Function to calculate RMSE
+rmse <- function(pred, actual) {
+  sqrt(mean((pred - actual)^2))
+}
+# Calculate RMSE for each model
+rf_dropNA_rmse <- rmse(rf_dropNA_pred, test_dropNA$Ozone_reading)
+knn_dropNA_rmse <- rmse(knn_dropNA_pred, test_dropNA$Ozone_reading)
+tree_dropNA_rmse <- rmse(tree_dropNA_pred, test_dropNA$Ozone_reading)
+
+# Print RMSE values
+cat("Random Forest RMSE:", rf_dropNA_rmse, "\n")
+cat("KNN RMSE:", knn_dropNA_rmse, "\n")
+cat("Decision Tree RMSE:", tree_dropNA_rmse, "\n")
+```
+
+****Drop column if NA's >= 20%****
+```{r}
+# Split the data into training and testing sets
+set.seed(123)
+data_split_dropCol <- initial_split(dropCol_data, prop = 0.75)
+train_dropCol <- training(data_split_dropCol)
+test_dropCol <- testing(data_split_dropCol)
+
+# Split data into predictors and target
+X <- train_dropCol[, -1]  # Features
+y <- train_dropCol$Ozone_reading  # Target
+
+# Random forest model
+rf_dropCol <- randomForest(Ozone_reading ~ ., data = train_dropCol)
+# make predictions
+rf_dropCol_pred <- predict(rf_dropCol, newdata = test_dropCol)
+# Plot variable importance
+varImpPlot(rf_dropCol, main = "Variable Importance Plot for Random Forest Model")
+
+# KNN model
+knn_dropCol <- train(Ozone_reading ~ ., data = train_dropCol, method = "knn")
+# make predictions
+knn_dropCol_pred <- predict(knn_dropCol, newdata = test_dropCol)
+# Plot variable importance
+feature_importance <- table(y) / length(y)
+barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
+
+# Decision tree model
+tree_dropCol <- rpart(Ozone_reading ~ ., data = train_dropCol)
+# make predictions
+tree_dropCol_pred <- predict(tree_dropCol, newdata = test_dropCol)
+# Plot variable importance
+var_importance <- varImp(tree_dropCol)
+barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
+```
+```{r}
+# Calculate RMSE for each model
+rf_dropCol_rmse <- rmse(rf_dropCol_pred, test_dropCol$Ozone_reading)
+knn_dropCol_rmse <- rmse(knn_dropCol_pred, test_dropCol$Ozone_reading)
+tree_dropCol_rmse <- rmse(tree_dropCol_pred, test_dropCol$Ozone_reading)
+
+# Print RMSE values
+cat("Random Forest RMSE:", rf_dropCol_rmse, "\n")
+cat("KNN RMSE:", knn_dropCol_rmse, "\n")
+cat("Decision Tree RMSE:", tree_dropCol_rmse, "\n")
+```
+
+**Mean**
+```{r}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_mean <- initial_split(imputed_data_mean, prop = 0.75)
@@ -848,14 +960,12 @@ test_mean <- testing(data_split_mean)
 X <- train_mean[, -1]  # Features
 y <- train_mean$Ozone_reading  # Target
 
-
 # Random forest model
 rf_mean <- randomForest(Ozone_reading ~ ., data = train_mean)
 # make predictions
 rf_mean_pred <- predict(rf_mean, newdata = test_mean)
 # Plot variable importance
 varImpPlot(rf_mean, main = "Variable Importance Plot for Random Forest Model")
-
 
 # KNN model
 knn_mean <- train(Ozone_reading ~ ., data = train_mean, method = "knn")
@@ -865,7 +975,6 @@ knn_mean_pred <- predict(knn_mean, newdata = test_mean)
 feature_importance <- table(y) / length(y)
 barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
 
-
 # Decision tree model
 tree_mean <- rpart(Ozone_reading ~ ., data = train_mean)
 # make predictions
@@ -874,72 +983,21 @@ tree_mean_pred <- predict(tree_mean, newdata = test_mean)
 var_importance <- varImp(tree_mean)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
-# SVM model
-svm_mean <- svm(Ozone_reading ~ ., data = train_mean)
-# make predictions
-svm_mean_pred <- predict(svm_mean, newdata = test_mean)
-# Plot variable importance
-
-
-
-# Function to calculate RMSE
-rmse <- function(pred, actual) {
-  sqrt(mean((pred - actual)^2))
-}
-
-# Define a function to calculate R-squared
-r_squared <- function(actual, pred) {
-  mean_actual <- mean(actual)
-  ss_tot <- sum((actual - mean_actual)^2)
-  ss_res <- sum((actual - pred)^2)
-  
-  # Check if ss_tot is 0, which would lead to division by zero
-  if (ss_tot == 0) {
-    r2 <- NaN  # Handle case where ss_tot is 0
-  } else {
-    r2 <- 1 - (ss_res / ss_tot)
-  }
-  
-  return(r2)
-}
-
+```
+```{r}
 # Calculate RMSE for each model
 rf_mean_rmse <- rmse(rf_mean_pred, test_mean$Ozone_reading)
 knn_mean_rmse <- rmse(knn_mean_pred, test_mean$Ozone_reading)
 tree_mean_rmse <- rmse(tree_mean_pred, test_mean$Ozone_reading)
-svm_mean_rmse <- rmse(svm_mean_pred, test_mean$Ozone_reading)
-
-rf_mean_r2 <- r_squared(test_mean$Ozone_reading, rf_mean_pred)
-knn_mean_r2 <- r_squared(test_mean$Ozone_reading, knn_mean_pred)
-tree_mean_r2 <- r_squared(test_mean$Ozone_reading, tree_mean_pred)
-svm_mean_r2 <- r_squared(test_mean$Ozone_reading, svm_mean_pred)
 
 # Print RMSE values
 cat("Random Forest RMSE:", rf_mean_rmse, "\n")
 cat("KNN RMSE:", knn_mean_rmse, "\n")
 cat("Decision Tree RMSE:", tree_mean_rmse, "\n")
-cat("SVM RMSE:", svm_mean_rmse, "\n")
-
-cat("Random Forest R-squared:", rf_mean_r2["Rsquared"], "\n")
-cat("KNN R-squared:", knn_mean_r2["Rsquared"], "\n")
-cat("Decision Tree R-squared:", tree_mean_r2["Rsquared"], "\n")
-cat("SVM R-squared:", svm_mean_r2["Rsquared"], "\n")
-
 ```
 
-***Make Predictions Using Data Where Missing Values Were Imputed Using the Median**
-
-The median imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors
-* Decision Tree
-* SVM
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE and R-Squared were then reported for each model. The SVM model resulted in the lowest RMSE (4.98) for predicted ozone levels when using median imputation.
-
-```{r, warning=FALSE, echo=T, message=FALSE}
-
+**Median**
+```{r}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_med <- initial_split(imputed_data_median, prop = 0.75)
@@ -957,65 +1015,36 @@ varImpPlot(rf_med, main = "Variable Importance Plot for Random Forest Model")
 knn_med <- train(Ozone_reading ~ ., data = train_med, method = "knn")
 knn_med_pred <- predict(knn_med, newdata = test_med)
 # Plot variable importance
-
+feature_importance <- table(y) / length(y)
+barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
 
 # Decision tree model
-tree_med <- ctree(Ozone_reading ~ ., data = train_med)
+tree_med <- rpart(Ozone_reading ~ ., data = train_med)
 tree_med_pred <- predict(tree_med, newdata = test_med)
 # Plot variable importance
+var_importance <- varImp(tree_med)
+barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
-
-# SVM model
-svm_med <- svm(Ozone_reading ~ ., data = train_med)
-svm_med_pred <- predict(svm_med, newdata = test_med)
-# Plot variable importance
-
-
-
+```
+```{r}
 # Calculate RMSE for each model
 rf_med_rmse <- rmse(rf_med_pred, test_med$Ozone_reading)
 knn_med_rmse <- rmse(knn_med_pred, test_med$Ozone_reading)
 tree_med_rmse <- rmse(tree_med_pred, test_med$Ozone_reading)
-svm_med_rmse <- rmse(svm_med_pred, test_med$Ozone_reading)
-
-rf_med_r2 <- r_squared(test_med$Ozone_reading, rf_med_pred)
-knn_med_r2 <- r_squared(test_med$Ozone_reading, knn_med_pred)
-tree_med_r2 <- r_squared(test_med$Ozone_reading, tree_med_pred)
-svm_med_r2 <- r_squared(test_med$Ozone_reading, svm_med_pred)
 
 # Print RMSE values
 cat("Random Forest RMSE:", rf_med_rmse, "\n")
 cat("KNN RMSE:", knn_med_rmse, "\n")
 cat("Decision Tree RMSE:", tree_med_rmse, "\n")
-cat("SVM RMSE:", svm_med_rmse, "\n")
-
-cat("Random Forest R-squared:", rf_med_r2["Rsquared"], "\n")
-cat("KNN R-squared:", knn_med_r2["Rsquared"], "\n")
-cat("Decision Tree R-squared:", tree_med_r2["Rsquared"], "\n")
-cat("SVM R-squared:", svm_med_r2["Rsquared"], "\n")
-
-
 ```
 
-***Make Predictions Using Data Where Missing Values Were Imputed Using the Mode**
-
-The mode imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors
-* Decision Tree
-* SVM
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE and R-Squared were then reported for each model. The SVM model resulted in the lowest RMSE (5.39) for predicted ozone levels when using mode imputation.
-
-```{r, warning=FALSE, echo=T, message=FALSE}
-
+**Mode**
+```{r}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_mode <- initial_split(imputed_data_mode, prop = 0.75)
 train_mode <- training(data_split_mode)
 test_mode <- testing(data_split_mode)
-
 
 # Random forest model
 rf_mode <- randomForest(Ozone_reading ~ ., data = train_mode)
@@ -1027,64 +1056,38 @@ varImpPlot(rf_mode, main = "Variable Importance Plot for Random Forest Model")
 knn_mode <- train(Ozone_reading ~ ., data = train_mode, method = "knn")
 knn_mode_pred <- predict(knn_mode, newdata = test_mode)
 # Plot variable importance
-
+feature_importance <- table(y) / length(y)
+barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
 
 # Decision tree model
-tree_mode <- ctree(Ozone_reading ~ ., data = train_mode)
+tree_mode <- rpart(Ozone_reading ~ ., data = train_mode)
 tree_mode_pred <- predict(tree_mode, newdata = test_mode)
 # Plot variable importance
+var_importance <- varImp(tree_mode)
+barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
-
-# SVM model
-svm_mode <- svm(Ozone_reading ~ ., data = train_mode)
-svm_mode_pred <- predict(svm_mode, newdata = test_mode)
-# Plot variable importance
-
-
-
+```
+```{r}
 # Calculate RMSE for each model
 rf_mode_rmse <- rmse(rf_mode_pred, test_mode$Ozone_reading)
 knn_mode_rmse <- rmse(knn_mode_pred, test_mode$Ozone_reading)
 tree_mode_rmse <- rmse(tree_mode_pred, test_mode$Ozone_reading)
-svm_mode_rmse <- rmse(svm_mode_pred, test_mode$Ozone_reading)
-
-rf_mode_r2 <- r_squared(test_mean$Ozone_reading, rf_mode_pred)
-knn_mode_r2 <- r_squared(test_mean$Ozone_reading, knn_mode_pred)
-tree_mode_r2 <- r_squared(test_mean$Ozone_reading, tree_mode_pred)
-svm_mode_r2 <- r_squared(test_mean$Ozone_reading, svm_mode_pred)
 
 # Print RMSE values
 cat("Random Forest RMSE:", rf_mode_rmse, "\n")
 cat("KNN RMSE:", knn_mode_rmse, "\n")
 cat("Decision Tree RMSE:", tree_mode_rmse, "\n")
-cat("SVM RMSE:", svm_mode_rmse, "\n")
-
-cat("Random Forest R-squared:", rf_mode_r2["Rsquared"], "\n")
-cat("KNN R-squared:", knn_mode_r2["Rsquared"], "\n")
-cat("Decision Tree R-squared:", tree_mode_r2["Rsquared"], "\n")
-cat("SVM R-squared:", svm_mode_r2["Rsquared"], "\n")
-
 ```
 
-***Make Predictions Using Data Where Missing Values Were Imputed Using MissForest**
+### Make Predictions using data where missing values were imputed with complex methods:
 
-The missForest imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors
-* Decision Tree
-* SVM
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE and R-Squared were then reported for each model. The SVM model resulted in the lowest RMSE (4.17) for predicted ozone levels when using missForest for imputation.
-
-```{r, warning=FALSE, echo=T, message=FALSE}
-
+**missForest**
+```{r}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_miss <- initial_split(ozone2_mf, prop = 0.75)
 train_miss <- training(data_split_miss)
 test_miss <- testing(data_split_miss)
-
 
 # Random forest model
 rf_miss <- randomForest(Ozone_reading ~ ., data = train_miss)
@@ -1096,66 +1099,36 @@ varImpPlot(rf_miss, main = "Variable Importance Plot for Random Forest Model")
 knn_miss <- train(Ozone_reading ~ ., data = train_miss, method = "knn")
 knn_miss_pred <- predict(knn_miss, newdata = test_miss)
 # Plot variable importance
-
+feature_importance <- table(y) / length(y)
+barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
 
 # Decision tree model
-tree_miss <- ctree(Ozone_reading ~ ., data = train_miss)
+tree_miss <- rpart(Ozone_reading ~ ., data = train_miss)
 tree_miss_pred <- predict(tree_miss, newdata = test_miss)
 # Plot variable importance
+var_importance <- varImp(tree_miss)
+barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
-
-# SVM model
-svm_miss <- svm(Ozone_reading ~ ., data = train_miss)
-svm_miss_pred <- predict(svm_miss, newdata = test_miss)
-# Plot variable importance
-
-
-
+```
+```{r}
 # Calculate RMSE for each model
 rf_miss_rmse <- rmse(rf_miss_pred, test_miss$Ozone_reading)
 knn_miss_rmse <- rmse(knn_miss_pred, test_miss$Ozone_reading)
 tree_miss_rmse <- rmse(tree_miss_pred, test_miss$Ozone_reading)
-svm_miss_rmse <- rmse(svm_miss_pred, test_miss$Ozone_reading)
-
-rf_miss_r2 <- r_squared(test_mean$Ozone_reading, rf_miss_pred)
-knn_miss_r2 <- r_squared(test_mean$Ozone_reading, knn_miss_pred)
-tree_miss_r2 <- r_squared(test_mean$Ozone_reading, tree_miss_pred)
-svm_miss_r2 <- r_squared(test_mean$Ozone_reading, svm_miss_pred)
 
 # Print RMSE values
 cat("Random Forest RMSE:", rf_miss_rmse, "\n")
 cat("KNN RMSE:", knn_miss_rmse, "\n")
 cat("Decision Tree RMSE:", tree_miss_rmse, "\n")
-cat("SVM RMSE:", svm_miss_rmse, "\n")
-
-cat("Random Forest R-squared:", rf_miss_r2["Rsquared"], "\n")
-cat("KNN R-squared:", knn_miss_r2["Rsquared"], "\n")
-cat("Decision Tree R-squared:", tree_miss_r2["Rsquared"], "\n")
-cat("SVM R-squared:", svm_miss_r2["Rsquared"], "\n")
-
-
 ```
 
-***Make Predictions Using Data Where Missing Values Were Imputed Using MICE**
-
-The MICE imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors
-* Decision Tree
-* SVM
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE and R-Squared were then reported for each model. The SVM model resulted in the lowest RMSE (4.13) for predicted ozone levels when using MICE for imputation.
-
-
-```{r, warning=FALSE, echo=T, message=FALSE}
-
+**MICE**
+```{r}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_mice <- initial_split(ozone2_mice, prop = 0.75)
 train_mice <- training(data_split_mice)
 test_mice <- testing(data_split_mice)
-
 
 # Random forest model
 rf_mice <- randomForest(Ozone_reading ~ ., data = train_mice)
@@ -1167,44 +1140,27 @@ varImpPlot(rf_mice, main = "Variable Importance Plot for Random Forest Model")
 knn_mice <- train(Ozone_reading ~ ., data = train_mice, method = "knn")
 knn_mice_pred <- predict(knn_mice, newdata = test_mice)
 # Plot variable importance
-
+feature_importance <- table(y) / length(y)
+barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature", ylab = "Importance")
 
 # Decision tree model
-tree_mice <- ctree(Ozone_reading ~ ., data = train_mice)
+tree_mice <- rpart(Ozone_reading ~ ., data = train_mice)
 tree_mice_pred <- predict(tree_mice, newdata = test_mice)
 # Plot variable importance
+var_importance <- varImp(tree_mice)
+barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
-
-# SVM model
-svm_mice <- svm(Ozone_reading ~ ., data = train_mice)
-svm_mice_pred <- predict(svm_mice, newdata = test_mice)
-# Plot variable importance
-
-
-
+```
+```{r}
 # Calculate RMSE for each model
 rf_mice_rmse <- rmse(rf_mice_pred, test_mice$Ozone_reading)
 knn_mice_rmse <- rmse(knn_mice_pred, test_mice$Ozone_reading)
 tree_mice_rmse <- rmse(tree_mice_pred, test_mice$Ozone_reading)
-svm_mice_rmse <- rmse(svm_mice_pred, test_mice$Ozone_reading)
-
-rf_mice_r2 <- r_squared(test_mean$Ozone_reading, rf_mice_pred)
-knn_mice_r2 <- r_squared(test_mean$Ozone_reading, knn_mice_pred)
-tree_mice_r2 <- r_squared(test_mean$Ozone_reading, tree_mice_pred)
-svm_mice_r2 <- r_squared(test_mean$Ozone_reading, svm_mice_pred)
 
 # Print RMSE values
 cat("Random Forest RMSE:", rf_mice_rmse, "\n")
 cat("KNN RMSE:", knn_mice_rmse, "\n")
 cat("Decision Tree RMSE:", tree_mice_rmse, "\n")
-cat("SVM RMSE:", svm_mice_rmse, "\n")
-
-cat("Random Forest R-squared:", rf_mice_r2["Rsquared"], "\n")
-cat("KNN R-squared:", knn_mice_r2["Rsquared"], "\n")
-cat("Decision Tree R-squared:", tree_mice_r2["Rsquared"], "\n")
-cat("SVM R-squared:", svm_mice_r2["Rsquared"], "\n")
-
-
 ```
 
 ### Summarize Model Performance for Each Imputation Methodology
@@ -1212,20 +1168,20 @@ cat("SVM R-squared:", svm_mice_r2["Rsquared"], "\n")
 The RMSE for each model and imputation method combination was summarized into a data frame. The results are shown below. The best model fit (lowest RMSE) was obtained when using MICE for imputation of missing data and the SVM algorithm for model training with the imputed dataset. Mean imputation with SVM model fitting was the second best combination, followed by median imputation with Random Forest.
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
-
-# Create data frame with RSME scores
-models <- c('RandomForest', 'KNN', 'DecisionTree', 'SVM')
-scores <- c(rf_mean_rmse,knn_mean_rmse,tree_mean_rmse,svm_mean_rmse, 
-            rf_med_rmse,knn_med_rmse,tree_med_rmse,svm_med_rmse,
-            rf_mode_rmse,knn_mode_rmse,tree_mode_rmse,svm_mode_rmse,
-            rf_miss_rmse,knn_miss_rmse,tree_miss_rmse,svm_miss_rmse,
-            rf_mice_rmse,knn_mice_rmse,tree_mice_rmse,svm_mice_rmse)
-ImpMethod <- c('Mean', 'Median', 'Mode','missForest','MICE')
+models <- c('RandomForest', 'KNN', 'DecisionTree')
+scores <- c(rf_dropCol_rmse, knn_dropCol_rmse, tree_dropCol_rmse,
+            rf_dropNA_rmse, knn_dropNA_rmse, tree_dropNA_rmse,
+            rf_mean_rmse, knn_mean_rmse, tree_mean_rmse,
+            rf_med_rmse, knn_med_rmse, tree_med_rmse,
+            rf_mode_rmse, knn_mode_rmse, tree_mode_rmse,
+            rf_miss_rmse, knn_miss_rmse, tree_miss_rmse,
+            rf_mice_rmse, knn_mice_rmse, tree_mice_rmse
+)
+ImpMethod <- c('DropCol','DropNA','Mean', 'Median', 'Mode','missForest','MICE')
 
 # Create dataframe
 rmse_df <- data.frame(Model = models, ImpMethod=ImpMethod,RMSE = scores)
-rmse_df[order(rmse_df$RMSE),]
-
+print(rmse_df[order(rmse_df$RMSE), ])
 ```
 
 
