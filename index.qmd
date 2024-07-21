@@ -831,9 +831,13 @@ print(sum(is.na(ozone2_mice)))
 
 The mean imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
 
-* Random Forest
-* K-Nearest Neighbors
-* Decision Tree
+* Random Forest: an ensemble learning method primarily used for classification and regression. It combines the predictions of multiple decision trees to improve accuracy and control over-fitting. It construct the decision trees during training and outputting the mode of the classes (classification) or mean prediction (regression) of the individual trees. Advantages include: high accuracy and robustness against over-fitting, 
+works well with large datasets and high-dimensional spaces, handles both classification and regression tasks. Disadvantages include: can be computationally intensive and slower to predict, less interpretable compared to a single decision tree.
+
+* K-Nearest Neighbors: is a simple, instance-based learning algorithm used for classification and regression. It classifies a data point based based on the stored instances from the training data without learning explicit parameters, but instead on how its neighbors are classified. Advantages include: simple and easy to implement, algorithm doesn't have a separate training phase making it more flexible. Disadvantages include:
+Computationally expensive for large datasets due to the need to compute distances to all points, sensitive to irrelevant or redundant features, performance depends on the choice of the number of k and the distance metric used.
+
+* Decision Tree: is a tree-structured classifier used for both classification and regression. It splits the data into subsets based on the value of input features, forming a tree where each node represents a feature and each branch represents a decision rule. Advantages include: Easy to interpret and visualize, can handle mixed-type data, non-parametric making it flexible for various data distributions, requires little data preprocessing. Disadvantages include: Prone to overfitting, sensitive to small variations in the data, can create biased trees if some classes/features are dominant.
 
 After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
 
@@ -841,7 +845,7 @@ After models were fit to the training data, predictions were made on the unseen 
 
 #Load additional libraries for model fitting
 library(caret) # for fitting KNN models
-library(e1071) # svr model
+library(e1071)
 library(rsample) # for creating validation splits
 library(recipes)    # for feature engineering
 library(randomForest)
@@ -1186,5 +1190,7 @@ print(rmse_df[order(rmse_df$RMSE), ])
 
 
 # Conclusions
+
+
 
 # References
