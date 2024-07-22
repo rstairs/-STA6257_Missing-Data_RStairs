@@ -17,7 +17,7 @@ editor:
     wrap: 72
 ---
 
-# Introduction
+# **Introduction**
 
 Missing data is a key challenge that data professionals encounter in their daily work. In the real world, data is often messy, incomplete, and requires a level of preprocessing before data analysis can occur. Part of data preprocessing is dealing with missing data. Missing data can occur for several reasons including but not limited to processing error, machine or measurement errors, non-responses in surveys, invalid calculations (e.g. division by zero), and study participant dropout (Emmanuel 2021). Missing data can be problematic for analysis because it can reduce the number of usable observations, introduce bias, and interfere with different analysis tools such as machine learning algorithms, which cannot automatically handle missing data.
 
@@ -25,7 +25,7 @@ One of the first steps in handling missing data is to determine how much of the 
 
 If a dataset contains missing data, there are two basic approaches: deletion or imputation (Schefer 2002). Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias or underestimation of variance if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood.
 
-### Missing Data Mechanisms
+#### **Missing Data Mechanisms**
 
 The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling], [@bennett2001can], [@little2014joys], [@du2020missing]:
 
@@ -46,7 +46,7 @@ When data are MNAR, the probability of a record missing is dependent on the unob
 Understanding the mechanism behind missing data (MCAR, MAR, or NMAR) is important because many imputation methods require the assumption of MCAR or MAR to be held true. There is not a statistical test or analysis to classify data as MCAR, MAR, or NMAR. Instead, visualization of the missing data is required to determine the relationships (or lack thereof) within the missing data. For example, correlation matrix plots, scatterplots, and other custom visualizations can be useful tools in identifying patterns in the missing data [@ghazali2020missing]. 
 
 
-### Methods for Handling Missing Data
+#### **Techniques for Handling Missing Data**
 
 Methods for handling missing data can be split into three broad categories [@ren2023review], [@Emmanuel2021surveyml]:
 
@@ -69,7 +69,7 @@ In multiple imputation methods such as MICE, a model is constructed to predict m
 Imputation methods can be further broken down into statistical versus machine learning methods. According to [@lin2020missing]'s review of literature from 2006-2017, four of the most common statistical methods for missing value imputation include expectation management (EM), linear regression, least squares (LS), and mean/mode imputation. For machine learning, the four most common methods include clustering, decision trees, random forest, and KNN.
 
 
-### Theories for Missing Data
+#### **Theories for Missing Data**
 
 **Rubin's Missing Data Theory:** 
 
@@ -85,7 +85,7 @@ Machine learning techniques are increasingly employed for imputing missing data 
 
 These theories provide a comprehensive framework for understanding and implementing imputation methods across various datasets and analytical contexts.
 
-### Research Methods for Missing Data:
+#### **Research Methods for Missing Data:**
 
 **Descriptive Studies:** 
 
@@ -111,39 +111,50 @@ These studies apply imputation methods to real-world data, demonstrating their p
 
 This involves discussing the conditions, limitations, and best practices of imputation methods. Rachael A Hughes' work is an example, providing insights into when multiple imputation is not suitable and suggesting alternative approaches.
 
-### Project Purpose 
 
-The purpose of this project is to demonstrate the use of several different types of missing data imputation methods using a test dataset with missing data. The performance of various imputation methods will be assessed using RMSE and R-Squared of the resulting predictive models after applying various imputation methods.
-
-# Related Work
+#### **Related Work**
 
 **Literature Research and Review**
+
 The approach used to select and analyze the literature included in this review involved identifying articles relevant to the topic of missing data and the imputation thereof. Articles were selected based on their topic relevance as it related to statistical and machine learning concepts. 
+
 
 Preference was given to articles that were published recently to ensure the inclusion of the latest methods and research in the field. In addition, articles were prioritized from peer-reviewed and reputable conference papers to ensure quality and reliability of the research. A comprehensive search using Google Scholar and the available databases accessed through the University of West Florida was implemented. Key search terms included: ‘missing data’, ‘missing data imputation’.
 
 Articles were selected based on their relevance to the subject, in addition to including papers with a variety of methods implemented. Research addressing both statistical and machine learning approaches were focused on. Articles not available in full text, not directly related to missing data imputation methods, or where the primary focus was theoretical as opposed to practical were excluded. 
 
 Once an article was selected, it was reviewed for relevant data pertaining to missing data imputation methods. The context of the study, the datasets involved, and the results provided were also reviewed. The article analysis focused on:
-•	Goal – understanding the specific goal of the study and how it relates to missing data imputation.
-•	Methods/Techniques – Identifying the specific methods used, whether statistical or machine learning, or a combination of both.
-•	Results/Applications – evaluating the effectiveness/efficiency of the methods employed. Showing how these methods were/can be applied in a real-world scenario.
-•	Limitations/Challenges – noting the limitations or challenges involved in each method used.
-•	Data – identifying the types of data used for testing (e.g. simulated, real-world) and the type of missing data (e.g. missing at random, missing completely at random, not missing at random)
+
+* Goal – understanding the specific goal of the study and how it relates to missing data imputation.
+* Methods/Techniques – Identifying the specific methods used, whether statistical or machine learning, or a combination of both.
+* Results/Applications – evaluating the effectiveness/efficiency of the methods employed. Showing how these methods were/can be applied in a real-world scenario.
+* Limitations/Challenges – noting the limitations or challenges involved in each method used.
+* Data – identifying the types of data used for testing (e.g. simulated, real-world) and the type of missing data (e.g. missing at random, missing completely at random, not missing at random)
 
 
-# Methods
+#### **Project Purpose** 
+
+The purpose of this project is to demonstrate the use of several different types of missing data imputation methods using a test dataset with missing data. The performance of various imputation methods will be assessed using RMSE and R-Squared of the resulting predictive models after applying various imputation methods.
+
+# **Methods**
 
 An overview of the methodology used to demonstrate different techniques for imputing missing data is shown below:
 
 ![Overivew of Methodology for Demonstrating Different Techniques for Missing Data Imputation. Figured generated by Robert Stairs, 14JUL2024.](MIssing Data Workflow Graphic.png)
 
-### Imputation Methods
 
-The following methods were used to impute missing data for this project: 
+#### **Missing Value Deletion Methods**
+
+The following methods were used to delete missing data for this project: 
+
 **List-wise Deletion:** all rows containing missing values are removed from the dataset
 
 **Column Delete with Threshold:** if the total percentage of missing values in a column is over a threshold (20%), then the entire column/feature is removed.
+
+
+#### **Imputation Methods**
+
+The following methods were used to impute missing data for this project: 
 
 **Mean imputation:** missing values are replaced with the mean of the non-missing values of the corresponding feature.
 
@@ -151,29 +162,38 @@ The following methods were used to impute missing data for this project:
 
 **Median imputation:** missing values are replaced with the median of the non-missing values of the corresponding feature.
 
-**MICE (multiple imputation by chained equations):** missing data for a given column are imputed based on other columns with observed data over multiple iterations (Azur et al. 2011). It operates under the assumption that the data are missing at random (MAR). For a missing column, the missing values are imputed using regression based on observed data from other columns in the dataset. Then, the next column’s missing data are imputed using observed data in other columns and so forth until regression models are available for each column. Each regression model will have its own level of uncertainty. With each iteration, a possible missing value is imputed for a given data point given the regression function and its associated uncertainty. This process is repeated over multiple iterations, where the number of iterations is set by the user. This results in multiple datasets, which are then combined into a single dataset again. In this case, 50 iterations were used.
+**MICE (multiple imputation by chained equations):** missing data for a given column are imputed based on other columns with observed data over multiple iterations [@azur2011multiple]. It operates under the assumption that the data are missing at random (MAR). For a missing column, the missing values are imputed using regression based on observed data from other columns in the dataset. Then, the next column’s missing data are imputed using observed data in other columns and so forth until regression models are available for each column. Each regression model will have its own level of uncertainty. With each iteration, a possible missing value is imputed for a given data point given the regression function and its associated uncertainty. This process is repeated over multiple iterations, where the number of iterations is set by the user. This results in multiple datasets, which are then combined into a single dataset again. In this case, 50 iterations were used.
 
-**missForest:** uses a random forest trained on observed data to predict missing values in continuous and categorical data. It is an ensemble machine learning method, where the data set is bootstrap sampled randomly and individual decision trees are constructed for each bootstrap (Tang 2017). The collection of decision trees is then used to impute a missing data point. This technique in machine learning helps prevent overfitting that decision trees are prone to.
+**missForest:** uses a random forest trained on observed data to predict missing values in continuous and categorical data. It is an ensemble machine learning method, where the data set is bootstrap sampled randomly and individual decision trees are constructed for each bootstrap [@tang2017random]. The collection of decision trees is then used to impute a missing data point. This technique in machine learning helps prevent overfitting that decision trees are prone to.
 
 
-### Machine Learning Methods for Model-Fitting
+#### **Machine Learning Methods for Model-Fitting**
 
 Once missing values were imputed using each of the five methods outlined above, each resulting dataset (5) was used to fit models for Ozone levels. The datasets were split into training and test sets using a split ratio of 0.75. The following models were then used for training each dataset:
 
 **Decision Tree:**
 
+Decision trees are a tree-structured classifier used for both classification and regression. It splits the data into subsets based on the value of input features, forming a tree where each node represents a feature and each branch represents a decision rule. Advantages include: Easy to interpret and visualize, can handle mixed-type data, non-parametric making it flexible for various data distributions, requires little data pre-processing. Disadvantages include: Prone to overfitting, sensitive to small variations in the data, can create biased trees if some classes/features are dominant.
+
+
 **Random Forest:**
 
-**KNN:**
+Random forest is an ensemble learning method primarily used for classification and regression. It combines the predictions of multiple decision trees to improve accuracy and control over-fitting. It construct the decision trees during training and outputting the mode of the classes (classification) or mean prediction (regression) of the individual trees. Advantages include: high accuracy and robustness against over-fitting, works well with large datasets and high-dimensional spaces, handles both classification and regression tasks. Disadvantages include: can be computationally intensive and slower to predict, less interpretable compared to a single decision tree.
+
+
+**K-Nearest Neighbors (KNN):**
+
+KNN is a simple, instance-based learning algorithm used for classification and regression. It classifies a data point based based on the stored instances from the training data without learning explicit parameters, but instead on how its neighbors are classified. Advantages include: simple and easy to implement, algorithm doesn't have a separate training phase making it more flexible. Disadvantages include: Computationally expensive for large datasets due to the need to compute distances to all points, sensitive to irrelevant or redundant features, performance depends on the choice of the number of k and the distance metric used.
+
+
 
 The effectiveness of each imputation technique was evaluated using RMSE and R-Squared for the resulting Ozone level models. The RMSE and R-Squared for each imputation/model combination were reported and summarized in a data frame. The combination with the lowest RMSE was determined to be the most effective imputation technique and model fit for this dataset.
 
 
+# **Analysis and Results**
 
-### Analysis and Results
 
-
-# Description of the Dataset
+#### **Description of the Dataset**
 
 The Ozone dataset (“Ozone: Los Angeles Ozone Pollution Data, 1976”) from the mlbench package in R was chosen for this project. It contains observations related to pollution levels in the Los Angeles area during 1976. The variables contained in the dataset are thought to influence ozone concentration. These include daily ozone measurements consisting of: 
 
@@ -194,7 +214,7 @@ The Ozone dataset (“Ozone: Los Angeles Ozone Pollution Data, 1976”) from the
 The dataset allows for analysis of how different meteorological conditions/factors can affect ozone levels. This dataset was chosen because it already has a high frequency of missing data, which is representative of a real-world application for missing data. It contains a total of 13 variables, 366 observations (one for each day for one year), and 139 missing or NA values for V9, which represents 38% of the total observations in the dataset. In practical applications, the missing values are unknown (not simulated), so it is up to the investigator to choose a methodology for handling the missing data. The investigator will also need to choose appropriate metrics for evaluating the effectiveness of different methods for handling missing data. 
 
 
-# Description of the Imputation Workflow
+#### **Description of the Imputation Workflow**
 
 The data were first pre-processed. This step typically entails importing the data, checking for missing values, checking data types, and making transformations as needed. In this case, all columns were converted to numeric data type and renamed for easier interpretation. Missing values by column were reported in summary statistics, but were not addressed until further visualization was performed.
 
@@ -202,7 +222,7 @@ Following pre-processing, correlation coefficients were calculated for all varia
 
 Missing data were then imputed with various methodologies, including list-wise deletion, feature removal, mean imputation, mode imputation, median imputation, MICE, and missForest. This resulted in 7 unique datasets, where missing data were imputed using different metholodologies. To compare the effectiveness of each imputation method, each of the imputed datasets were split into test and training datasets. The training set was used to develop machine learning models to predict Ozone levels, including decision trees, random forest, and KNN. The resulting RMSE from each machine learning model and imputation method were used to identify the most effective imputation method and model combination for this dataset.
 
-### Load Packages
+#### **Load Packages**
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -230,7 +250,7 @@ library(ggfittext)
 ```
 
 
-### Importing and Summarizing the Data
+#### **Importing and Summarizing the Data**
 
 First, the data were imported and converted to a data frame. Next, columns were reordered such that V4 (response variable) is the first column. Lastly, the data were summarized using the summary() function. The summary function gives the number of NA's per column. There are 139 missing values for V9 in the dataset. The number of missing values (NA's) in each column are as follows:
 
@@ -262,7 +282,7 @@ ozone1 <- ozone1 %>%
 summary(ozone1)
 ```
 
-### Data Pre-Processing
+#### **Data Pre-Processing**
 
 The data type was evaluated for each column. V1, V2, and V3 (Month, day of month, and day of week) were found to be "factor" data type, while the remaining columns were found to be be "numeric". V1, V2, and V3 columns were converted to numeric data type.
 
@@ -360,7 +380,7 @@ head(ozone2, n=10)
 head(ozone_date2, n=10)
 ```
 
-### Data Exploration 
+#### **Data Exploration** 
 
 **Summary Statistics by Day of Week**
 
@@ -587,7 +607,7 @@ ggplot(percentage_data7, aes(x = visibility_bin, y = percentage)) +
 
 ```
 
-### Exploration of the Missing Data
+#### **Exploration of the Missing Data**
 
 The total number of missing data points for each column is shown below as a count and as a percentage. Most of the columns contain <5% missing values. Temp_EM contains 139 missing values, which is 38.0% of the observations. The total number of missing values in the dataset is 203 out of 4,768 (13 columns times 366 obervations). This represents 4.3% of the entire dataset. 
 
@@ -608,7 +628,7 @@ print(missing_summary)
 print(sum(is.na(ozone2)))
 ```
 
-### Visualization of the Missing Data
+#### **Visualization of the Missing Data**
 
 Three different plots were generating to visualize the missing data. The first uses the vis_miss() function and the resulting plot shows the missing values shaded in black for each column and each row. Since the rows are arranged by date, we can see that the most of the data are missing in random clusters with respect to date. Temp_EM, which has the highest proportion of missing data (38%), appears to be missing in pretty regular intervals. This was further explored in the next section.
 
@@ -643,7 +663,7 @@ print(mcar_result)
 
 **Further Visualization of the Missing Data: Missingness Patterns**
 
-The data were further visualized using the gg_miss_fct() function to plot the proportion of missing values for each column (y-axis) broken down by one variable as a time (x-axis). The purpose of this is to determine if there are discernable patterns in the missingness of the data. This provides supportive information for classiflying the data as MCAR, MAR, or MNAR.
+The data were further visualized using the gg_miss_fct() function to plot the proportion of missing values for each column (y-axis) broken down by one variable as a time (x-axis). The purpose of this is to determine if there are discernible patterns in the missingness of the data. This provides additional supportive information for classifying the data as MCAR, MAR, or MNAR.
 
 Focusing on Temp_EM since it is the column with the highest number of missing values, the data appear to be missing randomly with respect to most of the variables. With respect to the date columns, the pattern of missingness appears to be random with respect to day of the month. However, it is apparent that there is a high proportion of missing data on days 6 and 7 of the week (Saturdays and Sundays). This indicates that Temp_EM was likely not measured on the weekends throughout the year. The values for Temp_EM also appear to be missing randomly with respect to month, though there is a notable high frequency of missing data around the month of May.
 
@@ -720,23 +740,24 @@ grid4 <- grid.arrange(p12, p13, nrow = 1)
 
 ```
 
-### Missing Data Imputation Using Simple Methods
+#### **Missing Data Imputation Using Simple Methods**
 
-Missing data were imputed using either the list-wise deletion, feature removal, mean, median or mode as a demonstration of simple imputation techniques. List-wise deletion is simply deleting all rows that contain a missing value. Feature removel is where a column is deleted if its total percentage of missing values is over a set threshold (we chose 20%). With  mean, median, or mode imputation, all NA values are replaced by a single value for each column: the mean, median, or mode of that column. Three data frames were created: one where mean imputation was used, a second where median imputation was used, and the last where mode imputation was used.
+Missing data were deleted using listwise deletion or feature selection as a baseline comparison for imputation methods. Additionally, missing data imputed using mean, median or mode as a demonstration of simple imputation techniques. Listwise deletion is simply deleting all rows that contain a missing value. Feature removal is where a column is deleted if its total percentage of missing values is over a set threshold (we chose 20%). With  mean, median, or mode imputation, all NA values are replaced by a single value for each column: the mean, median, or mode of that column. One dataframe was created for each method, resulting in a total of five dataframes:
+
+* Listwise deletion (row deletion)
+* Feature selection (column deletion). In this case, the Temp_EM column is dropped because more than 20% of the values are missing. Remaining rows with NAs are also dropped so that machine learning models can be applied.
+* Mean imputation
+* Median imputation
+* Mode imputation
+
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
-# Function to drop column if quantity of missing values is over the threshold
-drop_na_columns <- function(data, threshold) {
-  na_counts <- colSums(is.na(data))
-  na_proportion <- na_counts / nrow(data)
-  data <- data[, na_proportion <= threshold]
-  return(data)
-}
-# Define threshold (e.g., 20% NA allowed)
-threshold <- 0.20
+# Drop Temp_EM column because >20% data is missing. Feature selection. Remaining rows with NAs dropped as well.
+dropCol_data <- na.omit(ozone2 %>% select(-'Temp_EM'))
 
-# Drop all missing values
+
+# Drop all missing values. Row deletion.
 dropNA_data <- na.omit(ozone2)
 
 # Function for mean imputation
@@ -759,10 +780,6 @@ mode_impute <- function(x) {
 }
 
 ##### Apply imputation methods
-# Drop columns based on the NA threshold
-dropCol_data <- drop_na_columns(ozone2, threshold) # the column Temp_EM gets dropped
-dropCol_data <- apply(ozone2, 2, mean_impute)
-dropCol_data <- data.frame(dropCol_data)
 
 imputed_data_mean <- apply(ozone2, 2, mean_impute)
 imputed_data_mean <- data.frame(imputed_data_mean)
@@ -786,7 +803,7 @@ head(dropNA_data)
 #print(sum(is.na(imputed_data_mode)))
 ```
 
-### Missing Data Imputation Using MICE (Multiple Imputation Method) and missForest (Machine Learning Method)
+#### **Missing Data Imputation Using MICE (Multiple Imputation Method) and missForest (Machine Learning Method)**
 
 Next, the missing data were imputed using MICE and Miss_Forest methods. 
 
@@ -825,21 +842,19 @@ print(sum(is.na(ozone2_mice)))
 
 ```
 
-### Model-Fitting of Imputed Datasets
+#### **Model-Fitting of Imputed Datasets**
 
-***Make Predictions Using Data Where Missing Values Were Imputed Using the Mean**
+**Make Predictions Using Data Where Missing Values Were Deleted Using Listwise Deletion (Deletion of all missing rows with missing data)**
 
-The mean imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
+The listwise deleted dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
 
-* Random Forest: an ensemble learning method primarily used for classification and regression. It combines the predictions of multiple decision trees to improve accuracy and control over-fitting. It construct the decision trees during training and outputting the mode of the classes (classification) or mean prediction (regression) of the individual trees. Advantages include: high accuracy and robustness against over-fitting, 
-works well with large datasets and high-dimensional spaces, handles both classification and regression tasks. Disadvantages include: can be computationally intensive and slower to predict, less interpretable compared to a single decision tree.
-
-* K-Nearest Neighbors: is a simple, instance-based learning algorithm used for classification and regression. It classifies a data point based based on the stored instances from the training data without learning explicit parameters, but instead on how its neighbors are classified. Advantages include: simple and easy to implement, algorithm doesn't have a separate training phase making it more flexible. Disadvantages include:
-Computationally expensive for large datasets due to the need to compute distances to all points, sensitive to irrelevant or redundant features, performance depends on the choice of the number of k and the distance metric used.
-
-* Decision Tree: is a tree-structured classifier used for both classification and regression. It splits the data into subsets based on the value of input features, forming a tree where each node represents a feature and each branch represents a decision rule. Advantages include: Easy to interpret and visualize, can handle mixed-type data, non-parametric making it flexible for various data distributions, requires little data preprocessing. Disadvantages include: Prone to overfitting, sensitive to small variations in the data, can create biased trees if some classes/features are dominant.
+* Random Forest
+* K-Nearest Neighbors (KNN)
+* Decision Tree
 
 After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
+
+For the listwise deletion method, random forest had the best model fit, with an RMSE of 4.59.
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
@@ -854,8 +869,6 @@ library(tidymodels)
 library(class) 
 library(vip) 
 
-**List-wise Deletion**
-```{r}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_dropNA <- initial_split(dropNA_data, prop = 0.75)
@@ -888,8 +901,7 @@ tree_dropNA_pred <- predict(tree_dropNA, newdata = test_dropNA)
 # Plot variable importance
 var_importance <- varImp(tree_dropNA)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
-```
-```{r}
+
 # Function to calculate RMSE
 rmse <- function(pred, actual) {
   sqrt(mean((pred - actual)^2))
@@ -905,7 +917,19 @@ cat("KNN RMSE:", knn_dropNA_rmse, "\n")
 cat("Decision Tree RMSE:", tree_dropNA_rmse, "\n")
 ```
 
-****Drop column if NA's >= 20%****
+
+**Make Predictions Using Data Where Columns with >20% Missing Data Were Deleted (Temp_EM column)**
+
+The deleted column dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
+
+* Random Forest
+* K-Nearest Neighbors (KNN)
+* Decision Tree
+
+After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
+
+For the column deletion method (feature selection), random forest had the best model fit, with an RMSE of 3.66.
+
 ```{r}
 # Split the data into training and testing sets
 set.seed(123)
@@ -939,8 +963,8 @@ tree_dropCol_pred <- predict(tree_dropCol, newdata = test_dropCol)
 # Plot variable importance
 var_importance <- varImp(tree_dropCol)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
-```
-```{r}
+
+
 # Calculate RMSE for each model
 rf_dropCol_rmse <- rmse(rf_dropCol_pred, test_dropCol$Ozone_reading)
 knn_dropCol_rmse <- rmse(knn_dropCol_pred, test_dropCol$Ozone_reading)
@@ -952,7 +976,20 @@ cat("KNN RMSE:", knn_dropCol_rmse, "\n")
 cat("Decision Tree RMSE:", tree_dropCol_rmse, "\n")
 ```
 
-**Mean**
+
+**Make Predictions Using Data Where Missing Values were Imputed using the Mean**
+
+The mean imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
+
+* Random Forest
+* K-Nearest Neighbors (KNN)
+* Decision Tree
+
+After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
+
+For the mean imputation method, random forest had the best model fit, with an RMSE of 4.90.
+
+
 ```{r}
 # Split the data into training and testing sets
 set.seed(123)
@@ -987,8 +1024,6 @@ tree_mean_pred <- predict(tree_mean, newdata = test_mean)
 var_importance <- varImp(tree_mean)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
-```
-```{r}
 # Calculate RMSE for each model
 rf_mean_rmse <- rmse(rf_mean_pred, test_mean$Ozone_reading)
 knn_mean_rmse <- rmse(knn_mean_pred, test_mean$Ozone_reading)
@@ -1000,7 +1035,19 @@ cat("KNN RMSE:", knn_mean_rmse, "\n")
 cat("Decision Tree RMSE:", tree_mean_rmse, "\n")
 ```
 
-**Median**
+**Make Predictions Using Data Where Missing Values were Imputed using the Median**
+
+The mean imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
+
+* Random Forest
+* K-Nearest Neighbors (KNN)
+* Decision Tree
+
+After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
+
+For the mean imputation method, random forest had the best model fit, with an RMSE of 5.07.
+
+
 ```{r}
 # Split the data into training and testing sets
 set.seed(123)
@@ -1029,8 +1076,6 @@ tree_med_pred <- predict(tree_med, newdata = test_med)
 var_importance <- varImp(tree_med)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
-```
-```{r}
 # Calculate RMSE for each model
 rf_med_rmse <- rmse(rf_med_pred, test_med$Ozone_reading)
 knn_med_rmse <- rmse(knn_med_pred, test_med$Ozone_reading)
@@ -1042,7 +1087,19 @@ cat("KNN RMSE:", knn_med_rmse, "\n")
 cat("Decision Tree RMSE:", tree_med_rmse, "\n")
 ```
 
-**Mode**
+
+**Make Predictions Using Data Where Missing Values were Imputed using the Mode**
+
+The mean imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
+
+* Random Forest
+* K-Nearest Neighbors (KNN)
+* Decision Tree
+
+After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
+
+For the mode imputation method, random forest had the best model fit, with an RMSE of 5.40.
+
 ```{r}
 # Split the data into training and testing sets
 set.seed(123)
@@ -1070,8 +1127,6 @@ tree_mode_pred <- predict(tree_mode, newdata = test_mode)
 var_importance <- varImp(tree_mode)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
-```
-```{r}
 # Calculate RMSE for each model
 rf_mode_rmse <- rmse(rf_mode_pred, test_mode$Ozone_reading)
 knn_mode_rmse <- rmse(knn_mode_pred, test_mode$Ozone_reading)
@@ -1083,9 +1138,20 @@ cat("KNN RMSE:", knn_mode_rmse, "\n")
 cat("Decision Tree RMSE:", tree_mode_rmse, "\n")
 ```
 
-### Make Predictions using data where missing values were imputed with complex methods:
+#### **Make Predictions using data where missing values were imputed with complex methods:**
 
-**missForest**
+**Make Predictions Using Data Where Missing Values were Imputed using missForest Method**
+
+The missForest imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
+
+* Random Forest
+* K-Nearest Neighbors (KNN)
+* Decision Tree
+
+After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
+
+For the missForest imputation method, random forest had the best model fit, with an RMSE of 4.46.
+
 ```{r}
 # Split the data into training and testing sets
 set.seed(123)
@@ -1113,8 +1179,6 @@ tree_miss_pred <- predict(tree_miss, newdata = test_miss)
 var_importance <- varImp(tree_miss)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
-```
-```{r}
 # Calculate RMSE for each model
 rf_miss_rmse <- rmse(rf_miss_pred, test_miss$Ozone_reading)
 knn_miss_rmse <- rmse(knn_miss_pred, test_miss$Ozone_reading)
@@ -1126,7 +1190,20 @@ cat("KNN RMSE:", knn_miss_rmse, "\n")
 cat("Decision Tree RMSE:", tree_miss_rmse, "\n")
 ```
 
-**MICE**
+
+**Make Predictions Using Data Where Missing Values were Imputed using MICE Method**
+
+The MICE imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
+
+* Random Forest
+* K-Nearest Neighbors (KNN)
+* Decision Tree
+
+After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
+
+For the MICE imputation method, random forest had the best model fit, with an RMSE of 4.70.
+
+
 ```{r}
 # Split the data into training and testing sets
 set.seed(123)
@@ -1154,8 +1231,6 @@ tree_mice_pred <- predict(tree_mice, newdata = test_mice)
 var_importance <- varImp(tree_mice)
 barplot(var_importance$Overall, main = "Variable Importance for Decision Tree", xlab = "Variable", ylab = "Importance")
 
-```
-```{r}
 # Calculate RMSE for each model
 rf_mice_rmse <- rmse(rf_mice_pred, test_mice$Ozone_reading)
 knn_mice_rmse <- rmse(knn_mice_pred, test_mice$Ozone_reading)
@@ -1167,9 +1242,9 @@ cat("KNN RMSE:", knn_mice_rmse, "\n")
 cat("Decision Tree RMSE:", tree_mice_rmse, "\n")
 ```
 
-### Summarize Model Performance for Each Imputation Methodology
+#### **Summarize Model Performance for Each Imputation Methodology**
 
-The RMSE for each model and imputation method combination was summarized into a data frame. The results are shown below. The best model fit (lowest RMSE) was obtained when using MICE for imputation of missing data and the SVM algorithm for model training with the imputed dataset. Mean imputation with SVM model fitting was the second best combination, followed by median imputation with Random Forest.
+The RMSE for each model and imputation method combination was summarized into a data frame. The results are shown below. The best model fit (lowest RMSE) was obtained when using feature selection (column deletion) for imputation of missing data and the random forest algorithm for model training with the resulting dataset. Mean imputation with SVM model fitting was the second best combination, followed by median imputation with Random Forest.
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 models <- c('RandomForest', 'KNN', 'DecisionTree')
