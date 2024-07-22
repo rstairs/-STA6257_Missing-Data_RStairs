@@ -753,9 +753,15 @@ Missing data were deleted using listwise deletion or feature selection as a base
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
-# Drop Temp_EM column because >20% data is missing. Feature selection. Remaining rows with NAs dropped as well.
-dropCol_data <- na.omit(ozone2 %>% select(-'Temp_EM'))
-
+# Function to drop column if quantity of missing values is over the threshold
+drop_na_columns <- function(data, threshold) {
+  na_counts <- colSums(is.na(data))
+  na_proportion <- na_counts / nrow(data)
+  data <- data[, na_proportion <= threshold]
+  return(data)
+}
+# Define threshold (e.g., 20% NA allowed)
+threshold <- 0.20
 
 # Drop all missing values. Row deletion.
 dropNA_data <- na.omit(ozone2)
@@ -781,6 +787,11 @@ mode_impute <- function(x) {
 
 ##### Apply imputation methods
 
+# Drop columns based on the NA threshold
+dropCol_data <- drop_na_columns(ozone2, threshold) # the column Temp_EM gets dropped
+dropCol_data <- apply(dropCol_data, 2, mean_impute)
+dropCol_data <- data.frame(dropCol_data)
+
 imputed_data_mean <- apply(ozone2, 2, mean_impute)
 imputed_data_mean <- data.frame(imputed_data_mean)
 
@@ -798,9 +809,11 @@ head(dropCol_data)
 head(dropNA_data)
 
 # Check to make sure there are no remaining missing values
-#print(sum(is.na(imputed_data_mean)))
-#print(sum(is.na(imputed_data_median)))
-#print(sum(is.na(imputed_data_mode)))
+print(sum(is.na(imputed_data_mean)))
+print(sum(is.na(imputed_data_median)))
+print(sum(is.na(imputed_data_mode)))
+print(sum(is.na(dropCol_data)))
+print(sum(is.na(dropNA_data)))
 ```
 
 #### **Missing Data Imputation Using MICE (Multiple Imputation Method) and missForest (Machine Learning Method)**
