@@ -1309,6 +1309,6 @@ print(rmse_df[order(rmse_df$RMSE), ])
 
 # Conclusions
 
-
+This work demonstrates various methodologies that can be used to handle missing data. The dataset "Ozone", from the mlbench package in R was used to demonstrate the techniques for either deleting or imputing missing data. Visualization techniques to help classify data as MCAR, MAR, and NMAR were also demonstrated. With respect to the "Ozone" dataset, deletion of the column Temp_EM, which contains ~38% missing data, was found to be the most effective method for handling missing data. This was demonstrated through machine learning models trained to datasets where missing data were handled using various techniques including listwise deletion, feature selection (column deletion), mean/median/mode imputation, random forest (missForest) and MICE. The random forest model in combination with feature selection for handling missing data resulted in the lowest RMSE with respect to the test (unseen) dataset.
 
 # References
