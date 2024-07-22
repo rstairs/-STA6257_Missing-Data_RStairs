@@ -508,7 +508,7 @@ mode_impute <- function(x) {
 ##### Apply imputation methods
 # Drop columns based on the NA threshold
 dropCol_data <- drop_na_columns(ozone2, threshold) # the column Temp_EM gets dropped
-dropCol_data <- apply(ozone2, 2, mean_impute)
+dropCol_data <- apply(dropCol_data, 2, mean_impute)
 dropCol_data <- data.frame(dropCol_data)
 
 imputed_data_mean <- apply(ozone2, 2, mean_impute)
@@ -527,9 +527,11 @@ head(imputed_data_mode)
 head(dropCol_data)
 head(dropNA_data)
 
-#print(sum(is.na(imputed_data_mean)))
-#print(sum(is.na(imputed_data_median)))
-#print(sum(is.na(imputed_data_mode)))
+print(sum(is.na(imputed_data_mean)))
+print(sum(is.na(imputed_data_median)))
+print(sum(is.na(imputed_data_mode)))
+print(sum(is.na(dropCol_data)))
+print(sum(is.na(dropNA_data)))
 ```
 
 Complex Imputation Methods
