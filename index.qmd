@@ -17,7 +17,7 @@ editor:
     wrap: 72
 ---
 
-# **Introduction**
+# **Introduction**(RS)
 
 Missing data is a key challenge that data professionals encounter in their daily work. In the real world, data is often messy, incomplete, and requires a level of preprocessing before data analysis can occur. Part of data preprocessing is dealing with missing data. Missing data can occur for several reasons including but not limited to processing error, machine or measurement errors, non-responses in surveys, invalid calculations (e.g. division by zero), and study participant dropout (Emmanuel 2021). Missing data can be problematic for analysis because it can reduce the number of usable observations, introduce bias, and interfere with different analysis tools such as machine learning algorithms, which cannot automatically handle missing data.
 
@@ -25,7 +25,7 @@ One of the first steps in handling missing data is to determine how much of the 
 
 If a dataset contains missing data, there are two basic approaches: deletion or imputation (Schefer 2002). Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias or underestimation of variance if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood.
 
-#### **Missing Data Mechanisms**
+#### **Missing Data Mechanisms**(RS)
 
 The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling], [@bennett2001can], [@little2014joys], [@du2020missing]:
 
@@ -46,7 +46,7 @@ When data are MNAR, the probability of a record missing is dependent on the unob
 Understanding the mechanism behind missing data (MCAR, MAR, or NMAR) is important because many imputation methods require the assumption of MCAR or MAR to be held true. There is not a statistical test or analysis to classify data as MCAR, MAR, or NMAR. Instead, visualization of the missing data is required to determine the relationships (or lack thereof) within the missing data. For example, correlation matrix plots, scatterplots, and other custom visualizations can be useful tools in identifying patterns in the missing data [@ghazali2020missing]. 
 
 
-#### **Techniques for Handling Missing Data**
+#### **Techniques for Handling Missing Data**(KA, MV)
 
 Methods for handling missing data can be split into three broad categories [@ren2023review], [@Emmanuel2021surveyml]:
 
@@ -69,7 +69,7 @@ In multiple imputation methods such as MICE, a model is constructed to predict m
 Imputation methods can be further broken down into statistical versus machine learning methods. According to [@lin2020missing]'s review of literature from 2006-2017, four of the most common statistical methods for missing value imputation include expectation management (EM), linear regression, least squares (LS), and mean/mode imputation. For machine learning, the four most common methods include clustering, decision trees, random forest, and KNN.
 
 
-#### **Theories for Missing Data**
+#### **Theories for Missing Data**(KA, MV)
 
 **Rubin's Missing Data Theory:** 
 
@@ -85,7 +85,7 @@ Machine learning techniques are increasingly employed for imputing missing data 
 
 These theories provide a comprehensive framework for understanding and implementing imputation methods across various datasets and analytical contexts.
 
-#### **Research Methods for Missing Data:**
+#### **Research Methods for Missing Data:**(KA, MV)
 
 **Descriptive Studies:** 
 
@@ -112,7 +112,7 @@ These studies apply imputation methods to real-world data, demonstrating their p
 This involves discussing the conditions, limitations, and best practices of imputation methods. Rachael A Hughes' work is an example, providing insights into when multiple imputation is not suitable and suggesting alternative approaches.
 
 
-#### **Related Work**
+#### **Related Work**(EM)
 
 **Literature Research and Review**
 
@@ -136,7 +136,7 @@ Once an article was selected, it was reviewed for relevant data pertaining to mi
 
 The purpose of this project is to demonstrate the use of several different types of missing data imputation methods using a test dataset with missing data. The performance of various imputation methods will be assessed using RMSE and R-Squared of the resulting predictive models after applying various imputation methods.
 
-# **Methods**
+# **Methods**(RS,EM)
 
 An overview of the methodology used to demonstrate different techniques for imputing missing data is shown below:
 
@@ -190,7 +190,7 @@ KNN is a simple, instance-based learning algorithm used for classification and r
 The effectiveness of each imputation technique was evaluated using RMSE and R-Squared for the resulting Ozone level models. The RMSE and R-Squared for each imputation/model combination were reported and summarized in a data frame. The combination with the lowest RMSE was determined to be the most effective imputation technique and model fit for this dataset.
 
 
-# **Analysis and Results**
+# **Analysis and Results**(RS,EM)
 
 
 #### **Description of the Dataset**
@@ -214,7 +214,7 @@ The Ozone dataset (“Ozone: Los Angeles Ozone Pollution Data, 1976”) from the
 The dataset allows for analysis of how different meteorological conditions/factors can affect ozone levels. This dataset was chosen because it already has a high frequency of missing data, which is representative of a real-world application for missing data. It contains a total of 13 variables, 366 observations (one for each day for one year), and 139 missing or NA values for V9, which represents 38% of the total observations in the dataset. In practical applications, the missing values are unknown (not simulated), so it is up to the investigator to choose a methodology for handling the missing data. The investigator will also need to choose appropriate metrics for evaluating the effectiveness of different methods for handling missing data. 
 
 
-#### **Description of the Imputation Workflow**
+#### **Description of the Imputation Workflow**(RS,EM)
 
 The data were first pre-processed. This step typically entails importing the data, checking for missing values, checking data types, and making transformations as needed. In this case, all columns were converted to numeric data type and renamed for easier interpretation. Missing values by column were reported in summary statistics, but were not addressed until further visualization was performed.
 
