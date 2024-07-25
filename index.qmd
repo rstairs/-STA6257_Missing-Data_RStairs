@@ -634,6 +634,7 @@ ggplot(percentage_data7, aes(x = visibility_bin, y = percentage)) +
 
 ```
 
+
 #### **Exploration of the Missing Data**
 
 The total number of missing data points for each column is shown below as a count and as a percentage. Most of the columns contain <5% missing values. Temp_EM contains 139 missing values, which is 38.0% of the observations. The total number of missing values in the dataset is 203 out of 4,768 (13 columns times 366 obervations). This represents 4.3% of the entire dataset. 
@@ -677,7 +678,9 @@ The third plot was generated using the gg_miss_var() function and shows the numb
 #Another way to visualize number of missing rows per column
 gg_miss_var(ozone2) + labs(y = "Number of missing values") + ylim(0, 150)
 ```
-Lastly, the Little's MCAR test was performed to analyze randomness. 
+
+**Randomness Testing of Missing Data**
+The Little's MCAR test was performed to analyze randomness. 
 * Null Hypothesis (H0): The data is missing completely at random (MCAR).
 * Alternative Hypothesis (H1): The data is not missing completely at random.
 Based on the p-value(4.102052e-12) from the test, the null hypothesis is rejected, data is not missing completely at random (MCAR).
@@ -687,13 +690,70 @@ mcar_result <- mcar_test(ozone2)
 print(mcar_result)
 ```
 
+##Additionally, the Hawkin's and the Non-Parametric tests were performed to analyze missing data randomness.
+
+**Test Data for Normality**
+In order to interpret the tests, the data must be checked for normality. The Shapiro-Wilk and the Anderson-Darling tests were performed.
+```{r}
+# Extract the dependent variable
+ozone_levels <- ozone2$Ozone_reading
+
+# Remove NA values
+ozone_levels <- na.omit(ozone_levels)
+
+# Perform normality tests
+library(nortest)
+shapiro_test <- shapiro.test(ozone_levels)
+ad_test <- ad.test(ozone_levels)
+
+# Print the results
+print(shapiro_test)
+print(ad_test)
+```
+**A histogram and QQ plot were also created**
+```{r}
+# Histogram
+ggplot(ozone2, aes(x = Ozone_reading)) + geom_histogram(binwidth = 5) + ggtitle("Histogram of Ozone")
+
+# Q-Q plot
+qqnorm(ozone2$Ozone_reading)
+qqline(ozone2$Ozone_reading)
+```
+
+**Run Hawkins and Non-Parametric Tests**
+```{r}
+library(dplyr)
+explanatory = c("Temp_EM","Month", "Day_of_month","Day_of_week", "Pressure_afb", "Wind_speed_LAX", "Humidity_LAX", "Temp_sandburg", "IBH_LAX", 
+                "Pressure_gradient", "IBT_LAX", "Visibility_LAX")
+dependent = "Ozone_reading"
+
+# Run randomness test
+ozone2 %>%
+  select(explanatory)%>%
+  MissMech::TestMCARNormality()
+
+```
+**Hawkins Test**
+* P-value for the Hawkins test of normality and homoscedasticity: 0.0113103
+* This test checks for both multivariate normality and homoscedasticity (equal variances).
+* Interpretation: Since the p-value is less than 0.05, the null hypothesis of multivariate normality or homoscedasticity (or both) is rejected. This means that the data does not follow a multivariate normal distribution, or the variances are not equal across groups.
+* MCAR Hypothesis: Provided that the above tests show that the data is not normally distributed, the hypothesis of MCAR (Missing Completely At Random) is not rejected at the 0.05 significance level.
+
+**Non-Parametric Test**
+* P-value for the non-parametric test of homoscedasticity: 0.2743229
+* This test checks for homoscedasticity without assuming normality.
+* Interpretation: Since the p-value is greater than 0.05, there is not enough evidence to reject the null hypothesis of homoscedasticity. This suggests that the variances are equal across groups.
+* MCAR Hypothesis: There is not sufficient evidence to reject the hypothesis of MCAR at the 0.05 significance level.
+
+
+
 **Further Visualization of the Missing Data: Missingness Patterns**
 
 The data were further visualized using the gg_miss_fct() function to plot the proportion of missing values for each column (y-axis) broken down by one variable as a time (x-axis). The purpose of this is to determine if there are discernible patterns in the missingness of the data. This provides additional supportive information for classifying the data as MCAR, MAR, or MNAR.
 
 Focusing on Temp_EM since it is the column with the highest number of missing values, the data appear to be missing randomly with respect to most of the variables. With respect to the date columns, the pattern of missingness appears to be random with respect to day of the month. However, it is apparent that there is a high proportion of missing data on days 6 and 7 of the week (Saturdays and Sundays). This indicates that Temp_EM was likely not measured on the weekends throughout the year. The values for Temp_EM also appear to be missing randomly with respect to month, though there is a notable high frequency of missing data around the month of May.
 
-For the other variables in the dataset, there does not appear to be any obvious patterns to the missing data. Most importantly, the frequency of missing data for Temp_EM does not appear to depend on the output variable (ozone reading). Therefore, we can most likely proceed to imputation with the assumption that our data are missing at random (MAR), since there is some dependency of the missing data on other input variables such as day of week and month.
+For the other variables in the dataset, there does not appear to be any obvious patterns to the missing data. Most importantly, the frequency of missing data for Temp_EM does not appear to depend on the output variable (ozone reading). Therefore, we can most likely proceed to imputation with the assumption that our data are missing completely at random (MCAR).
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 
