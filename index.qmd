@@ -17,15 +17,15 @@ editor:
     wrap: 72
 ---
 
-# **Introduction**(RS)
+# **Introduction**
 
 Missing data is a key challenge that data professionals encounter in their daily work. In the real world, data is often messy, incomplete, and requires a level of preprocessing before data analysis can occur. Part of data preprocessing is dealing with missing data. Missing data can occur for several reasons including but not limited to processing error, machine or measurement errors, non-responses in surveys, invalid calculations (e.g. division by zero), and study participant dropout (Emmanuel 2021). Missing data can be problematic for analysis because it can reduce the number of usable observations, introduce bias, and interfere with different analysis tools such as machine learning algorithms, which cannot automatically handle missing data.
 
 One of the first steps in handling missing data is to determine how much of the data is missing and from which columns. Missing data in a dataset can be represented in several ways including NA, NaN, Null, None, blanks, spaces, empty strings, or placeholder values such as 999999 (or equivalent obvious numerical outlier). For standard missing values such as NAs, functions such as is.na() in R can be used to count the number of missing observations. For string-related missing values such as space (“ ” or empty strings (“”), functions such as unique() in R can be used to identify unexpected strings. For numerical placeholders such as 0, 99999 (or equivalent), or negative values, histograms of the data can be useful to identify missing values.
 
-If a dataset contains missing data, there are two basic approaches: deletion or imputation (Schefer 2002). Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias or underestimation of variance if the data are not missing completely at random. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood.
+If a dataset contains missing data, there are two basic approaches: deletion or imputation [@schefer2002dealingwithmissingdata]. Deletion of data can be problematic for analysis, especially when the proportion of missing data is high or the overall number of observations is low. Deletion of data can also lead to bias or underestimation of variance if the data are not missing completely at random. Imputation is the process of replacing missing values with estimates, which can be accomplished using statistical or machine learning methods. It is crucial when choosing an approach to missing data that the underlying mechanism(s) for the missing data are understood.
 
-#### **Missing Data Mechanisms**(RS)
+#### **Missing Data Mechanisms**
 
 The mechanisms for missing data can generally be broken up into three categories [@mack2018managing], [@may2009modelling], [@bennett2001can], [@little2014joys], [@du2020missing]:
 
@@ -57,10 +57,10 @@ Where Yobs is the observed data, Ymis is the missing data, and ψ contains the m
 ![Figure 1: MCAR, MAR, and MNAR Example, where M is the probability of a missing data point, X is the observed data, and Y is the unobserved data. [@du2020missing]](Missing Data Mechanisms Figure.png)
 
 
-Understanding the mechanism behind missing data (MCAR, MAR, or NMAR) is important because many imputation methods require the assumption of MCAR or MAR to be held true. The Little's MCAR test is a statistical test that can be used to support whether data are MCAR or not. This method will be discussed further in the methods section. Visualization of the missing data is helpful for determining the relationships (or lack thereof) within the missing data. For example, correlation matrix plots, scatterplots, and other custom visualizations can be useful tools in identifying patterns in the missing data [@ghazali2020missing]. 
+Understanding the mechanism behind missing data (MCAR, MAR, or NMAR) is important because many imputation methods require the assumption of MCAR or MAR to be held true. Statistical tests such as Little's MCAR test, Hawkin's test and non-parametric test can be used to support whether data or MCAR or not. These tests will be discussed further in the methods section. Visualization of the missing data is also helpful for determining the relationships (or lack thereof) within the missing data. For example, correlation matrix plots, scatterplots, and other custom visualizations can be useful tools in identifying patterns in the missing data [@ghazali2020missing]. 
 
 
-#### **Techniques for Handling Missing Data**(RS)
+#### **Techniques for Handling Missing Data**
 
 Methods for handling missing data can be split into three broad categories [@ren2023review], [@Emmanuel2021surveyml]:
 
@@ -83,7 +83,7 @@ In multiple imputation methods such as MICE, a model is constructed to predict m
 Imputation methods can be further broken down into statistical versus machine learning methods. According to [@lin2020missing]'s review of literature from 2006-2017, four of the most common statistical methods for missing value imputation include expectation management (EM), linear regression, least squares (LS), and mean/mode imputation. For machine learning, the four most common methods include clustering, decision trees, random forest, and KNN.
 
 
-#### **Theories for Missing Data**(KA, MV)
+#### **Theories for Missing Data**
 
 **Rubin's Missing Data Theory:** 
 
@@ -99,7 +99,7 @@ Machine learning techniques are increasingly employed for imputing missing data 
 
 These theories provide a comprehensive framework for understanding and implementing imputation methods across various datasets and analytical contexts.
 
-#### **Research Methods for Missing Data:**(KA, MV)
+#### **Research Methods for Missing Data:**
 
 **Descriptive Studies:** 
 
@@ -123,17 +123,13 @@ These studies apply imputation methods to real-world data, demonstrating their p
 
 **Theoretical Analysis:** 
 
-This involves discussing the conditions, limitations, and best practices of imputation methods. Rachael A Hughes' work is an example, providing insights into when multiple imputation is not suitable and suggesting alternative approaches.
+Critical decisions based on statistical theories and useful techniques are involved in addressing missing data in datasets. By categorizing missing data into MCAR, MAR, and MNAR, Rubin's Missing Data Theory offers a fundamental framework for choosing the best imputation techniques. Statistical Theory of Imputation estimates missing values by using models such as multiple imputation, which preserves uncertainty by making many credible guesses. In contrast, machine learning theories use data-driven insights to forecast missing values based on observed patterns using algorithms like KNN and neural networks. Many ways are available with trade-offs in simplicity, accuracy, and processing needs. Examples of these techniques are deletion methods, single imputation (e.g., mean imputation), and multiple imputation (e.g., MICE). These techniques are validated by comparative and simulation studies, which assess their efficacy in various circumstances and datasets. Comprehending these theories and approaches is essential for minimizing biases and optimizing data utility in analytical tasks, highlighting the multidisciplinary aspect of tackling difficulties related to missing data in practical applications.
 
-
-#### **Related Work**(EM)
+#### **Related Work**
 
 **Literature Research and Review**
 
-The approach used to select and analyze the literature included in this review involved identifying articles relevant to the topic of missing data and the imputation thereof. Articles were selected based on their topic relevance as it related to statistical and machine learning concepts. 
-
-
-Preference was given to articles that were published recently to ensure the inclusion of the latest methods and research in the field. In addition, articles were prioritized from peer-reviewed and reputable conference papers to ensure quality and reliability of the research. A comprehensive search using Google Scholar and the available databases accessed through the University of West Florida was implemented. Key search terms included: ‘missing data’, ‘missing data imputation’.
+The approach used to select and analyze the literature included in this review involved identifying articles relevant to the topic of missing data and the imputation thereof. Articles were selected based on their topic relevance as it related to statistical and machine learning concepts. Preference was given to articles that were published recently to ensure the inclusion of the latest methods and research in the field. In addition, articles were prioritized from peer-reviewed and reputable conference papers to ensure quality and reliability of the research. A comprehensive search using Google Scholar and the available databases accessed through the University of West Florida was implemented. Key search terms included: ‘missing data’, ‘missing data imputation’.
 
 Articles were selected based on their relevance to the subject, in addition to including papers with a variety of methods implemented. Research addressing both statistical and machine learning approaches were focused on. Articles not available in full text, not directly related to missing data imputation methods, or where the primary focus was theoretical as opposed to practical were excluded. 
 
@@ -220,7 +216,7 @@ KNN is a simple, instance-based learning algorithm used for classification and r
 The effectiveness of each imputation technique was evaluated using RMSE and R-Squared for the resulting Ozone level models. The RMSE and R-Squared for each imputation/model combination were reported and summarized in a data frame. The combination with the lowest RMSE was determined to be the most effective imputation technique and model fit for this dataset.
 
 
-# **Analysis and Results**(RS,EM)
+# **Analysis and Results**
 
 
 #### **Description of the Dataset**
@@ -662,18 +658,26 @@ print(sum(is.na(ozone2)))
 Three different plots were generating to visualize the missing data. 
 
 The first uses the vis_miss() function and the resulting plot shows the missing values shaded in black for each column and each row. Since the rows are arranged by date, we can see that the most of the data are missing in random clusters with respect to date. Temp_EM, which has the highest proportion of missing data (38%), appears to be missing in pretty regular intervals. This was further explored in the next section.
+
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # Plot missing data pattern
 #Shows what percentage of the data are missing from each column
 vis_miss(ozone2)
 ```
+
+
 The second plot uses the gg_miss_upset() function. This plot shows the number of missing values not only by each column, but by each possbile combination of missing values (intersections). For example, the third bar in this figure shows that there are 9 rows that are missing values for IBT_LAX, Humidity_LAX, and IBH_LAX. The majority of the rows with missing data appear to be only missing Temp_EM (127). The next highest intersection is Pressure_afb_NA, which contains 10 rows.
+
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
 #This plot gives a visual of what combinations of NAs are present and how many there are for each
 #set nsets to 8 since we have 8 columns with missing data
 gg_miss_upset(ozone2, nsets=8)
 ```
 The third plot was generated using the gg_miss_var() function and shows the number of missing values for each variable. Again, Temp_EM has by far the largest number of missing points (139).
+
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
 #Another way to visualize number of missing rows per column
 gg_miss_var(ozone2) + labs(y = "Number of missing values") + ylim(0, 150)
@@ -733,18 +737,20 @@ ozone2 %>%
   MissMech::TestMCARNormality()
 
 ```
+
 **Hawkins Test**
+
 * P-value for the Hawkins test of normality and homoscedasticity: 0.0113103
 * This test checks for both multivariate normality and homoscedasticity (equal variances).
 * Interpretation: Since the p-value is less than 0.05, the null hypothesis of multivariate normality or homoscedasticity (or both) is rejected. This means that the data does not follow a multivariate normal distribution, or the variances are not equal across groups.
 * MCAR Hypothesis: Provided that the above tests show that the data is not normally distributed, the hypothesis of MCAR (Missing Completely At Random) is not rejected at the 0.05 significance level.
 
 **Non-Parametric Test**
+
 * P-value for the non-parametric test of homoscedasticity: 0.2743229
 * This test checks for homoscedasticity without assuming normality.
 * Interpretation: Since the p-value is greater than 0.05, there is not enough evidence to reject the null hypothesis of homoscedasticity. This suggests that the variances are equal across groups.
 * MCAR Hypothesis: There is not sufficient evidence to reject the hypothesis of MCAR at the 0.05 significance level.
-
 
 
 **Further Visualization of the Missing Data: Missingness Patterns**
@@ -846,14 +852,17 @@ threshold <- 0.20
 
 # Drop columns based on the NA threshold
 dropCol_data <- drop_na_columns(ozone2, threshold) # the column Temp_EM gets dropped
-dropCol_data <- apply(dropCol_data, 2, mean_impute)
 dropCol_data <- data.frame(dropCol_data)
+dropCol_data <- na.omit(dropCol_data)
 
 head(dropCol_data)
 print(sum(is.na(dropCol_data)))
 ```
 
 **Listwise deletion (row deletion)**
+
+Create a new dataset where all rows with NAs are deleted.
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # Drop all missing values. Row deletion.
 dropNA_data <- na.omit(ozone2)
@@ -863,6 +872,9 @@ print(sum(is.na(dropNA_data)))
 ```
 
 **Mean imputation**
+
+Create a new dataset where all missing values are replaced with the mean of the column.
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # Function for mean imputation
 mean_impute <- function(x) {
@@ -878,6 +890,9 @@ print(sum(is.na(imputed_data_mean)))
 ```
 
 **Median imputation**
+
+Create a new dataset where all missing values are replaced with the median of the column.
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # Function for median imputation
 median_impute <- function(x) {
@@ -892,6 +907,9 @@ print(sum(is.na(imputed_data_median)))
 ```
 
 **Mode imputation**
+
+Create a new dataset where all missing values are replaced with the mode of the column.
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # Function for mode imputation (using the most common value)
 mode_impute <- function(x) {
@@ -931,6 +949,7 @@ ozone2_mf$error
 ```
 
 **MICE**
+
 ```{r, warning=FALSE, echo=T, message=FALSE, results=FALSE}
 library(mice)
 
@@ -961,9 +980,8 @@ The listwise deleted dataset was split into testing and training datasets using 
 
 After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
 
-For the listwise deletion method, random forest had the best model fit, with an RMSE of 4.59.
-
 Load additional libraries and split the data into training and testing sets
+
 ```{r, warning=FALSE, echo=T, message=FALSE}
 #Load additional libraries for model fitting
 library(caret) # for fitting KNN models
@@ -1053,7 +1071,11 @@ test_dropCol <- testing(data_split_dropCol)
 X <- train_dropCol[, -1]  # Features
 y <- train_dropCol$Ozone_reading  # Target
 ```
+
+
 **Random Forest**
+
+
 ```{r}
 # Random forest model
 rf_dropCol <- randomForest(Ozone_reading ~ ., data = train_dropCol)
@@ -1114,10 +1136,7 @@ test_mean <- testing(data_split_mean)
 # Split data into predictors and target
 X <- train_mean[, -1]  # Features
 y <- train_mean$Ozone_reading  # Target
-``
 
-**Random Forest**
-```{r}
 # Random forest model
 rf_mean <- randomForest(Ozone_reading ~ ., data = train_mean)
 # make predictions
@@ -1416,6 +1435,7 @@ print(rmse_df[order(rmse_df$RMSE), ])
 
 # Conclusions
 
-This work demonstrates various methodologies that can be used to handle missing data. The dataset "Ozone", from the mlbench package in R was used to demonstrate the techniques for either deleting or imputing missing data. Visualization techniques to help classify data as MCAR, MAR, and NMAR were also demonstrated. With respect to the "Ozone" dataset, deletion of the column Temp_EM, which contains ~38% missing data, was found to be the most effective method for handling missing data. This was demonstrated through machine learning models trained to datasets where missing data were handled using various techniques including listwise deletion, feature selection (column deletion), mean/median/mode imputation, random forest (missForest) and MICE. The random forest model in combination with feature selection for handling missing data resulted in the lowest RMSE with respect to the test (unseen) dataset.
+In summary, maintaining the integrity and dependability of data analysis procedures depends on the management of missing data. This work demonstrates various methodologies that can be used to handle missing data, including listwise and feature selection deletion methods, machine learning-based algorithms like missForest, single imputation techniques such as mean, mode, median imputation, and multiple imputation using MICE. The dataset "Ozone", from the mlbench package in R was used to demonstrate the techniques for either deleting or imputing missing data. Statistical tests and visualization techniques to help classify data as MCAR, MAR, and NMAR were also demonstrated. With respect to the "Ozone" dataset, deletion of the column Temp_EM, which contains ~38% missing data, was found to be the most effective method for handling missing data. This was demonstrated through machine learning models trained to datasets where missing data were handled using the various techniques described above. A total of seven datasets were created, and each dataset was trained and tested with KNN, decision tree, and random forest algorithms. The random forest model in combination with feature selection for handling missing data resulted in the lowest RMSE with respect to the test (unseen) dataset. This may have been the best result in this instance because this data appear to be MCAR based on statistical testing. It is best practice to test a variety of different methods, as was performed in this work, and predefine success criteria when handling missing data. To provide reliable and accurate results from data analysis, the imputation method selected should ultimately be in line with the unique features of the dataset and the analytical objectives. 
+
 
 # References
