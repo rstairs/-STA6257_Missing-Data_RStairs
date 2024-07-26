@@ -1413,7 +1413,7 @@ cat("Decision Tree RMSE:", tree_mice_rmse, "\n")
 
 #### **Summarize Model Performance for Each Imputation Methodology**
 
-The RMSE for each model and imputation method combination was summarized into a data frame. The results are shown below. The best model fit (lowest RMSE) was obtained when using feature selection (column deletion) for imputation of missing data and the random forest algorithm for model training with the resulting dataset. Mean imputation with SVM model fitting was the second best combination, followed by median imputation with Random Forest.
+The RMSE for each model and imputation method combination was summarized into a data frame. The results are shown below. The best model fit (lowest RMSE) was obtained when using feature selection (column deletion) for imputation of missing data and the random forest algorithm for model training with the resulting dataset. Mean imputation with the Decision Tree model fitting was the second best combination, followed by mode imputation with Random Forest.
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 models <- c('RandomForest', 'KNN', 'DecisionTree')
