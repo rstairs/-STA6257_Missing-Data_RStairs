@@ -17,7 +17,7 @@ editor:
     wrap: 72
 ---
 
-[Slides](Insert Link to Slides)
+[Slides](Slides.html)
 
 # **Introduction**
 
