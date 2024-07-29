@@ -21,62 +21,179 @@ editor:
 
 # Introduction
 
-## Placeholder Title 1
+## Introduction
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+- Missing data in real-world datasets is a key challenge.
+- Causes: Processing errors, measurement errors, survey non-responses, invalid calculations, participant dropout.
+- Impact: Reduces usable observations, introduces bias, interferes with analysis tools.
+- Importance: Accurate handling is critical for reliable data analysis.
 
-## Placeholder Title 2
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+## Identifying Missing Data
 
-## Placeholder Title 3
+- **Representation:** Standard (NA, NaN, Null, None), strings (blanks, spaces, empty strings), numerical placeholders (extreme values like 999999).
+- **Useful R Functions:** is.na() counts standard missing values, unique() identifies unexpected strings.
+- **Visual Tools:** Histograms for numerical placeholders.
+- **Example:** Survey dataset with missing age values represented as blanks.
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
 
-## Placeholder Title 4
+## Missing Data Mechanisms
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+- **MCAR (Missing Completely at Random)**: Independent of observed and unobserved data. Example: Random network connectivity loss. Impact: Deletion reduces data size, no bias.
+- **MAR (Missing at Random)**: Depends on observed data. Example: Age omission in surveys by specific demographics. Impact: Potential bias if not handled.
+- **MNAR (Missing Not at Random)**: Related to unobserved data. Example: Health survey non-responses due to severity of illness. Impact: Complex analysis, prone to bias.
 
-## Placeholder Title 5
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+## Techniques for Handling Missing Data
+
+**Deletion Methods:**
+
+- Listwise Deletion: Removes rows with any missing values. Simple but reduces dataset size.
+- Feature Selection: Removes columns with high proportions of missing data. Maintains observation count but reduces feature count.
+- Example: Removing rows with missing income data in a financial dataset.
+
+**Single Imputation:**
+
+- Mean/Median Imputation: Replaces missing values with the mean/median of the column.
+- Hot Deck Imputation: Uses values from similar records to fill missing data.
+- Regression-based Imputation: Predicts missing values using regression models based on other variables.
+- Example: Replacing missing temperature readings with the average temperature of the day.
+
+**Multiple Imputation:**
+
+- MICE (Multiple Imputation by Chained Equations): Iteratively imputes missing data by predicting and incorporating uncertainty.
+- Process: Generates multiple datasets, imputes missing values, combines results for final analysis.
+- Example: Using MICE to impute missing survey responses across several related questions.
+
+
+## Theories for Missing Data
+
+**Rubin’s Missing Data Theory:**
+
+- Categories: MCAR, MAR, MNAR.
+- Framework for understanding mechanisms behind missing data.
+- Guides selection of imputation strategies based on these mechanisms.
+
+**Statistical Theory of Imputation:**
+
+- Uses statistical models to estimate missing values.
+- Multiple imputation generates multiple plausible values for each missing data point.
+- Example: Using multiple imputation to handle missing financial data in economic research.
+
+
+**Machine Learning Theories:**
+
+- Employ techniques like k-nearest neighbors (KNN) and neural networks.
+- Predict missing values based on patterns in observed data.
+- Example: Using KNN to fill in missing entries in a customer database.
+
+## Research Methods for Missing Data
+
+**Descriptive Studies:**
+
+- Analyze patterns of missing data.
+- Example: Jerez et al. analyzed missing data in medical records.
+
+**Comparative Studies:**
+
+- Evaluate the performance of different imputation methods.
+- Example: Ibrahim and Zheng compared methods in clinical trial data.
+
+**Simulation Studies:**
+
+- Test imputation methods on controlled datasets.
+- Allow systematic observation of the impact of different techniques.
+- Example: Using simulated datasets to evaluate the accuracy of imputation methods.
+
+**Application-Based Studies:**
+
+- Real-world implementation examples.
+- Example: Saqib Ejaz Awan demonstrated imputation methods in large-scale survey data.
+
 
 # Methods
 
-## Placeholder Title 6
+## Classification of Data
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+![](images/missing_data.jpg){width="686"}
 
-## Placeholder Title 7
+## Randomness Testing {.smaller}
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+::: columns
+::: {.column width="50%"}
+::: {style="font-size: 0.5em;"}
+-   Little's MCAR Test:
+-   Hawkin's Test
+-   Non-Parametric Test
+-   Data Pattern Visualizations
+:::
+:::
 
-## Placeholder Title 8
+::: {.column width="100%"}
+![](images/Screenshot%202024-07-28%20135932.png){width="694"}
+:::
+:::
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+## Imputation Methods
+
+::: columns
+::: {.column width="50%"}
+::: {style="font-size: 0.7em;"}
+-   **Deletion**:
+    -   List-wise
+    -   Feature selection
+:::
+:::
+
+::: {.column width="100%"}
+![](images/40537_2020_313_Fig4_HTML.png){width="694"}
+:::
+:::
+
+## Imputation Methods
+
+::: columns
+::: {.column width="50%"}
+::: {style="font-size: 0.7em;"}
+**Simple**:
+
+-   Mean
+
+-   Median
+
+-   Mode
+:::
+:::
+
+::: {.column width="50%"}
+::: {style="font-size: 0.7em;"}
+**Complex**:
+
+-   MICE
+
+-   missForest
+:::
+:::
+
+::: {.column width="100%"}
+![](images/10-1241508x11.png){width="620"}
+:::
+:::
+
+## Model-Fitting: Decision Tree
+
+![](images/Decision%20Tree%20Example.png){fig-align="center"}
 
 
-## Placeholder Title 9
+## Model-Fitting - Random Forest
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+![](images/Random%20Forest%20Example.png){fig-align="center"}
+
+------------------------------------------------------------------------
+
+## Model-Fitting - KNN
+
+![](images/KNN%20Example.png){fig-align="center"}
 
 # Analysis and Results
 
