@@ -1433,6 +1433,23 @@ ImpMethod <- c('DropCol','DropNA','Mean', 'Median', 'Mode','missForest','MICE')
 # Create dataframe
 rmse_df <- data.frame(Model = models, ImpMethod=ImpMethod,RMSE = scores)
 print(rmse_df[order(rmse_df$RMSE), ])
+
+rmse_df$Combined_Methods <- paste(rmse_df$ImpMethod, rmse_df$Model)
+
+#Create a bar chart
+library(forcats)
+library(ggplot2)
+library(dplyr)
+
+#Make a bar chart
+rmse_df %>%
+  mutate(Combined_Methods = fct_reorder(Combined_Methods, desc(RMSE))) %>%
+  ggplot (aes(x=Combined_Methods, y=RMSE)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  coord_flip() +
+  xlab("") + 
+  theme_bw()
+
 ```
 
 

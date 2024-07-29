@@ -110,12 +110,13 @@ editor:
 - Real-world implementation examples.
 - Example: Saqib Ejaz Awan demonstrated imputation methods in large-scale survey data.
 
+# Overview of Methodology
 
-# Methods
+![](MIssing Data Workflow Graphic.PNG)
 
 ## Classification of Data
 
-![](images/missing_data.jpg){width="686"}
+![](missing_data.png){width="686"}
 
 ## Randomness Testing {.smaller}
 
@@ -130,7 +131,7 @@ editor:
 :::
 
 ::: {.column width="100%"}
-![](images/Screenshot%202024-07-28%20135932.png){width="694"}
+![](Screenshot 2024-07-28 135932.png){width="694"}
 :::
 :::
 
@@ -146,7 +147,7 @@ editor:
 :::
 
 ::: {.column width="100%"}
-![](images/40537_2020_313_Fig4_HTML.png){width="694"}
+![](40537_2020_313_Fig4_HTML.png){width="694"}
 :::
 :::
 
@@ -176,24 +177,24 @@ editor:
 :::
 
 ::: {.column width="100%"}
-![](images/10-1241508x11.png){width="620"}
+![](10-1241508x11.png){width="620"}
 :::
 :::
 
 ## Model-Fitting: Decision Tree
 
-![](images/Decision%20Tree%20Example.png){fig-align="center"}
+![](Decision Tree Example.png){fig-align="center"}
 
 
 ## Model-Fitting - Random Forest
 
-![](images/Random%20Forest%20Example.png){fig-align="center"}
+![](Random Forest Example.png){fig-align="center"}
 
 ------------------------------------------------------------------------
 
 ## Model-Fitting - KNN
 
-![](images/KNN%20Example.png){fig-align="center"}
+![](KNN Example.png){fig-align="center"}
 
 # Analysis and Results
 
@@ -594,24 +595,23 @@ gg_miss_upset(ozone2, nsets=8)
 ```
 
 
-# Statistical Testing for MCAR (Missing Completely at Random)
+## Statistical Testing for MCAR (Missing Completely at Random)
 
-**Randomness Testing of Missing Data**
-The Little's MCAR test was performed to analyze randomness. 
-* Null Hypothesis (H0): The data is missing completely at random (MCAR).
-* Alternative Hypothesis (H1): The data is not missing completely at random.
-Based on the p-value(4.102052e-12) from the test, the null hypothesis is rejected, data is not missing completely at random (MCAR).
-```{r, warning=FALSE, echo=T, message=FALSE}
+- The MissMech package was used to test for MCAR
+- *First, check for normality of dependent variable (ozone levels)*
+- If normally distributed, use Hawkin's test
+- If not normally distributed, use non-parametric test
+- Shapiro-Wilk and Anderson Darling tests indicate non-normality (p < 0.05)
+- Q-Q plot and histogram visibly show non-normal distribution
+- **non-parametric test p-value: 0.27, fail to reject null hypothesis that data are MCAR**
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 # Perform Little's MCAR test
 mcar_result <- mcar_test(ozone2)
 print(mcar_result)
 ```
 
-##Additionally, the Hawkin's and the Non-Parametric tests were performed to analyze missing data randomness.
-
-**Test Data for Normality**
-In order to interpret the tests, the data must be checked for normality. The Shapiro-Wilk and the Anderson-Darling tests were performed.
-```{r}
+```{r, echo=FALSE, , include=FALSE}
 # Extract the dependent variable
 ozone_levels <- ozone2$Ozone_reading
 
@@ -627,8 +627,7 @@ ad_test <- ad.test(ozone_levels)
 print(shapiro_test)
 print(ad_test)
 ```
-**A histogram and QQ plot were also created**
-```{r}
+```{r, echo=FALSE}
 # Histogram
 ggplot(ozone2, aes(x = Ozone_reading)) + geom_histogram(binwidth = 5) + ggtitle("Histogram of Ozone")
 
@@ -637,8 +636,7 @@ qqnorm(ozone2$Ozone_reading)
 qqline(ozone2$Ozone_reading)
 ```
 
-**Run Hawkins and Non-Parametric Tests**
-```{r}
+```{r, echo=FALSE, include=FALSE}
 library(dplyr)
 explanatory = c("Temp_EM","Month", "Day_of_month","Day_of_week", "Pressure_afb", "Wind_speed_LAX", "Humidity_LAX", "Temp_sandburg", "IBH_LAX", 
                 "Pressure_gradient", "IBT_LAX", "Visibility_LAX")
@@ -651,30 +649,9 @@ ozone2 %>%
 
 ```
 
-**Hawkins Test**
+## Further Visualization of the Missingess Pattern
 
-* P-value for the Hawkins test of normality and homoscedasticity: 0.0113103
-* This test checks for both multivariate normality and homoscedasticity (equal variances).
-* Interpretation: Since the p-value is less than 0.05, the null hypothesis of multivariate normality or homoscedasticity (or both) is rejected. This means that the data does not follow a multivariate normal distribution, or the variances are not equal across groups.
-* MCAR Hypothesis: Provided that the above tests show that the data is not normally distributed, the hypothesis of MCAR (Missing Completely At Random) is not rejected at the 0.05 significance level.
-
-**Non-Parametric Test**
-
-* P-value for the non-parametric test of homoscedasticity: 0.2743229
-* This test checks for homoscedasticity without assuming normality.
-* Interpretation: Since the p-value is greater than 0.05, there is not enough evidence to reject the null hypothesis of homoscedasticity. This suggests that the variances are equal across groups.
-* MCAR Hypothesis: There is not sufficient evidence to reject the hypothesis of MCAR at the 0.05 significance level.
-
-
-**Further Visualization of the Missing Data: Missingness Patterns**
-
-The data were further visualized using the gg_miss_fct() function to plot the proportion of missing values for each column (y-axis) broken down by one variable as a time (x-axis). The purpose of this is to determine if there are discernible patterns in the missingness of the data. This provides additional supportive information for classifying the data as MCAR, MAR, or MNAR.
-
-Focusing on Temp_EM since it is the column with the highest number of missing values, the data appear to be missing randomly with respect to most of the variables. With respect to the date columns, the pattern of missingness appears to be random with respect to day of the month. However, it is apparent that there is a high proportion of missing data on days 6 and 7 of the week (Saturdays and Sundays). This indicates that Temp_EM was likely not measured on the weekends throughout the year. The values for Temp_EM also appear to be missing randomly with respect to month, though there is a notable high frequency of missing data around the month of May.
-
-For the other variables in the dataset, there does not appear to be any obvious patterns to the missing data. Most importantly, the frequency of missing data for Temp_EM does not appear to depend on the output variable (ozone reading). Therefore, we can most likely proceed to imputation with the assumption that our data are missing completely at random (MCAR).
-
-```{r, warning=FALSE, echo=T, message=FALSE}
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
 
 # Create gg_miss_fct plots with adjusted themes
 p1 <- gg_miss_fct(ozone2, fct = Month) + 
@@ -745,13 +722,17 @@ grid4 <- grid.arrange(p12, p13, nrow = 1)
 
 ```
 
-#### **Missing Data Imputation Using Simple Methods**
+## Missing Data Deletion or Imputation
 
-Missing data were deleted using listwise deletion or feature selection as a baseline comparison for imputation methods. Additionally, missing data imputed using mean, median or mode as a demonstration of simple imputation techniques. Listwise deletion is simply deleting all rows that contain a missing value. Feature removal is where a column is deleted if its total percentage of missing values is over a set threshold (we chose 20%). With  mean, median, or mode imputation, all NA values are replaced by a single value for each column: the mean, median, or mode of that column. One dataframe was created for each method, resulting in a total of five dataframes:
+- Listwise deletion (delete rows with missing data)
+- Feature selection (delete columns with >20% missing data) -> Temp_EM column
+- Mean, median, or mode imputation
+- MICE
+- Random Forest
+- A total of 7 datasets were created using various methods for handling missing data
 
-**Feature selection (column deletion)**
-In this case, the Temp_EM column is dropped because more than 20% of the values are missing. Remaining rows with NAs are also dropped so that machine learning models can be applied.
-```{r, warning=FALSE, echo=T, message=FALSE}
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 
 # Function to drop column if quantity of missing values is over the threshold
 drop_na_columns <- function(data, threshold) {
@@ -772,11 +753,8 @@ head(dropCol_data)
 print(sum(is.na(dropCol_data)))
 ```
 
-**Listwise deletion (row deletion)**
 
-Create a new dataset where all rows with NAs are deleted.
-
-```{r, warning=FALSE, echo=T, message=FALSE}
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 # Drop all missing values. Row deletion.
 dropNA_data <- na.omit(ozone2)
 
@@ -784,11 +762,7 @@ head(dropNA_data)
 print(sum(is.na(dropNA_data)))
 ```
 
-**Mean imputation**
-
-Create a new dataset where all missing values are replaced with the mean of the column.
-
-```{r, warning=FALSE, echo=T, message=FALSE}
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 # Function for mean imputation
 mean_impute <- function(x) {
   x[is.na(x)] <- mean(x, na.rm = TRUE)
@@ -802,11 +776,8 @@ head(imputed_data_mean)
 print(sum(is.na(imputed_data_mean)))
 ```
 
-**Median imputation**
 
-Create a new dataset where all missing values are replaced with the median of the column.
-
-```{r, warning=FALSE, echo=T, message=FALSE}
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 # Function for median imputation
 median_impute <- function(x) {
   x[is.na(x)] <- median(x, na.rm = TRUE)
@@ -819,11 +790,8 @@ head(imputed_data_median)
 print(sum(is.na(imputed_data_median)))
 ```
 
-**Mode imputation**
 
-Create a new dataset where all missing values are replaced with the mode of the column.
-
-```{r, warning=FALSE, echo=T, message=FALSE}
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 # Function for mode imputation (using the most common value)
 mode_impute <- function(x) {
   mode_val <- as.numeric(names(sort(table(x), decreasing = TRUE)[1]))
@@ -837,13 +805,7 @@ head(imputed_data_mode)
 print(sum(is.na(imputed_data_mode)))
 ```
 
-
-#### **Missing Data Imputation Using MICE (Multiple Imputation Method) and missForest (Machine Learning Method)**
-
-Next, the missing data were imputed using MICE and Miss_Forest methods. 
-
-**missForest**
-```{r, warning=FALSE, echo=T, message=FALSE, results=FALSE}
+```{r, warning=FALSE, echo=FALSE, message=FALSE, results=FALSE, include=FALSE}
 
 library(missForest)
 
@@ -861,9 +823,7 @@ ozone2_mf$OOBerror
 ozone2_mf$error
 ```
 
-**MICE**
-
-```{r, warning=FALSE, echo=T, message=FALSE, results=FALSE}
+```{r, warning=FALSE, echo=FALSE, message=FALSE, results=FALSE, include=FALSE}
 library(mice)
 
 # Impute missing values using MICE
@@ -881,21 +841,14 @@ ozone2_mice <- as.data.frame(ozone2_mice)
 print(sum(is.na(ozone2_mice)))
 ```
 
-#### **Model-Fitting of Imputed Datasets**
+## Model-Fitting of Imputed Datasets
 
-**Make Predictions Using Data Where Missing Values Were Deleted Using Listwise Deletion (Deletion of all missing rows with missing data)**
+- Seven missing data methods -> Seven datasets
+- Each dataset was split into train/test datasets using a split ratio of 0.75
+- Models were fit for Ozone levels using random forest, decision tree, or KNN algorithms
+- Resulting RMSE for test data was used as a metric for best missing data methodology
 
-The listwise deleted dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors (KNN)
-* Decision Tree
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
-
-Load additional libraries and split the data into training and testing sets
-
-```{r, warning=FALSE, echo=T, message=FALSE}
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 #Load additional libraries for model fitting
 library(caret) # for fitting KNN models
 library(e1071)
@@ -922,8 +875,8 @@ rmse <- function(pred, actual) {
   sqrt(mean((pred - actual)^2))
 }
 ```
-**Random Forest**
-```{r, warning=FALSE, echo=T, message=FALSE}
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 # Random forest model
 rf_dropNA <- randomForest(Ozone_reading ~ ., data = train_dropNA)
 # make predictions
@@ -934,8 +887,8 @@ varImpPlot(rf_dropNA, main = "Variable Importance Plot for Random Forest Model")
 rf_dropNA_rmse <- rmse(rf_dropNA_pred, test_dropNA$Ozone_reading)
 cat("Random Forest RMSE:", rf_dropNA_rmse, "\n")
 ```
-**KNN**
-```{r, warning=FALSE, echo=T, message=FALSE}
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 # KNN model
 knn_dropNA <- train(Ozone_reading ~ ., data = train_dropNA, method = "knn")
 # make predictions
@@ -947,8 +900,8 @@ barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature
 knn_dropNA_rmse <- rmse(knn_dropNA_pred, test_dropNA$Ozone_reading)
 cat("KNN RMSE:", knn_dropNA_rmse, "\n")
 ```
-**Decision Tree**
-```{r, warning=FALSE, echo=T, message=FALSE}
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 # Decision tree model
 tree_dropNA <- rpart(Ozone_reading ~ ., data = train_dropNA)
 # make predictions
@@ -961,19 +914,7 @@ tree_dropNA_rmse <- rmse(tree_dropNA_pred, test_dropNA$Ozone_reading)
 cat("Decision Tree RMSE:", tree_dropNA_rmse, "\n")
 ```
 
-**Make Predictions Using Data Where Columns with >20% Missing Data Were Deleted (Temp_EM column)**
-
-The deleted column dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors (KNN)
-* Decision Tree
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
-
-For the column deletion method (feature selection), random forest had the best model fit, with an RMSE of 3.66.
-
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_dropCol <- initial_split(dropCol_data, prop = 0.75)
@@ -986,10 +927,7 @@ y <- train_dropCol$Ozone_reading  # Target
 ```
 
 
-**Random Forest**
-
-
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Random forest model
 rf_dropCol <- randomForest(Ozone_reading ~ ., data = train_dropCol)
 # make predictions
@@ -1000,8 +938,8 @@ varImpPlot(rf_dropCol, main = "Variable Importance Plot for Random Forest Model"
 rf_dropCol_rmse <- rmse(rf_dropCol_pred, test_dropCol$Ozone_reading)
 cat("Random Forest RMSE:", rf_dropCol_rmse, "\n")
 ```
-**KNN**
-```{r}
+
+```{r, include=FALSE, echo=FALSE}
 # KNN model
 knn_dropCol <- train(Ozone_reading ~ ., data = train_dropCol, method = "knn")
 # make predictions
@@ -1013,8 +951,8 @@ barplot(feature_importance, main = "Feature Importance for KNN", xlab = "Feature
 knn_dropCol_rmse <- rmse(knn_dropCol_pred, test_dropCol$Ozone_reading)
 cat("KNN RMSE:", knn_dropCol_rmse, "\n")
 ```
-**Decision Tree**
-```{r}
+
+```{r, include=FALSE, echo=FALSE}
 # Decision tree model
 tree_dropCol <- rpart(Ozone_reading ~ ., data = train_dropCol)
 # make predictions
@@ -1027,19 +965,8 @@ tree_dropCol_rmse <- rmse(tree_dropCol_pred, test_dropCol$Ozone_reading)
 cat("Decision Tree RMSE:", tree_dropCol_rmse, "\n")
 ```
 
-**Make Predictions Using Data Where Missing Values were Imputed using the Mean**
 
-The mean imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors (KNN)
-* Decision Tree
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
-
-For the mean imputation method, random forest had the best model fit, with an RMSE of 4.90.
-
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_mean <- initial_split(imputed_data_mean, prop = 0.75)
@@ -1061,8 +988,7 @@ rf_mean_rmse <- rmse(rf_mean_pred, test_mean$Ozone_reading)
 cat("Random Forest RMSE:", rf_mean_rmse, "\n")
 ```
 
-**KNN**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # KNN model
 knn_mean <- train(Ozone_reading ~ ., data = train_mean, method = "knn")
 # make predictions
@@ -1075,8 +1001,7 @@ knn_mean_rmse <- rmse(knn_mean_pred, test_mean$Ozone_reading)
 cat("KNN RMSE:", knn_mean_rmse, "\n")
 ```
 
-**Decision Tree**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Decision tree model
 tree_mean <- rpart(Ozone_reading ~ ., data = train_mean)
 # make predictions
@@ -1089,19 +1014,7 @@ tree_mean_rmse <- rmse(tree_mean_pred, test_mean$Ozone_reading)
 cat("Decision Tree RMSE:", tree_mean_rmse, "\n")
 ```
 
-**Make Predictions Using Data Where Missing Values were Imputed using the Median**
-
-The mean imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors (KNN)
-* Decision Tree
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
-
-For the mean imputation method, random forest had the best model fit, with an RMSE of 5.07.
-
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_med <- initial_split(imputed_data_median, prop = 0.75)
@@ -1109,8 +1022,7 @@ train_med <- training(data_split_med)
 test_med <- testing(data_split_med)
 ```
 
-**Random Forest**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Random forest model
 rf_med <- randomForest(Ozone_reading ~ ., data = train_med)
 rf_med_pred <- predict(rf_med, newdata = test_med)
@@ -1121,8 +1033,7 @@ rf_med_rmse <- rmse(rf_med_pred, test_med$Ozone_reading)
 cat("Random Forest RMSE:", rf_med_rmse, "\n")
 ```
 
-**KNN**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # KNN model
 knn_med <- train(Ozone_reading ~ ., data = train_med, method = "knn")
 knn_med_pred <- predict(knn_med, newdata = test_med)
@@ -1134,8 +1045,7 @@ knn_med_rmse <- rmse(knn_med_pred, test_med$Ozone_reading)
 cat("KNN RMSE:", knn_med_rmse, "\n")
 ```
 
-**Decision Tree**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Decision tree model
 tree_med <- rpart(Ozone_reading ~ ., data = train_med)
 tree_med_pred <- predict(tree_med, newdata = test_med)
@@ -1147,19 +1057,7 @@ tree_med_rmse <- rmse(tree_med_pred, test_med$Ozone_reading)
 cat("Decision Tree RMSE:", tree_med_rmse, "\n")
 ```
 
-**Make Predictions Using Data Where Missing Values were Imputed using the Mode**
-
-The mean imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors (KNN)
-* Decision Tree
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
-
-For the mode imputation method, random forest had the best model fit, with an RMSE of 5.40.
-
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_mode <- initial_split(imputed_data_mode, prop = 0.75)
@@ -1167,8 +1065,7 @@ train_mode <- training(data_split_mode)
 test_mode <- testing(data_split_mode)
 ```
 
-**Random Forest**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Random forest model
 rf_mode <- randomForest(Ozone_reading ~ ., data = train_mode)
 rf_mode_pred <- predict(rf_mode, newdata = test_mode)
@@ -1179,8 +1076,7 @@ rf_mode_rmse <- rmse(rf_mode_pred, test_mode$Ozone_reading)
 cat("Random Forest RMSE:", rf_mode_rmse, "\n")
 ```
 
-**KNN**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # KNN model
 knn_mode <- train(Ozone_reading ~ ., data = train_mode, method = "knn")
 knn_mode_pred <- predict(knn_mode, newdata = test_mode)
@@ -1192,8 +1088,7 @@ knn_mode_rmse <- rmse(knn_mode_pred, test_mode$Ozone_reading)
 cat("KNN RMSE:", knn_mode_rmse, "\n")
 ```
 
-**Decision Tree**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Decision tree model
 tree_mode <- rpart(Ozone_reading ~ ., data = train_mode)
 tree_mode_pred <- predict(tree_mode, newdata = test_mode)
@@ -1205,21 +1100,8 @@ tree_mode_rmse <- rmse(tree_mode_pred, test_mode$Ozone_reading)
 cat("Decision Tree RMSE:", tree_mode_rmse, "\n")
 ```
 
-#### **Make Predictions using data where missing values were imputed with complex methods:**
 
-**Make Predictions Using Data Where Missing Values were Imputed using missForest Method**
-
-The missForest imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors (KNN)
-* Decision Tree
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
-
-For the missForest imputation method, random forest had the best model fit, with an RMSE of 4.46.
-
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_miss <- initial_split(ozone2_mf, prop = 0.75)
@@ -1227,8 +1109,7 @@ train_miss <- training(data_split_miss)
 test_miss <- testing(data_split_miss)
 ```
 
-**Random Forest**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Random forest model
 rf_miss <- randomForest(Ozone_reading ~ ., data = train_miss)
 rf_miss_pred <- predict(rf_miss, newdata = test_miss)
@@ -1239,8 +1120,7 @@ rf_miss_rmse <- rmse(rf_miss_pred, test_miss$Ozone_reading)
 cat("Random Forest RMSE:", rf_miss_rmse, "\n")
 ```
 
-**KNN**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # KNN model
 knn_miss <- train(Ozone_reading ~ ., data = train_miss, method = "knn")
 knn_miss_pred <- predict(knn_miss, newdata = test_miss)
@@ -1252,8 +1132,7 @@ knn_miss_rmse <- rmse(knn_miss_pred, test_miss$Ozone_reading)
 cat("KNN RMSE:", knn_miss_rmse, "\n")
 ```
 
-**Decision Tree**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Decision tree model
 tree_miss <- rpart(Ozone_reading ~ ., data = train_miss)
 tree_miss_pred <- predict(tree_miss, newdata = test_miss)
@@ -1265,20 +1144,8 @@ tree_miss_rmse <- rmse(tree_miss_pred, test_miss$Ozone_reading)
 cat("Decision Tree RMSE:", tree_miss_rmse, "\n")
 ```
 
-**Make Predictions Using Data Where Missing Values were Imputed using MICE Method**
 
-The MICE imputed dataset was split into testing and training datasets using a split ratio of 0.75. Models were then fit using the following algorithms:
-
-* Random Forest
-* K-Nearest Neighbors (KNN)
-* Decision Tree
-
-After models were fit to the training data, predictions were made on the unseen test data. RMSE was then reported for each model. 
-
-For the MICE imputation method, random forest had the best model fit, with an RMSE of 4.70.
-
-
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Split the data into training and testing sets
 set.seed(123)
 data_split_mice <- initial_split(ozone2_mice, prop = 0.75)
@@ -1286,8 +1153,7 @@ train_mice <- training(data_split_mice)
 test_mice <- testing(data_split_mice)
 ```
 
-**Random Forest**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Random forest model
 rf_mice <- randomForest(Ozone_reading ~ ., data = train_mice)
 rf_mice_pred <- predict(rf_mice, newdata = test_mice)
@@ -1298,8 +1164,7 @@ rf_mice_rmse <- rmse(rf_mice_pred, test_mice$Ozone_reading)
 cat("Random Forest RMSE:", rf_mice_rmse, "\n")
 ```
 
-**KNN**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # KNN model
 knn_mice <- train(Ozone_reading ~ ., data = train_mice, method = "knn")
 knn_mice_pred <- predict(knn_mice, newdata = test_mice)
@@ -1311,8 +1176,7 @@ knn_mice_rmse <- rmse(knn_mice_pred, test_mice$Ozone_reading)
 cat("KNN RMSE:", knn_mice_rmse, "\n")
 ```
 
-**Decision Tree**
-```{r}
+```{r, include=FALSE, echo=FALSE}
 # Decision tree model
 tree_mice <- rpart(Ozone_reading ~ ., data = train_mice)
 tree_mice_pred <- predict(tree_mice, newdata = test_mice)
@@ -1324,11 +1188,15 @@ tree_mice_rmse <- rmse(tree_mice_pred, test_mice$Ozone_reading)
 cat("Decision Tree RMSE:", tree_mice_rmse, "\n")
 ```
 
-#### **Summarize Model Performance for Each Imputation Methodology**
+## Model Performance for Each Missing Data Methodology
 
-The RMSE for each model and imputation method combination was summarized into a data frame. The results are shown below. The best model fit (lowest RMSE) was obtained when using feature selection (column deletion) for imputation of missing data and the random forest algorithm for model training with the resulting dataset. Mean imputation with the Decision Tree model fitting was the second best combination, followed by mode imputation with Random Forest.
+- The RMSE for each model and imputation method combination was summarized into a data frame
+- The best model fit (lowest RMSE) was obtained when using **feature selection (column deletion)** for missing data and the **random forest** algorithm for model training
+- Simple methods likely outperformed more advanced methods in this case since statistical testing supports that data are MCAR
+- *There is no single best method for handling missing data, it will always depend on the context*
+- Testing of multiple methods is the typical approach
 
-```{r, warning=FALSE, echo=T, message=FALSE}
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
 models <- c('RandomForest', 'KNN', 'DecisionTree')
 scores <- c(rf_dropCol_rmse, knn_dropCol_rmse, tree_dropCol_rmse,
             rf_dropNA_rmse, knn_dropNA_rmse, tree_dropNA_rmse,
@@ -1343,12 +1211,50 @@ ImpMethod <- c('DropCol','DropNA','Mean', 'Median', 'Mode','missForest','MICE')
 # Create dataframe
 rmse_df <- data.frame(Model = models, ImpMethod=ImpMethod,RMSE = scores)
 print(rmse_df[order(rmse_df$RMSE), ])
+
+```
+
+
+## Model Performance for Each Missing Data Methodology
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+#Add a column that combines the imputation method and model fitting methods into one string
+
+rmse_df$Combined_Methods <- paste(rmse_df$ImpMethod, rmse_df$Model)
+
+#Create a bar chart
+library(forcats)
+library(ggplot2)
+library(dplyr)
+
+#Make a bar chart
+RMSE_summary <- rmse_df %>%
+  mutate(Combined_Methods = fct_reorder(Combined_Methods, desc(RMSE))) %>%
+  ggplot (aes(x=Combined_Methods, y=RMSE)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  coord_flip() +
+  xlab("") + 
+  theme_bw()
+
+RMSE_summary
+
 ```
 
 
 # Conclusions
 
-In summary, maintaining the integrity and dependability of data analysis procedures depends on the management of missing data. This work demonstrates various methodologies that can be used to handle missing data, including listwise and feature selection deletion methods, machine learning-based algorithms like missForest, single imputation techniques such as mean, mode, median imputation, and multiple imputation using MICE. The dataset "Ozone", from the mlbench package in R was used to demonstrate the techniques for either deleting or imputing missing data. Statistical tests and visualization techniques to help classify data as MCAR, MAR, and NMAR were also demonstrated. With respect to the "Ozone" dataset, deletion of the column Temp_EM, which contains ~38% missing data, was found to be the most effective method for handling missing data. This was demonstrated through machine learning models trained to datasets where missing data were handled using the various techniques described above. A total of seven datasets were created, and each dataset was trained and tested with KNN, decision tree, and random forest algorithms. The random forest model in combination with feature selection for handling missing data resulted in the lowest RMSE with respect to the test (unseen) dataset. This may have been the best result in this instance because this data appear to be MCAR based on statistical testing. It is best practice to test a variety of different methods, as was performed in this work, and predefine success criteria when handling missing data. To provide reliable and accurate results from data analysis, the imputation method selected should ultimately be in line with the unique features of the dataset and the analytical objectives. 
+## Conclusions
 
+- In analytical processes, managing missing data is essential to preserving data integrity.
+- We investigated a number of approaches to deal with missing data, such as imputation and deletion algorithms.
+- Imputation techniques included mean, median, mode, random forest, MICE 
+- Deletion methods included listwise (row deletion) and feature selection (column deletion)
+- It is necessary to comprehend the missing data mechanism (MCAR, MAR, MNAR) in order to choose the best imputation techniques.
 
-# References
+## Conclusions Continued 
+
+- The efficacy of every imputation technique was evaluated using evaluation measures such as RMSE and R-Squared on the Ozone dataset.
+- The features of the dataset and the goals of the analysis should guide the choice of imputation technique.
+- When deletion procedures are used and the missing data are not entirely random, skewed conclusions may arise.
+- While single imputation techniques are straightforward, they may understate data variability.
+- Subsequent investigations may delve deeper into sophisticated machine learning methodologies to enhance the precision of missing data imputation.
