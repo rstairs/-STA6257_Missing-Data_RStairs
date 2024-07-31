@@ -634,6 +634,38 @@ ggplot(percentage_data7, aes(x = visibility_bin, y = percentage)) +
 ```
 
 
+**Correlation Matrix for All Columns**
+
+The correlation matrix shows a lot of strong correlation between the predictors in the model. Some of the strongest correlations are as follows (|correlation| >0.5):
+
+* Pressure_afb: Temp_Sandburg, Temp_EM, IBH_LAX, IBT_LAX
+* Humidity_LAX: Pressure gradient
+* Temp_Sandburg: Pressure_afb, Temp_EM, IBH_LAX, IBT_LAX
+* Temp_EM: Pressure_afb, Temp_Sandburg, IBH_LAX, IBT_LAX
+* IBH_LAX: Pressure_afb, Temp_Sandburg, Temp_EM, IBT_LAX
+* Pressure_gradient: Humidity_LAX
+* IBT_LAX: Pressure_afb, Temp_Sandburg, Temp_EM, IBH_LAX
+
+
+```{r, warning=FALSE, echo=T, message=FALSE}
+library("corrplot")
+
+#Delete NA values to allow calculation of correlation coefficients
+ozone_delete_NA <- na.omit(ozone2)
+
+
+#Make the correlation matrix
+ozone_cor = cor(ozone_delete_NA)
+ozone_cor
+
+
+#Make the plot of the correlation matrix
+corrplot(ozone_cor)
+
+```
+
+
+
 #### **Exploration of the Missing Data**
 
 The total number of missing data points for each column is shown below as a count and as a percentage. Most of the columns contain <5% missing values. Temp_EM contains 139 missing values, which is 38.0% of the observations. The total number of missing values in the dataset is 203 out of 4,768 (13 columns times 366 obervations). This represents 4.3% of the entire dataset. 
