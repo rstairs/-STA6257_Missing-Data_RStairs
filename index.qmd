@@ -146,7 +146,7 @@ Once an article was selected, it was reviewed for relevant data pertaining to mi
 
 #### **Project Purpose** 
 
-The purpose of this project is to demonstrate the use of several different types of missing data imputation methods using a test dataset with missing data. The performance of various imputation methods will be assessed using RMSE and R-Squared of the resulting predictive models after applying various imputation methods.
+The purpose of this project is to demonstrate the use of several different types of missing data imputation methods using a test dataset with missing data. The performance of various imputation methods will be assessed using the root mean squared error (RMSE) of the resulting predictive models after applying various imputation methods.
 
 # **Methods**
 
@@ -216,7 +216,7 @@ KNN is a simple, instance-based learning algorithm used for classification and r
 
 ![**Figure 6:** Visual representation of KNN algorithm, where k is the number of nearest neighbors (https://towardsdatascience.com/why-does-increasing-k-decrease-variance-in-knn-9ed6de2f5061)](KNN Example.png)
 
-The effectiveness of each imputation technique was evaluated using RMSE and R-Squared for the resulting Ozone level models. The RMSE and R-Squared for each imputation/model combination were reported and summarized in a data frame. The combination with the lowest RMSE was determined to be the most effective imputation technique and model fit for this dataset.
+The effectiveness of each imputation technique was evaluated using RMSE for the resulting Ozone level models. The RMSE for each imputation/model combination were reported and summarized in a data frame. The combination with the lowest RMSE was determined to be the most effective imputation technique and model fit for this dataset.
 
 
 # **Analysis and Results**
