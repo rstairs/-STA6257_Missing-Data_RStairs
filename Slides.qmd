@@ -264,11 +264,6 @@ ozone1 <- ozone1 %>%
 summary(ozone1)
 ```
 
-## Data Pre-Processing Summary
-
-- All columns converted to numeric data type
-- Renamed columns for clearer interpretation during analysis and reporting
-- Combined month, day of month and day of week into one date column
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 # Create function to check data types of data frame columns
@@ -339,15 +334,6 @@ ozone_date2 <- plyr::rename(ozone_date, c('V4'="Ozone_reading",
 ```
 
 
-## Data Exploration Summary
-
-- Summary statistics by day of week, month
-- Histograms to visualize distributions of data 
-- Correlation coefficients for all features with respect to Ozone levels (output)
-- **Strong Positive Correlations:** Humidity_LAX, Pressure_afb, IBT_LAX, Temp_EM, and Temp_sandburg
-- **Strong Negative Correlations:** IBH_LAX and Visibility_LAX
-
-
 ```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 
 # Summary statistics by day of the week 
@@ -376,7 +362,7 @@ ozone_summary_by_month <- ozone2 %>%
 ```
 
 
-```{r, warning=FALSE, echo=FALSE, message=FALSE}
+```{r, warning=FALSE, echo=FALSE, message=FALSE, include=FALSE}
 
 # Make sure data is in numeric form
 ozone2[] <- lapply(ozone2, as.numeric)
