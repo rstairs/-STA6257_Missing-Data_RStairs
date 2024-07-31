@@ -112,7 +112,7 @@ editor:
 
 # Overview of Methodology
 
-![](MIssing Data Workflow Graphic.PNG)
+![](Missing Data Workflow Graphic Updated.png)
 
 ## Classification of Data
 
@@ -250,13 +250,7 @@ library(ggfittext)
 ```
 
 
-## Summarizing the Data
-
-- The summary() function shows the number of NAs for each column
-- Most columns have <20 NAs, however V9 contains 139 missing values
-- V9: Temperature (degrees F) measured at El Monte, CA
-
-```{r, warning=FALSE, echo=FALSE}
+```{r, warning=FALSE, echo=FALSE, include=FALSE}
 # import data
 data("Ozone", package = "mlbench")
 
@@ -274,7 +268,7 @@ summary(ozone1)
 
 - All columns converted to numeric data type
 - Renamed columns for clearer interpretation during analysis and reporting
-- Combined month, day of month and day of week into one data column
+- Combined month, day of month and day of week into one date column
 
 ```{r, warning=FALSE, echo=FALSE, message=FALSE}
 # Create function to check data types of data frame columns
@@ -547,6 +541,31 @@ ggplot(percentage_data7, aes(x = visibility_bin, y = percentage)) +
        x = "Visibility Levels",
        y = "Percentage of Ozone Readings") +
   theme_minimal()
+
+```
+
+
+
+## Exploring Collinearity in the Dataset
+
+- Correlation plot shows collinearity between several of the features in then dataset
+- There are a number of predictors that show |r| > 0.5
+- Temperature measurements and pressure notably have high collinearity
+
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+library("corrplot")
+
+#Delete NA values to allow calculation of correlation coefficients
+ozone_delete_NA <- na.omit(ozone2)
+
+
+#Make the correlation matrix
+ozone_cor = cor(ozone_delete_NA)
+
+
+#Make the plot of the correlation matrix
+corrplot(ozone_cor)
 
 ```
 
