@@ -21,7 +21,7 @@ editor:
 
 # **Introduction**
 
-Missing data is a key challenge that data professionals encounter in their daily work. In the real world, data is often messy, incomplete, and requires a level of pre-processing before data analysis can occur. Part of data pre-processing is dealing with missing data. Missing data can occur for several reasons including but not limited to processing error, machine or measurement errors, non-responses in surveys, invalid calculations (e.g. division by zero), and study participant dropout (Emmanuel 2021). Missing data can be problematic for analysis because it can reduce the number of usable observations, introduce bias, and interfere with different analysis tools such as machine learning algorithms, which cannot automatically handle missing data.
+Missing data is a key challenge that data professionals encounter in their daily work. In the real world, data is often messy, incomplete, and requires a level of pre-processing before data analysis can occur. Part of data pre-processing is dealing with missing data. Missing data can occur for several reasons including but not limited to processing error, machine or measurement errors, non-responses in surveys, invalid calculations (e.g. division by zero), and study participant dropout [@Emmanuel2021surveyml]. Missing data can be problematic for analysis because it can reduce the number of usable observations, introduce bias, and interfere with different analysis tools such as machine learning algorithms, which cannot automatically handle missing data.
 
 One of the first steps in handling missing data is to determine how much of the data is missing and from which columns. Missing data in a dataset can be represented in several ways including NA, NaN, Null, None, blanks, spaces, empty strings, or placeholder values such as 999999 (or equivalent obvious numerical outlier). For standard missing values such as NAs, functions such as is.na() in R can be used to count the number of missing observations. For string-related missing values such as space (“ ” or empty strings (“”), functions such as unique() in R can be used to identify unexpected strings. For numerical placeholders such as 0, 99999 (or equivalent), or negative values, histograms of the data can be useful to identify missing values.
 
@@ -190,7 +190,7 @@ The following methods were used to impute missing data for this project:
 
 **Median imputation:** missing values were replaced with the median of the non-missing values of the corresponding feature.
 
-**MICE (multiple imputation by chained equations):** missing data for a given column were imputed based on other columns with observed data over multiple iterations [@azur2011multiple]. It operates under the assumption that the data are missing at random (MAR). For a missing column, the missing values were imputed using regression based on observed data from other columns in the dataset. Then, the next column’s missing data were imputed using observed data in other columns and so forth until regression models are available for each column. Each regression model has its own level of uncertainty. With each iteration, a possible missing value is imputed for a given data point given the regression function and its associated uncertainty. This process was repeated over multiple iterations, where the number of iterations was set to 50. This resulted in multiple datasets, which were then combined into a single dataset again. 
+**MICE (multiple imputation by chained equations):** missing data for a given column were imputed based on other columns with observed data over multiple iterations [@azur2011multiple]. It operates under the assumption that the data are missing at random (MAR). For a missing column, the missing values were imputed using regression based on observed data from other columns in the dataset. Then, the next column’s missing data were imputed using observed data in other columns and so forth until regression models are available for each column. Each regression model has its own level of uncertainty. With each iteration, a possible missing value is imputed for a given data point given the regression function and its associated uncertainty. This process was repeated over multiple iterations, where the number of iterations was set to 50. This resulted in multiple datasets, which were then combined into a single dataset again [@vanbuuren2018flexibleimputationmissingdata]. 
 
 
 ![**Figure 3:** Multiple Imputation versus Single Imputation Methods, [@ren2023review]](Multiple Imputation vs Single Imputation.png)
@@ -1098,7 +1098,7 @@ print(sum(is.na(mf_test)))
 ```
 
 **MICE**
-For determining the number of imputations, a rule of thumb is to do one imputation for every 1% of missing data. Since we have approximately 4% of missing data in the dataset, we used 4 imputations. The method chosen is the Predictive Mean Matching (pmm) which is suitable for continuous variables like temperature, wind, etc. The total iterations must be enough to reach convergence, and the typical range is 5-20. The function was run at maxit=5, 10, and 20. At maxit=20, it appears convergence has been reached. Therefore, the final number of iterations used is 20.
+For determining the number of imputations, a rule of thumb is to do one imputation for every 1% of missing data. Since we have approximately 4% of missing data in the dataset, we used 4 imputations. The method chosen is the Predictive Mean Matching (pmm) which is suitable for continuous variables like temperature, wind, etc. The total iterations must be enough to reach convergence, and the typical range is 5-20. The function was run at maxit=5, 10, and 20. At maxit=20, it appears convergence has been reached. Therefore, the final number of iterations used is 20 [@vanbuuren2018flexibleimputationmissingdata].
 
 ```{r, echo=FALSE,warning=FALSE,message=FALSE,error=FALSE, results='hide'}
 library(mice)
@@ -1199,8 +1199,9 @@ vi <- varImp(knn_dropNA)
 plot(vi)
 
 # Calculate importance for the KNN model
-importance <- perm_importance(knn_dropNA, dropNA_train[, -ncol(dropNA_train)], dropNA_train$Ozone_reading)
-vip(importance)
+#library(hstats)
+#importance <- perm_importance(knn_dropNA, dropNA_train[, -ncol(dropNA_train)], dropNA_train$Ozone_reading)
+#vip(importance)
 
 
 # calculate RMSE
@@ -1374,7 +1375,7 @@ knn_med <- train(Ozone_reading ~ ., data = median_train, method = "knn")
 knn_med_pred <- predict(knn_med, newdata = median_test)
 
 # Plot variable importance
-vi <- varImp(knn_median)
+vi <- varImp(knn_med)
 plot(vi)
 
 # calculate RMSE
@@ -1563,7 +1564,7 @@ cat("Decision Tree RMSE:", tree_mice_rmse, "\n")
 
 #### **Summarize Model Performance for Each Imputation Methodology**
 
-The RMSE for each model and imputation method combination was summarized into a data frame. The results are shown below. The best model fit (lowest RMSE) was obtained when using feature selection (column deletion) for imputation of missing data and the random forest algorithm for model training with the resulting dataset. Mean imputation with the Decision Tree model fitting was the second best combination, followed by mode imputation with Random Forest.
+The RMSE for each model and imputation method combination was summarized into a data frame. The results are shown below. The best model fit (lowest RMSE) was obtained when using feature selection (column deletion) for imputation of missing data and the random forest algorithm for model training with the resulting dataset. Mean imputation with the Decision Tree model fitting was the second best combination, followed by median imputation with Random Forest.
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 models <- c('RandomForest', 'KNN', 'DecisionTree')
@@ -1602,7 +1603,11 @@ rmse_df %>%
 
 # Conclusions
 
-In summary, maintaining the integrity and dependability of data analysis procedures depends on the management of missing data. This work demonstrates various methodologies that can be used to handle missing data, including listwise and feature selection deletion methods, machine learning-based algorithms like missForest, single imputation techniques such as mean, mode, median imputation, and multiple imputation using MICE. The dataset "Ozone", from the mlbench package in R was used to demonstrate the techniques for either deleting or imputing missing data. Statistical tests and visualization techniques to help classify data as MCAR, MAR, and NMAR were also demonstrated. With respect to the "Ozone" dataset, deletion of the column Temp_EM, which contains ~38% of the total missing data, was found to be the most effective method for handling missing data. This was demonstrated through machine learning models trained to datasets where missing data were handled using the various techniques described above. Each imputed dataset was  trained and tested with KNN, decision tree, and random forest algorithms. The random forest model in combination with feature selection for handling missing data resulted in the lowest RMSE with respect to the test (unseen) dataset. This may have been the best result in this instance because the data appeared to be MCAR based on statistical testing. It is best practice to test a variety of different methods, as was performed in this work, and pre-define success criteria when handling missing data. To provide reliable and accurate results from data analysis, the imputation method selected should ultimately be in line with the unique features of the dataset and the analytical objectives. 
+In summary, maintaining the integrity and dependability of data analysis procedures depends on the management of missing data. This work demonstrates various methodologies that can be used to handle missing data, including listwise and feature selection deletion methods, machine learning-based algorithms like missForest, single imputation techniques such as mean, mode, median imputation, and multiple imputation using MICE. The dataset "Ozone", from the mlbench package in R was used to demonstrate the techniques for handling missing data. Statistical tests and visualization techniques were also used to help classify data as MCAR, MAR, and NMAR. Missing data were deleted or imputed using the seven methodologies described above and each resulting dataset was used to train three machine learning models: decision tree, random forest, and KNN.
+
+For the Ozone dataset, the data were found to be MCAR using the non-parametric test provided in the missMech package. The random forest model in combination with feature selection (column deletion) for handling missing data resulted in the lowest RMSE with respect to the test (unseen) dataset. This may have been the best result in this instance for a few reasons. First, the Temp_EM column contains the majority of the missing data in this dataset, with 38% of its values missing. Secondly, there was a high degree of collinearity (|r| > 0.5) between several of the model features, including Temp_EM. Thirdly, the data appear to be MCAR based on statistical testing. Therefore, deletion of missing data should not result in significant bias. 
+
+There is no single "best" method for hanlding missing data. It is best practice to test a variety of different methods for deletion or imputation, as was performed in this work. It is also important to pre-define success criteria when handling missing data. To provide reliable and accurate results from data analysis, the imputation method selected should ultimately be in line with the unique features of the dataset and the analytical objectives. 
 
 
 # References
